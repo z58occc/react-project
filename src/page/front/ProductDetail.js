@@ -10,12 +10,14 @@ function ProdeuctDetail() {
     const [cartQuantity, setCartQuantity] = useState(1);
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(false);
-    const {getCart}=useOutletContext();
+    const { getCart } = useOutletContext();
     const dispatch = useDispatch();
 
     const getProduct = async (id) => {
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/product/${id}`);
+        console.log(productRes);
         setProducts(productRes.data.product);
+
     };
 
     const addToCart = async () => {
@@ -62,9 +64,16 @@ function ProdeuctDetail() {
                         <p className="fw-bold">NT$ {product.price}</p>
                         <p>{product.content}</p>
                         <div className="my-4">
-                            <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" alt="" className="img-fluid mt-4" />
-                            <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" alt="" className="img-fluid mt-4" />
-                            <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" alt="" className="img-fluid mt-4" />
+                            {product?.imagesUrl?.map((img,i) => {
+                                return (
+                                    <img src={img} style={{minHeight: "400px",
+                                        width:"700px"
+                                    }} 
+                                    key={i}
+                                    className="object-cover mt-5"
+                                    alt="" />
+                                )
+                            })}
                         </div>
                         <div className="accordion border border-bottom border-top-0 border-start-0 border-end-0 mb-3" id="accordionExample">
                             <div className="card border-0">

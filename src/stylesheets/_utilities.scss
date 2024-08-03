@@ -1,3 +1,14 @@
 .object-cover{
     object-fit: cover;
 }
+.carousel-indicators {
+    position: absolute;
+    top: 1000px; /* 根據需要調整 */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  .carousel{
+    position: relative;
+    // background-color: black;
+  }

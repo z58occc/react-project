@@ -38,6 +38,7 @@ function Products() {
                                     <p className="card-text text-muted mb-0">{product.content}</p>
                                     <p className="text-muted mt-1">{product.price}</p>
                                 </div>
+
                             </div>
                         </div>
                     )
