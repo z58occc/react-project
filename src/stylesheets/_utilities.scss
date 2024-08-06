@@ -1,14 +1,39 @@
-.object-cover{
-    object-fit: cover;
+.object-cover {
+  object-fit: cover;
 }
+
 .carousel-indicators {
-    position: absolute;
-    top: 1000px; /* 根據需要調整 */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-  }
-  .carousel{
-    position: relative;
-    // background-color: black;
-  }
+  position: absolute;
+  bottom: -50px;
+  ;
+  /* 根據需要調整 */
+
+  z-index: 2;
+}
+
+.carousel {
+  position: relative;
+}
+
+.carousel-item img {
+  height: 450px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 50px;
+  height: 50px;
+  background-size: 50px 50px;
+  position: absolute;
+
+}
+.carousel-control-prev-icon{
+  position: absolute;
+  left: -50px;
+
+}
+.carousel-control-next-icon{
+  position: absolute;
+  right: -50px;
+
+}

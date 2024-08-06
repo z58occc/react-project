@@ -4,14 +4,19 @@ import axios from "axios";
 
 function Home() {
 
+
     const [products, setProducts] = useState([]);
-    const [isLoading, setLoaging] = useState(false);
+    const [isLoading, setLoading] = useState(false);
+
+
+
+
+
 
     const getProducts = async (page = 1) => {
-        setLoaging(true);
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?page=${page}`);
         setProducts(productRes.data.products);
-        setLoaging(false);
+        console.log(products);
     }
     useEffect(() => {
         getProducts(1);
@@ -20,89 +25,46 @@ function Home() {
         <>
 
             <div className="container">
-                <div className="row flex-md-row-reverse flex-column">
-                    <Carousel products={products}></Carousel>
-                    
+                <div className="row flex-md-row-reverse flex-column"
+                    style={{
+                        display: 'flex',
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}>
+                    <Carousel products={products} ></Carousel>
                 </div>
                 <div className="row mt-5">
-                    <div className="col-md-6 mt-md-4">
-                        <div className="card border-0 mb-4 position-relative position-relative">
-                            <img
-                                src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80"
-                                className="card-img-top rounded-0"
-                                alt="..."
-                            />
-                            <div className="card-body p-0">
-                                <h4 className="mb-0 mt-4">Lorem ipsum</h4>
-                                <div className="d-flex justify-content-between mt-3">
-                                    <p className="card-text text-muted mb-0 w-75">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                                        diam nonumy eirmod.
-                                    </p>
-                                    <button className="btn btn-outline-dark rounded-0 text-nowrap">
-                                        Lorem ipsum
-                                    </button>
+                    {products.slice(0, 4).map((product) => {
+                        return (
+                            <div className="col-md-6 mt-md-4">
+                                <div className="card border-0 mb-4 position-relative position-relative">
+                                    <img
+                                        src={product.imageUrl}
+                                        className="card-img-top rounded-0 object-cover"
+                                        alt="..."
+                                        style={{ height: "300px" }}
+                                    />
+                                    <div className="card-body p-0">
+                                        <h4 className="mb-0 mt-4">{product.title}</h4>
+                                        <div className="d-flex justify-content-between mt-3">
+                                            <p className="card-text text-muted mb-0 w-100">
+                                                {product.description}
+                                            </p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className="btn btn-dark w-50 rounded-0 py-3 mt-3"
+                                            style={{ height: '50px' }}
+                                        >
+                                            前往產品頁
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6 mt-md-4">
-                        <div className="card border-0 mb-4 position-relative position-relative">
-                            <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" className="card-img-top rounded-0" alt="..."
-                            />
-                            <div className="card-body p-0">
-                                <h4 className="mb-0 mt-4">Lorem ipsum</h4>
-                                <div className="d-flex justify-content-between mt-3">
-                                    <p className="card-text text-muted mb-0 w-75">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                                        diam nonumy eirmod.
-                                    </p>
-                                    <button className="btn btn-outline-dark rounded-0 text-nowrap">
-                                        Lorem ipsum
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6 mt-md-4">
-                        <div className="card border-0 mb-4 position-relative position-relative">
-                            <img
-                                src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80"
-                                className="card-img-top rounded-0"
-                                alt="..."
-                            />
-                            <div className="card-body p-0">
-                                <h4 className="mb-0 mt-4">Lorem ipsum</h4>
-                                <div className="d-flex justify-content-between mt-3">
-                                    <p className="card-text text-muted mb-0 w-75">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                                        diam nonumy eirmod.
-                                    </p>
-                                    <button className="btn btn-outline-dark rounded-0 text-nowrap">
-                                        Lorem ipsum
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6 mt-md-4">
-                        <div className="card border-0 mb-4 position-relative position-relative">
-                            <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" className="card-img-top rounded-0" alt="..."
-                            />
-                            <div className="card-body p-0">
-                                <h4 className="mb-0 mt-4">Lorem ipsum</h4>
-                                <div className="d-flex justify-content-between mt-3">
-                                    <p className="card-text text-muted mb-0 w-75">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                                        diam nonumy eirmod.
-                                    </p>
-                                    <button className="btn btn-outline-dark rounded-0 text-nowrap">
-                                        Lorem ipsum
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        )
+                    })}
+
+
                 </div>
             </div>
             <div className="bg-light mt-7">
