@@ -29,7 +29,7 @@ function Carousel({ products }) {
                         </div>
                         <div className="col" style={{ backgroundColor: 'orange' }}>
                             {products[0]?.title}
-                            <div className="row">
+                            <div className="row m-1" >
                                 {products[0]?.imagesUrl.slice(0, 4).map((img,i) => {
                                     return (
                                         <div className="col-6 g-3  " key={i}>

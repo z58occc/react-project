@@ -1,8 +1,16 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { MessageContext,handleSuccessMessage,handleErrorMessage} from "../store/messageStore";
+import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 
 function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
+    //取出token
+    const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("hextoken="))
+        ?.split("=")[1];
+    axios.defaults.headers.common['Authorization'] = token;
+
+
     const [tempData, setTempData] = useState({
         title: "",
         category: "",
@@ -16,7 +24,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
 
     });
 
-    const [,dispatch]=useContext(MessageContext);
+    const [, dispatch] = useContext(MessageContext);
 
     useEffect(() => {
         if (type === 'create') {
@@ -75,14 +83,44 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
             handleSuccessMessage(dispatch, res);
             closeProductModal();
             getProducts();
+
         } catch (error) {
             console.log(error);
             handleErrorMessage(dispatch, error);
         }
     }
+    const uploadFile = async (e) => {
+        const {name,files}=e.target
+        const file=files[0];
+        console.log(file);  
+        // console.log(file[0]);
+        if (!file) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file-to-upload', file)
+        try {
+            const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/upload`, formData, {
+                headers: {
+                    authorization: token
+                }
+            })
+            console.log(res);
+            console.log(res.data.imageUrl);
+            // setTempData({
+            //     ...tempData,
+            //     [imageUrl]: res.data.imageUrl
+            // })
+            console.log(tempData);
+        } catch (error) {
+            console.lo(error);
+        }
+    }
 
 
     return (
+        
         <div
             className='modal fade'
             tabIndex='-1'
@@ -94,8 +132,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 <div className='modal-content'>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                            {type ==='create'? "建立新商品":`編輯${tempData.title}`}
-                            
+                            {type === 'create' ? "建立新商品" : `編輯${tempData.title}`}
                         </h1>
                         <button
                             type='button'
@@ -126,6 +163,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             type='file'
                                             id='customFile'
                                             className='form-control'
+                                            onChange={(e) => uploadFile(e)}
                                         />
                                     </label>
                                 </div>

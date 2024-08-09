@@ -16,7 +16,6 @@ function Home() {
     const getProducts = async (page = 1) => {
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?page=${page}`);
         setProducts(productRes.data.products);
-        console.log(products);
     }
     useEffect(() => {
         getProducts(1);
@@ -36,7 +35,7 @@ function Home() {
                 <div className="row mt-5">
                     {products.slice(0, 4).map((product) => {
                         return (
-                            <div className="col-md-6 mt-md-4">
+                            <div className="col-md-6 mt-md-4" key={product.id}>
                                 <div className="card border-0 mb-4 position-relative position-relative">
                                     <img
                                         src={product.imageUrl}

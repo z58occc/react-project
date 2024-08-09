@@ -2,17 +2,16 @@ import { Outlet, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useReducer } from "react";
 import Message from "../../components/Message";
-import { MessageContext,messageReducer,initState } from "../../store/messageStore";
-
+import { MessageContext, messageReducer, initState } from "../../store/messageStore";
 
 
 function Dashboard() {
     const navigate = useNavigate();
 
-    const reducer=useReducer(messageReducer,initState);
+    const reducer = useReducer(messageReducer, initState);
     const logout = () => {
         document.cookie = 'hextoken=;';
-        navigate('/login')
+        navigate('/')
     }
 
     //取出token
@@ -44,9 +43,11 @@ function Dashboard() {
             <Message></Message>
             <nav className="navbar navbar-expand-lg bg-dark">
                 <div className="container-fluid">
-                    <p className="text-white mb-0">
-                        HEX EATS 後台管理系統
-                    </p>
+                    <Link to='/' style={{ textDecoration: 'none' }}>
+                        <p className="text-white mb-0">
+                            回到首頁
+                        </p>
+                    </Link>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -61,10 +62,10 @@ function Dashboard() {
                     <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <button type="button" className="btn btn-sm btn-light"
-                                    onClick={logout}>
-                                    登出
-                                </button>
+                                    <button type="button" className="btn btn-sm btn-light"
+                                        onClick={logout}>
+                                        登出
+                                    </button>
                             </li>
                         </ul>
                     </div>

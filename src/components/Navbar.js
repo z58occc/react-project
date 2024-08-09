@@ -1,7 +1,22 @@
 import { NavLink } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
-function Navbar({cartData}) {
+
+function Navbar({ cartData }) {
+    
+    const [token,setToken]=useState(document.cookie);
+    
+    const logout = () => {
+        document.cookie = 'hextoken=';
+        setToken(document.cookie);
+    }
+
+   
+
+
     return (
+
         <div className="bg-white sticky-top">
             <div className="container">
                 <nav className="navbar px-0 navbar-expand-lg navbar-light bg-white">
@@ -25,13 +40,27 @@ function Navbar({cartData}) {
                         </ul>
                     </div>
                     <div className="d-flex">
-                        <NavLink to="/cart" className='nav-link position-relative'>
+                        <NavLink to="/cart" className='nav-link position-relative m-5'>
                             <i className="bi bi-cart-x-fill"></i>
                             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 {cartData?.carts?.length}
                             </span>
-
                         </NavLink>
+                    </div>
+                    <div className="d-flex">
+                        {token !=='hextoken='?
+                            (
+                                <NavLink to="/" className='nav-link position-relative'>
+                                    <button onClick={logout} className="btn btn-primary">登出</button>
+                                </NavLink>
+                            )
+                            : (
+                                <NavLink to="/login" className='nav-link position-relative'>
+                                    <button className="btn btn-danger">登入</button>
+                                </NavLink>
+                            )
+                        }
+
                     </div>
                 </nav>
             </div>
