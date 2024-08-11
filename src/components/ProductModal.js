@@ -21,6 +21,13 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
         content: "",
         is_enabled: 1,
         imageUrl: "",
+        imagesUrl:[
+            '',
+            '',
+            '',
+            '',
+            ''
+        ]
 
     });
 
@@ -37,7 +44,14 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 description: "",
                 content: "",
                 is_enabled: 1,
-                imageUrl: "",
+                imageUrl:'',
+                imagesUrl:[
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                ] ,
 
             });
         } else if (type === 'edit') {
@@ -57,6 +71,11 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 ...tempData,
                 [name]: +e.target.checked,// boolean
             })
+        // } else if(name === 'imagesUrl'){
+        //     setTempData({
+        //         ...tempData.imagesUrl,
+                
+        //     })
         }
         else {
             setTempData({
@@ -90,10 +109,10 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
         }
     }
     const uploadFile = async (e) => {
+        console.log(e.target.name)
         const {name,files}=e.target
         const file=files[0];
         console.log(file);  
-        // console.log(file[0]);
         if (!file) {
             return;
         }
@@ -108,10 +127,10 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
             })
             console.log(res);
             console.log(res.data.imageUrl);
-            // setTempData({
-            //     ...tempData,
-            //     [imageUrl]: res.data.imageUrl
-            // })
+            setTempData({
+                ...tempData,
+                [name]: res.data.imageUrl
+            })
             console.log(tempData);
         } catch (error) {
             console.lo(error);
@@ -146,13 +165,80 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                             <div className='col-sm-4'>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='image'>
-                                        輸入圖片網址
+                                        輸入主圖網址
                                         <input
                                             type='text'
                                             name='imageUrl'
                                             id='image'
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
+                                            onChange={handleChange}
+                                        />
+                                    </label>
+                                    <img className="w-100" src={tempData.imageUrl} alt="..." />
+                                </div>
+                                <div className='form-group mb-2'>
+                                    <label className='w-100' htmlFor='image'>
+                                        輸入圖片網址 1
+                                        <input
+                                            type='text'
+                                            name='imagesUrl[1]'
+                                            id='image'
+                                            placeholder='請輸入圖片連結'
+                                            className='form-control'
+                                            onChange={handleChange}
+                                        />
+                                    </label>
+                                </div>
+                                <div className='form-group mb-2'>
+                                    <label className='w-100' htmlFor='image'>
+                                        輸入圖片網址 2
+                                        <input
+                                            type='text'
+                                            name='imageUrl'
+                                            id='image'
+                                            placeholder='請輸入圖片連結'
+                                            className='form-control'
+                                            onChange={handleChange}
+                                        />
+                                    </label>
+                                </div>
+                                <div className='form-group mb-2'>
+                                    <label className='w-100' htmlFor='image'>
+                                        輸入圖片網址 3
+                                        <input
+                                            type='text'
+                                            name='imageUrl'
+                                            id='image'
+                                            placeholder='請輸入圖片連結'
+                                            className='form-control'
+                                            onChange={handleChange}
+                                        />
+                                    </label>
+                                </div>
+                                <div className='form-group mb-2'>
+                                    <label className='w-100' htmlFor='image'>
+                                        輸入圖片網址 4
+                                        <input
+                                            type='text'
+                                            name='imageUrl'
+                                            id='image'
+                                            placeholder='請輸入圖片連結'
+                                            className='form-control'
+                                            onChange={handleChange}
+                                        />
+                                    </label>
+                                </div>
+                                <div className='form-group mb-2'>
+                                    <label className='w-100' htmlFor='image'>
+                                        輸入圖片網址 5
+                                        <input
+                                            type='text'
+                                            name='imageUrl'
+                                            id='image'
+                                            placeholder='請輸入圖片連結'
+                                            className='form-control'
+                                            onChange={handleChange}
                                         />
                                     </label>
                                 </div>
@@ -163,6 +249,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             type='file'
                                             id='customFile'
                                             className='form-control'
+                                            name='imageUrl'
                                             onChange={(e) => uploadFile(e)}
                                         />
                                     </label>

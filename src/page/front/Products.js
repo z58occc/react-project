@@ -8,15 +8,14 @@ import Loading from "../../components/Loading";
 function Products() {
     const [products, setProducts] = useState([]);
     const [pagination, setPagination] = useState({});
-    const [isLoading, setLoaging] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
     const getProducts = async (page = 1) => {
-        setLoaging(true);
+        setLoading(true);
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?page=${page}`);
-        console.log(productRes);
         setProducts(productRes.data.products);
         setPagination(productRes.data.pagination);
-        setLoaging(false);
+        setLoading(false);
     }
     useEffect(() => {
         getProducts(1);

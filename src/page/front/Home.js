@@ -1,6 +1,7 @@
 import Carousel from "../../components/Carousel";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Loading from "../../components/Loading";
 
 function Home() {
 
@@ -13,9 +14,13 @@ function Home() {
 
 
 
+
     const getProducts = async (page = 1) => {
+        setLoading(true);
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?page=${page}`);
         setProducts(productRes.data.products);
+        setLoading(false);
+
     }
     useEffect(() => {
         getProducts(1);
@@ -24,6 +29,8 @@ function Home() {
         <>
 
             <div className="container">
+                <Loading isLoading={isLoading}></Loading>
+
                 <div className="row flex-md-row-reverse flex-column"
                     style={{
                         display: 'flex',

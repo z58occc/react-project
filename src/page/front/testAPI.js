@@ -1,7 +1,32 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { useState } from "react";
 
 function TestAPI() {
+  const [tempData, setTempData] = useState({
+    title: "",
+    category: "",
+    origin_price: 100,
+    price: 300,
+    unit: "",
+    description: "",
+    content: "",
+    is_enabled: 1,
+    imageUrl: "",
+    imagesUrl: [
+      '',
+      '',
+      '',
+      '',
+      ''
+    ]
+
+  });
+  // setTempData({...tempData,imagesUrl:[
+
+  // ]}
+
+  // )
   const getToken = async () => {
     const TokenRes = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.REACT_APP_CLIENT_ID}&client_secret=${process.env.REACT_APP_CLIENT_SECRET}&grant_type=client_credentials`,);
     // console.log(TokenRes);
