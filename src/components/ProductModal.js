@@ -2,13 +2,18 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 
+
 function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
+
+
     //取出token
     const token = document.cookie
         .split("; ")
         .find((row) => row.startsWith("hextoken="))
         ?.split("=")[1];
     axios.defaults.headers.common['Authorization'] = token;
+
+
 
 
     const [tempData, setTempData] = useState({
@@ -21,7 +26,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
         content: "",
         is_enabled: 1,
         imageUrl: "",
-        imagesUrl:[
+        imagesUrl: [
             '',
             '',
             '',
@@ -44,14 +49,14 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 description: "",
                 content: "",
                 is_enabled: 1,
-                imageUrl:'',
-                imagesUrl:[
+                imageUrl: '',
+                imagesUrl: [
                     '',
                     '',
                     '',
                     '',
                     '',
-                ] ,
+                ],
 
             });
         } else if (type === 'edit') {
@@ -71,11 +76,6 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 ...tempData,
                 [name]: +e.target.checked,// boolean
             })
-        // } else if(name === 'imagesUrl'){
-        //     setTempData({
-        //         ...tempData.imagesUrl,
-                
-        //     })
         }
         else {
             setTempData({
@@ -84,8 +84,18 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
             })
         }
     }
+    const hadleChangeImages = (e) => {
+        const { name } = e.target;
+        const index = parseInt(e.target.name);
+        setTempData({
+            ...tempData,
+            imagesUrl: tempData.imagesUrl.map((item, i) => i === index ? e.target.value : item)
+        })
+
+    }
 
     const submit = async () => {
+        console.log(tempData);
         try {
             let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/product`;
             let method = 'post';
@@ -110,9 +120,9 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
     }
     const uploadFile = async (e) => {
         console.log(e.target.name)
-        const {name,files}=e.target
-        const file=files[0];
-        console.log(file);  
+        const { name, files } = e.target
+        const file = files[0];
+        console.log(file);
         if (!file) {
             return;
         }
@@ -139,7 +149,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
 
 
     return (
-        
+
         <div
             className='modal fade'
             tabIndex='-1'
@@ -175,72 +185,89 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={handleChange}
                                         />
                                     </label>
-                                    <img className="w-100" src={tempData.imageUrl} alt="..." />
+                                    {
+                                        tempData.imageUrl && <img className="w-100" src={tempData.imageUrl} alt="..." />
+                                    }
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 1
                                         <input
                                             type='text'
-                                            name='imagesUrl[1]'
+                                            name='0'
                                             id='image'
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
-                                            onChange={handleChange}
+                                            onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    {
+                                        tempData.imagesUrl[0] && <img className="w-100" src={tempData.imagesUrl[0]} alt="..." />
+                                    }
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 2
                                         <input
                                             type='text'
-                                            name='imageUrl'
+                                            name='1'
                                             id='image'
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
-                                            onChange={handleChange}
+                                            onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    {
+                                        tempData.imagesUrl[1] && <img className="w-100" src={tempData.imagesUrl[1]} alt="..." />
+                                    }
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 3
                                         <input
                                             type='text'
-                                            name='imageUrl'
+                                            name='2'
                                             id='image'
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
-                                            onChange={handleChange}
+                                            onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    {
+                                        tempData.imagesUrl[2] && <img className="w-100" src={tempData.imagesUrl[2]} alt="..." />
+                                    }
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 4
                                         <input
                                             type='text'
-                                            name='imageUrl'
+                                            name='3'
                                             id='image'
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
-                                            onChange={handleChange}
+                                            onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    {
+                                        tempData.imagesUrl[3] && <img className="w-100" src={tempData.imagesUrl[3]} alt="..." />
+                                    }
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 5
                                         <input
                                             type='text'
-                                            name='imageUrl'
+                                            name='4'
                                             id='image'
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
-                                            onChange={handleChange}
+                                            onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    {
+                                        tempData.imagesUrl[4] && <img className="w-100" src={tempData.imagesUrl[4]} alt="..." />
+                                    }
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='customFile'>
