@@ -56,48 +56,30 @@ function Success() {
                                                     <div className="w-100 d-flex flex-column">
                                                         <div className="d-flex justify-content-between fw-bold">
                                                             <h5>{item.product.title}</h5>
-                                                            <p className="mb-0">x10</p>
+                                                            <p className="mb-0">x{item.qty}</p>
                                                         </div>
                                                         <div className="d-flex justify-content-between mt-auto">
-                                                            <p className="text-muted mb-0"><small>NT$12,000</small></p>
-                                                            <p className="mb-0">NT$12,000</p>
+                                                            <p className="text-muted mb-0"><small>NT${item.product.price}</small></p>
+                                                            <p className="mb-0">NT${item.total}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </li>
                                         )
                                     })}
-                                    <li className="list-group-item px-0">
-                                        <div className="d-flex mt-2">
-                                            <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" alt="" className="me-2" style={{ width: "60px", height: "60px", objectFit: "cover" }} />
-                                            <div className="w-100 d-flex flex-column">
-                                                <div className="d-flex justify-content-between fw-bold">
-                                                    <h5>Lorem ipsum</h5>
-                                                    <p className="mb-0">x10</p>
-                                                </div>
-                                                <div className="d-flex justify-content-between mt-auto">
-                                                    <p className="text-muted mb-0"><small>NT$12,000</small></p>
-                                                    <p className="mb-0">NT$12,000</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    
                                     <li className="list-group-item px-0 pb-0">
                                         <table className="table text-muted">
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row" className="border-0 px-0 font-weight-normal">Lorem ipsum</th>
-                                                    <td className="text-end border-0 px-0">NT$24,000</td>
-                                                </tr>
-                                                <tr>
+                                                {/* <tr>
                                                     <th scope="row" className="border-0 px-0 pt-0 font-weight-normal">Payment</th>
                                                     <td className="text-end border-0 px-0 pt-0">ApplePay</td>
-                                                </tr>
+                                                </tr> */}
                                             </tbody>
                                         </table>
                                         <div className="d-flex justify-content-between mt-2">
-                                            <p className="mb-0 h4 fw-bold">Lorem ipsum</p>
-                                            <p className="mb-0 h4 fw-bold">NT$24,000</p>
+                                            <p className="mb-0 h4 fw-bold">總金額</p>
+                                            <p className="mb-0 h4 fw-bold">NT${orderData?.total}</p>
                                         </div>
                                     </li>
                                 </ul>

@@ -27,16 +27,30 @@
   position: absolute;
 
 }
-.carousel-control-prev-icon{
+
+.carousel-control-prev-icon {
   position: absolute;
   left: -50px;
 
 }
-.carousel-control-next-icon{
+
+.carousel-control-next-icon {
   position: absolute;
   right: -50px;
 
 }
-.form-group>img{
-  width: 100px;
+
+.bi-caret-up,
+.bi-caret-down {
+  position: absolute;
 }
+
+  .bi-caret-up {
+    top: 180px;
+    /* right: -15px; */
+  }
+
+  .bi-caret-down {
+    top: 190px;
+    /* right: -15px; */
+  }

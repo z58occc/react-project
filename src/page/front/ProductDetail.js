@@ -56,13 +56,14 @@ function ProdeuctDetail() {
                 <div style={{
                     minHeight: "400px", backgroundImage: `url(${product.imageUrl})`,
                     backgroundPosition: "center center",
+                    backgroundSize:'cover',    
                 }}>
                 </div>
                 <div className="row justify-content-between mt-4 mb-7">
                     <div className="col-md-7">
                         <h2 className="mb-0">{product.title}</h2>
                         <p className="fw-bold">NT$ {product.price}</p>
-                        <p>{product.content}</p>
+                        <p>{product.description}</p>
                         <div className="my-4">
                             {product?.imagesUrl?.map((img,i) => {
                                 return (
@@ -75,52 +76,23 @@ function ProdeuctDetail() {
                                 )
                             })}
                         </div>
-                        <div className="accordion border border-bottom border-top-0 border-start-0 border-end-0 mb-3" id="accordionExample">
+                        <div className="accordion  mb-3" id="accordionExample">
                             <div className="card border-0">
                                 <div className="card-header py-4 bg-white border border-bottom-0 border-top border-start-0 border-end-0" id="headingOne" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                                     <div className="d-flex justify-content-between align-items-center pe-1">
                                         <h4 className="mb-0">
-                                            Lorem ipsum
+                                           商品說明
                                         </h4>
                                         <i className="bi bi-dash"></i>
                                     </div>
                                 </div>
                                 <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div className="card-body pb-5">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+                                        {product.content}
                                     </div>
                                 </div>
                             </div>
-                            <div className="card border-0">
-                                <div className="card-header py-4 bg-white border border-bottom-0 border-top border-start-0 border-end-0" id="headingTwo" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
-                                    <div className="d-flex justify-content-between align-items-center pe-1">
-                                        <h4 className="mb-0">
-                                            Lorem ipsum
-                                        </h4>
-                                        <i className="bi bi-plus"></i>
-                                    </div>
-                                </div>
-                                <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                    <div className="card-body pb-5">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="card border-0">
-                                <div className="card-header py-4 bg-white border border-bottom-0 border-top border-start-0 border-end-0" id="headingThree" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                                    <div className="d-flex justify-content-between align-items-center pe-1">
-                                        <h4 className="mb-0">
-                                            Lorem ipsum
-                                        </h4>
-                                        <i className="fas fa-plus"></i>
-                                    </div>
-                                </div>
-                                <div id="collapseThree" className="collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                    <div className="card-body pb-5">
-                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div className="col-md-4">
@@ -152,18 +124,6 @@ function ProdeuctDetail() {
                         >
                             加入購物車
                         </button>
-                    </div>
-                </div>
-            </div>
-            <div className="bg-dark">
-                <div className="container">
-                    <div className="d-flex align-items-center justify-content-between text-white py-4">
-                        <p className="mb-0">© 2020 LOGO All Rights Reserved.</p>
-                        <ul className="d-flex list-unstyled mb-0 h4">
-                            <li><a href="#" className="text-white mx-3"><i className="fab fa-facebook"></i></a></li>
-                            <li><a href="#" className="text-white mx-3"><i className="fab fa-instagram"></i></a></li>
-                            <li><a href="#" className="text-white mx-3"><i className="fab fa-line"></i></a></li>
-                        </ul>
                     </div>
                 </div>
             </div>

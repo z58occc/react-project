@@ -1,18 +1,27 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
+import { useRef } from "react";
 
 
 function Navbar({ cartData }) {
-    
-    const [token,setToken]=useState(document.cookie);
-    
+    const [searchWord, setSearchWord] = useState('');
+    const mySearch = useRef();
+
+    const [token, setToken] = useState(document.cookie);
+
     const logout = () => {
         document.cookie = 'hextoken=';
         setToken(document.cookie);
     }
+    const search = (e) => {
+        setSearchWord(e.target.value);
+    }
+    const clearSearch = () => {
+        mySearch.current.value = '';
+    }
 
-   
+
 
 
     return (
@@ -36,8 +45,16 @@ function Navbar({ cartData }) {
                                     產品列表
                                 </NavLink>
                             </li>
-
                         </ul>
+                        <form className="d-flex ms-5" role="search">
+                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                                onChange={search}
+                                ref={mySearch}
+                            />
+                            <Link to={`/products/${searchWord}`} className="btn btn-outline-primary" type="submit"
+                                onClick={clearSearch}
+                            >Search</Link>
+                        </form>
                     </div>
                     <div className="d-flex">
                         <NavLink to="/cart" className='nav-link position-relative m-5'>
@@ -47,8 +64,13 @@ function Navbar({ cartData }) {
                             </span>
                         </NavLink>
                     </div>
+                    <div className="d-flex m-3">
+                        <NavLink to="/admin/products" className='btn btn-primary'>
+                            去後台
+                        </NavLink>
+                    </div>
                     <div className="d-flex">
-                        {token !=='hextoken='?
+                        {token !== 'hextoken=' ?
                             (
                                 <NavLink to="/" className='nav-link position-relative'>
                                     <button onClick={logout} className="btn btn-primary">登出</button>
@@ -60,6 +82,7 @@ function Navbar({ cartData }) {
                                 </NavLink>
                             )
                         }
+
 
                     </div>
                 </nav>

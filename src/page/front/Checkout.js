@@ -1,10 +1,13 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { Input } from "../../components/FontElements";
 import axios from "axios";
 
 
 function Checkout() {
+    const { cartData } = useOutletContext();
+
+
     const {
         register,
         handleSubmit,
@@ -13,7 +16,7 @@ function Checkout() {
         mode: 'onTouched',
     });
 
-    const navigate =useNavigate();
+    const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         const { name, email, tel, address } = data;
@@ -44,7 +47,7 @@ function Checkout() {
                 <div className="row justify-content-center flex-md-row flex-column-reverse">
                     <form className="col-md-6" onSubmit={handleSubmit(onSubmit)}>
                         <div className="bg-white p-4">
-                            <h4 className="fw-bold">外送資料</h4>
+                            <h4 className="fw-bold">訂單資料</h4>
                             <div>
                                 <div className="mb-2">
                                     <Input
@@ -122,24 +125,31 @@ function Checkout() {
                     <div className="col-md-4">
                         <div className="border p-4 mb-4">
                             <h4 className="mb-4">選購項目</h4>
-                            <div className="d-flex">
-                                <img src="https://images.unsplash.com/photo-1502743780242-f10d2ce370f3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1916&q=80" alt="" className="me-2" style={{ width: "48px", height: "48px", objectFit: "cover" }} />
-                                <div className="w-100">
-                                    <div className="d-flex justify-content-between fw-bold">
-                                        <p className="mb-0">Lorem ipsum</p>
-                                        <p className="mb-0">x10</p>
+                            {cartData?.carts?.map((item) => {
+                                return (
+                                    <div className="d-flex m-3" key={item.id}>
+                                        <div>
+                                            <img src={item.product.imageUrl} alt="..." className="me-2 " style={{ width: '48px', height: "48px", objectFit: "cover" }} />
+                                        </div>
+                                        <div className="w-100">
+                                            <div className="d-flex justify-content-between fw-bold">
+                                                <p className="mb-0">{item.product.title}</p>
+                                                <p className="mb-0">x{item.qty}</p>
+                                            </div>
+                                            <div className="d-flex justify-content-between">
+                                                <p className="text-muted mb-0"><small>NT${item.product.price}</small></p>
+                                                <p className="mb-0">NT${item.final_total}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="d-flex justify-content-between">
-                                        <p className="text-muted mb-0"><small>NT$12,000</small></p>
-                                        <p className="mb-0">NT$12,000</p>
-                                    </div>
-                                </div>
-                            </div>
+
+                                )
+                            })}
 
 
                             <div className="d-flex justify-content-between mt-4">
-                                <p className="mb-0 h4 fw-bold">Total</p>
-                                <p className="mb-0 h4 fw-bold">NT$24,000</p>
+                                <p className="mb-0 h4 fw-bold">總金額</p>
+                                <p className="mb-0 h4 fw-bold">NT${cartData.total}</p>
                             </div>
                         </div>
                     </div>

@@ -85,7 +85,6 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
         }
     }
     const hadleChangeImages = (e) => {
-        const { name } = e.target;
         const index = parseInt(e.target.name);
         setTempData({
             ...tempData,
@@ -137,13 +136,22 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
             })
             console.log(res);
             console.log(res.data.imageUrl);
-            setTempData({
-                ...tempData,
-                [name]: res.data.imageUrl
-            })
-            console.log(tempData);
+            if (e.target.name === "imageUrl") {
+                setTempData({
+                    ...tempData,
+                    [name]: res.data.imageUrl
+                })
+                console.log(tempData);
+            } else {
+                const index = parseInt(e.target.name);
+                setTempData({
+                    ...tempData,
+                    imagesUrl: tempData.imagesUrl.map((item, i) => i === index ? res.data.imageUrl : item)
+                })
+
+            }
         } catch (error) {
-            console.lo(error);
+            console.log(error);
         }
     }
 
@@ -173,8 +181,8 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                     <div className='modal-body'>
                         <div className='row'>
                             <div className='col-sm-4'>
-                                <div className='form-group mb-2'>
-                                    <label className='w-100' htmlFor='image'>
+                                <div className='form-group mb-5'>
+                                    <label className='w-100 ' htmlFor='image'>
                                         輸入主圖網址
                                         <input
                                             type='text'
@@ -185,11 +193,21 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={handleChange}
                                         />
                                     </label>
+                                    <div className='form-group '>
+                                        <input
+                                            type='file'
+                                            id='customFile'
+                                            className='form-control'
+                                            name='imageUrl'
+                                            onChange={(e) => uploadFile(e)}
+                                        />
+                                    </div>
                                     {
                                         tempData.imageUrl && <img className="w-100" src={tempData.imageUrl} alt="..." />
                                     }
+
                                 </div>
-                                <div className='form-group mb-2'>
+                                <div className='form-group mb-5'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 1
                                         <input
@@ -201,11 +219,22 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    <div className='form-group '>
+                                        <input
+                                            type='file'
+                                            id='customFile'
+                                            className='form-control'
+                                            name='0'
+                                            onChange={(e) => uploadFile(e)}
+                                        />
+                                    </div>
                                     {
                                         tempData.imagesUrl[0] && <img className="w-100" src={tempData.imagesUrl[0]} alt="..." />
                                     }
+
+
                                 </div>
-                                <div className='form-group mb-2'>
+                                <div className='form-group mb-5'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 2
                                         <input
@@ -217,11 +246,21 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    <div className='form-group '>
+                                        <input
+                                            type='file'
+                                            id='customFile'
+                                            className='form-control'
+                                            name='1'
+                                            onChange={(e) => uploadFile(e)}
+                                        />
+                                    </div>
                                     {
                                         tempData.imagesUrl[1] && <img className="w-100" src={tempData.imagesUrl[1]} alt="..." />
                                     }
+
                                 </div>
-                                <div className='form-group mb-2'>
+                                <div className='form-group mb-5'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 3
                                         <input
@@ -233,11 +272,21 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    <div className='form-group '>
+                                        <input
+                                            type='file'
+                                            id='customFile'
+                                            className='form-control'
+                                            name='2'
+                                            onChange={(e) => uploadFile(e)}
+                                        />
+                                    </div>
                                     {
                                         tempData.imagesUrl[2] && <img className="w-100" src={tempData.imagesUrl[2]} alt="..." />
                                     }
+
                                 </div>
-                                <div className='form-group mb-2'>
+                                <div className='form-group mb-5'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 4
                                         <input
@@ -249,11 +298,21 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={hadleChangeImages}
                                         />
                                     </label>
+                                    <div className='form-group '>
+                                        <input
+                                            type='file'
+                                            id='customFile'
+                                            className='form-control'
+                                            name='3'
+                                            onChange={(e) => uploadFile(e)}
+                                        />
+                                    </div>
                                     {
                                         tempData.imagesUrl[3] && <img className="w-100" src={tempData.imagesUrl[3]} alt="..." />
                                     }
+
                                 </div>
-                                <div className='form-group mb-2'>
+                                <div className='form-group mb-5'>
                                     <label className='w-100' htmlFor='image'>
                                         輸入圖片網址 5
                                         <input
@@ -265,23 +324,20 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             onChange={hadleChangeImages}
                                         />
                                     </label>
-                                    {
-                                        tempData.imagesUrl[4] && <img className="w-100" src={tempData.imagesUrl[4]} alt="..." />
-                                    }
-                                </div>
-                                <div className='form-group mb-2'>
-                                    <label className='w-100' htmlFor='customFile'>
-                                        或 上傳圖片
+                                    <div className='form-group '>
                                         <input
                                             type='file'
                                             id='customFile'
                                             className='form-control'
-                                            name='imageUrl'
+                                            name='4'
                                             onChange={(e) => uploadFile(e)}
                                         />
-                                    </label>
+                                    </div>
+                                    {
+                                        tempData.imagesUrl[4] && <img className="w-100" src={tempData.imagesUrl[4]} alt="..." />
+                                    }
                                 </div>
-                                <img src="" alt='' className='img-fluid' />
+
                             </div>
                             <div className='col-sm-8'>
 
@@ -426,7 +482,6 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
     )
 }
 export default ProductModal;
-
 
 
 

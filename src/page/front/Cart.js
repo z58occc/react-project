@@ -72,7 +72,7 @@ function Cart() {
                                         <i className="bi bi-x-circle-fill"></i>
                                     </button>
                                     <p className="mb-0 fw-bold">{item.product.title}</p>
-                                    <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>{item.product.content}</p>
+                                    <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>{item.product.description}</p>
                                     <div className="d-flex justify-content-between align-items-center w-100">
                                         <select name="" id="" className="form-select"
                                             value={item.qty}
@@ -88,8 +88,8 @@ function Cart() {
                                             })
                                             }
                                         </select>
-                                        <p className="mb-0 ms-auto">NT$ {item.final_total}</p>
                                     </div>
+                                    <p style={{float:'right'}} className="mb-0 ms-auto">NT$ {item.final_total}</p>
                                 </div>
                             </div>
                         )

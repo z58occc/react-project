@@ -20,6 +20,7 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
+          <Route path="products/:searchWord" element={<Products></Products>}></Route>
           <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>
           <Route path="product/:id" element={<ProdeuctDetail></ProdeuctDetail>}></Route>
           <Route path="cart" element={<Cart></Cart>}></Route>
