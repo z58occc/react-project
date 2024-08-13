@@ -32,7 +32,6 @@ function Carousel({ products }) {
                         <div className="col-4  bg-primary " >
                             <div className="m-3">
                                 <Link
-                                    // className="m-3"
                                     style={{
                                         textDecoration: 'none',
                                         color: 'black',
@@ -83,7 +82,6 @@ function Carousel({ products }) {
                                                 color: 'black',
                                                 fontSize: '40px'
                                             }}
-                                            className="m-5"
                                             to={`./product/${product?.id}`} >
                                             {product.title}
                                         </Link>
@@ -104,7 +102,9 @@ function Carousel({ products }) {
                                             )
                                         })}
                                     </div>
-                                    <div className="mt-7 ">
+                                    <div className="mt-7 w-25" style={{
+                                        textAlign:'center'
+                                    }}>
                                         NT$ {product.price}
                                     </div>
 

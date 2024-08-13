@@ -12,10 +12,12 @@ import Cart from "./page/front/Cart";
 import Checkout from "./page/front/Checkout";
 import Success from "./page/front/Success";
 import TestAPI from "./page/front/testAPI";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <div className="App">
+      <ScrollToTop></ScrollToTop>
       <Routes>
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>

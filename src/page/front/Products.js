@@ -79,7 +79,7 @@ function Products() {
                                     src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
 
                                 <div className="card-body p-0">
-                                    <h4 className="mb-0 mt-2"><Link style={{textDecoration:'none'}} to={`/product/${product.id}`}>{product.title}</Link></h4>
+                                    <h4 className="mb-0 mt-2 text-center"><Link style={{textDecoration:'none'}} to={`/product/${product.id}`}>{product.title}</Link></h4>
                                 </div>
 
                             </div>

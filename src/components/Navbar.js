@@ -57,17 +57,6 @@ function Navbar({ cartData }) {
                         </ul>
                     </div>
                     <div className="d-flex">
-                        <form className="d-flex ms-5" role="search">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-                                onChange={search}
-                                ref={mySearch}
-                            />
-                            <Link to={`/products/${searchWord}`} className="btn btn-outline-primary" type="submit"
-                                onClick={clearSearch}
-                            >Search</Link>
-                        </form>
-                    </div>
-                    <div className="d-flex">
                         <NavLink to="/cart" className='nav-link position-relative m-5'>
                             <i className="bi bi-cart-x-fill"></i>
                             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -77,9 +66,9 @@ function Navbar({ cartData }) {
                     </div>
 
 
-                    <div class="btn-group me-5">
-                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="visually-hidden">Toggle Dropdown</span>
+                    <div className="btn-group me-7">
+                        <button type="button" className="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span className="visually-hidden">Toggle Dropdown</span>
                         </button>
                         <ul className="dropdown-menu " aria-labelledby="dropdownMenuButton1" 
                         style={{
@@ -90,10 +79,6 @@ function Navbar({ cartData }) {
                                 <div className="d-flex  ">
                                     <NavLink to="/admin/products"
                                         className='nav-link  w-100 dropdown-item'
-                                        style={{
-                                            // color: 'black',
-                                            // textDecoration: "none"
-                                        }}
                                     >
                                         去後台
                                     </NavLink>
