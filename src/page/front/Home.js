@@ -2,6 +2,8 @@ import Carousel from "../../components/Carousel";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "../../components/Loading";
+import { Link,useOutletContext } from "react-router-dom";
+
 
 function Home() {
 
@@ -39,32 +41,27 @@ function Home() {
                     }}>
                     <Carousel products={products} ></Carousel>
                 </div>
-                <div className="row mt-5">
+                <div className="row m-5">
                     {products.slice(0, 4).map((product) => {
                         return (
                             <div className="col-md-6 mt-md-4" key={product.id}>
                                 <div className="card border-0 mb-4 position-relative position-relative">
-                                    <img
-                                        src={product.imageUrl}
-                                        className="card-img-top rounded-0 object-cover"
-                                        alt="..."
-                                        style={{ height: "300px" }}
-                                    />
-                                    <div className="card-body p-0">
-                                        <h4 className="mb-0 mt-4">{product.title}</h4>
-                                        <div className="d-flex justify-content-between mt-3">
-                                            <p className="card-text text-muted mb-0 w-100">
-                                                {product.description}
-                                            </p>
+                                    <Link style={{textDecoration:'none'}} to={`./product/${product.id}`}>
+                                        <img
+                                            src={product.imageUrl}
+                                            className="card-img-top rounded-0 object-cover"
+                                            alt="..."
+                                            style={{ height: "300px" }}
+                                        />
+                                        <div className="card-body p-0">
+                                            <h4 className="mb-0 mt-4">{product.title}</h4>
+                                            <div className="d-flex justify-content-between mt-3">
+                                                <p className="card-text text-muted mb-0 w-100">
+                                                    {product.description}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <button
-                                            type="button"
-                                            className="btn btn-dark w-50 rounded-0 py-3 mt-3"
-                                            style={{ height: '50px' }}
-                                        >
-                                            前往產品頁
-                                        </button>
-                                    </div>
+                                    </Link>
                                 </div>
                             </div>
                         )

@@ -52,7 +52,9 @@ function Success() {
 
                                             <li className="list-group-item px-0" key={item.id}>
                                                 <div className="d-flex mt-2">
-                                                    <img src={item.product.imageUrl} alt="" className="me-2" style={{ width: "60px", height: "60px", objectFit: "cover" }} />
+                                                    <div>
+                                                        <img src={item.product.imageUrl} alt="" className="me-2" style={{ width: "60px", height: "60px", objectFit: "cover" }} />
+                                                    </div>
                                                     <div className="w-100 d-flex flex-column">
                                                         <div className="d-flex justify-content-between fw-bold">
                                                             <h5>{item.product.title}</h5>
@@ -67,7 +69,7 @@ function Success() {
                                             </li>
                                         )
                                     })}
-                                    
+
                                     <li className="list-group-item px-0 pb-0">
                                         <table className="table text-muted">
                                             <tbody>

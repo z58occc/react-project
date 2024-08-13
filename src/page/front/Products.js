@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import Loading from "../../components/Loading";
 import { useParams } from "react-router-dom";
@@ -37,6 +37,7 @@ function Products() {
         setProducts(typeRes.data.products);
         setLoading(false);
     }
+    
 
     useEffect(() => {
         if (searchWord) {

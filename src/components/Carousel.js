@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom"
 
 function Carousel({ products }) {
     return (
@@ -23,14 +23,28 @@ function Carousel({ products }) {
 
             <div className="carousel-inner" >
                 <div className="carousel-item active">
-                    <div className="row">
-                        <div className="col">
-                            <img src={products[0]?.imageUrl} className="object-cover d-block w-100" alt="..." />
+                    <div className="row g-0">
+                        <div className="col-8">
+                            <Link to={`./product/${products[0]?.id}`}>
+                                <img src={products[0]?.imageUrl} className="object-cover d-block w-100" alt="..." />
+                            </Link>
                         </div>
-                        <div className="col" style={{ backgroundColor: 'orange' }}>
-                            {products[0]?.title}
+                        <div className="col-4  bg-primary " >
+                            <div className="m-3">
+                                <Link
+                                    // className="m-3"
+                                    style={{
+                                        textDecoration: 'none',
+                                        color: 'black',
+                                        fontSize: '40px'
+                                    }}
+                                    to={`./product/${products[0]?.id}`}
+                                >
+                                    {products[0]?.title}
+                                </Link>
+                            </div>
                             <div className="row m-1" >
-                                {products[0]?.imagesUrl?.slice(0, 4).map((img,i) => {
+                                {products[0]?.imagesUrl?.slice(0, 4).map((img, i) => {
                                     return (
                                         <div className="col-6 g-3  " key={i}>
                                             <img src={img} alt=""
@@ -44,7 +58,10 @@ function Carousel({ products }) {
                                     )
                                 })}
                             </div>
-                            NT${products[0]?.price}
+                            <div className="mt-7  w-25 "
+                                style={{ textAlign: 'center' }}  >
+                                NT$ {products[0]?.price}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -53,15 +70,27 @@ function Carousel({ products }) {
                     return (
                         <div className="carousel-item " key={product?.id} >
                             <div className="row g-0">
-                                <div className="col-6">
-                                    <img src={product.imageUrl} className="object-cover d-block w-100" alt="..." />
+                                <div className="col-8">
+                                    <Link to={`./product/${product?.id}`}>
+                                        <img src={product.imageUrl} className="object-cover d-block w-100" alt="..." />
+                                    </Link>
                                 </div>
-                                <div className="col-6" style={{ backgroundColor: 'orange' }}>
-                                    <div>
-                                        {product.title}
+                                <div className="col-4" style={{ backgroundColor: 'orange' }}>
+                                    <div className="m-3">
+                                        <Link
+                                            style={{
+                                                textDecoration: 'none',
+                                                color: 'black',
+                                                fontSize: '40px'
+                                            }}
+                                            className="m-5"
+                                            to={`./product/${product?.id}`} >
+                                            {product.title}
+                                        </Link>
                                     </div>
+
                                     <div className="row m-1">
-                                        {product?.imagesUrl?.slice(0, 4).map((img,i) => {
+                                        {product?.imagesUrl?.slice(0, 4).map((img, i) => {
                                             return (
                                                 <div className="col-6 g-3    " key={i}>
                                                     <img src={img} alt=""
@@ -75,7 +104,7 @@ function Carousel({ products }) {
                                             )
                                         })}
                                     </div>
-                                    <div>
+                                    <div className="mt-7 ">
                                         NT$ {product.price}
                                     </div>
 

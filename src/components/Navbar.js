@@ -1,5 +1,4 @@
 import { NavLink, Link } from "react-router-dom";
-import axios from "axios";
 import { useState } from "react";
 import { useRef } from "react";
 
@@ -27,18 +26,28 @@ function Navbar({ cartData }) {
     return (
 
         <div className="bg-white sticky-top">
-            <div className="container">
-                <nav className="navbar px-0 navbar-expand-lg navbar-light bg-white">
-                    <NavLink
-                        className="navbar-brand position-absolute" to='/'
-                        style={{ left: "50%", transform: 'translate(-50%, -50%)', top: '50%', }}
-                    >
-                        卡斯柏的日式餐點
-                    </NavLink>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+            <div className="collapse" id="navbarToggleExternalContent">
+                <div className="bg-dark p-4">
+                    <h5 className="text-white h4">Collapsed content</h5>
+                    <span className="text-muted">Toggleable via the navbar brand.</span>
+                </div>
+            </div>
+            <nav className="navbar navbar-dark bg-dark">
+                <div className="container-fluid">
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className="collapse navbar-collapse bg-white custom-header-md-open" id="navbarNav">
+                </div>
+            </nav>
+            <div className="container">
+                <nav className="navbar px-0 navbar-expand-lg navbar-light bg-white ">
+                    <NavLink
+                        className="navbar-brand " to='/'
+                    >
+                        Home
+                    </NavLink>
+                    <div className="collapse navbar-collapse bg-white custom-header-md-open ms-5" id="navbarNav">
                         <ul className="navbar-nav">
                             <li className="nav-item active">
                                 <NavLink className="nav-link ps-0" to="/products">
@@ -46,6 +55,8 @@ function Navbar({ cartData }) {
                                 </NavLink>
                             </li>
                         </ul>
+                    </div>
+                    <div className="d-flex">
                         <form className="d-flex ms-5" role="search">
                             <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                                 onChange={search}
@@ -64,27 +75,58 @@ function Navbar({ cartData }) {
                             </span>
                         </NavLink>
                     </div>
-                    <div className="d-flex m-3">
-                        <NavLink to="/admin/products" className='btn btn-primary'>
-                            去後台
-                        </NavLink>
-                    </div>
-                    <div className="d-flex">
-                        {token !== 'hextoken=' ?
-                            (
-                                <NavLink to="/" className='nav-link position-relative'>
-                                    <button onClick={logout} className="btn btn-primary">登出</button>
-                                </NavLink>
-                            )
-                            : (
-                                <NavLink to="/login" className='nav-link position-relative'>
-                                    <button className="btn btn-danger">登入</button>
-                                </NavLink>
-                            )
-                        }
 
 
+                    <div class="btn-group me-5">
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul className="dropdown-menu " aria-labelledby="dropdownMenuButton1" 
+                        style={{
+                            color:'orange'
+                        }}
+                         >
+                            <li>
+                                <div className="d-flex  ">
+                                    <NavLink to="/admin/products"
+                                        className='nav-link  w-100 dropdown-item'
+                                        style={{
+                                            // color: 'black',
+                                            // textDecoration: "none"
+                                        }}
+                                    >
+                                        去後台
+                                    </NavLink>
+                                </div>
+                            </li>
+                            <li>
+                                <div className="d-flex">
+                                    {token !== 'hextoken=' ?
+                                        (
+                                            <button
+                                                onClick={logout}
+                                                className='nav-link   w-100 dropdown-item'>
+                                                登出
+                                            </button>
+                                        )
+                                        : (
+                                            <NavLink
+                                                to="/login" className='nav-link position-relative  w-100
+                                                dropdown-item'>
+                                                登入
+                                            </NavLink>
+                                        )
+                                    }
+                                </div>
+                            </li>
+                        </ul>
                     </div>
+
+
+
+
+
+
                 </nav>
             </div>
         </div>
