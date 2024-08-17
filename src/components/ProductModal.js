@@ -426,9 +426,10 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             placeholder='請輸入產品描述'
                                             className='form-control'
                                             onChange={handleChange}
-                                            value={tempData.description}
+                                            value={tempData.description.trim()}
                                         />
                                     </label>
+
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='content'>
@@ -441,6 +442,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             className='form-control'
                                             onChange={handleChange}
                                             value={tempData.content}
+                                            style={{height:'300px'}}
                                         />
                                     </label>
                                 </div>

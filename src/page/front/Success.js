@@ -18,10 +18,15 @@ function Success() {
     }, [orderId])
     return (
         <div className="container">
-            <div style={{
-                minHeight: "400px", backgroundImage: "url(https://images.unsplash.com/photo-1480399129128-2066acb5009e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80)",
-                backgroundPosition: "center center",
-            }}>
+            <div
+                className="object-cover "
+                style={{
+                    minHeight: "400px ",
+                    backgroundImage: "url(https://images.unsplash.com/photo-1521791136064-7986c2920216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MjExMzl8MHwxfHNlYXJjaHw2fHxoYW5kc2hha2V8ZW58MHx8fHwxNzIzNjU1NTU5fDA&ixlib=rb-4.0.3&q=80&w=1080)",
+                    backgroundPosition: "center center",
+                    backgroundRepeat:'no-repeat',
+                    backgroundSize:'cover'
+                }}>
             </div>
             <div className="mt-5 mb-7">
                 <div className="row">

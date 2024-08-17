@@ -13,6 +13,7 @@ import Checkout from "./page/front/Checkout";
 import Success from "./page/front/Success";
 import TestAPI from "./page/front/testAPI";
 import ScrollToTop from "./components/ScrollToTop";
+import NextTime from "./page/front/NextTime";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
+          <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>
           <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>
           <Route path="product/:id" element={<ProdeuctDetail></ProdeuctDetail>}></Route>

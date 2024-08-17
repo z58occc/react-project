@@ -3,74 +3,39 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 function TestAPI() {
-  const [tempData, setTempData] = useState({
-    title: "",
-    category: "",
-    origin_price: 100,
-    price: 300,
-    unit: "",
-    description: "",
-    content: "",
-    is_enabled: 1,
-    imageUrl: "",
-    imagesUrl: [
-      '',
-      '',
-      '',
-      '',
-      ''
-    ]
+  const api = 'https://api.unsplash.com/search/photos/';
+  const accessKey = 'Yo_kzLVGm0KQwhCmxu3UhDHNoL830EX5-z-7BUkhV2E';
+  const filterString='animal'
 
-  });
-  // setTempData({...tempData,imagesUrl:[
+  const [imgs,setImgs]=useState([]);
 
-  // ]}
 
-  // )
-  const getToken = async () => {
-    const TokenRes = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.REACT_APP_CLIENT_ID}&client_secret=${process.env.REACT_APP_CLIENT_SECRET}&grant_type=client_credentials`,);
-    // console.log(TokenRes);
-    // console.log(TokenRes.data.access_token);
-    // const getImg = async () => {
-    //   const ImgRes = await axios.post(`https://api.igdb.com/v4/games`, {
-    //     headers: {
-    //       "Client-ID": process.env.REACT_APP_CLIENT_ID,
-    //       "Authorization": `Bearer ${TokenRes.data.access_token}`,
-    //     },
-    //     "body": "fields *;"
-    //   }
-    //   )
-    //   console.log(ImgRes);
-    // }
-    fetch(
-      "https://api.igdb.com/v4/age_ratings",
-      {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          "Client-ID": process.env.REACT_APP_CLIENT_ID,
-          "Authorization": `Bearer ${TokenRes.data.access_token}`,
-        },
-        body: "fields category,checksum,content_descriptions,rating,rating_cover_url,synopsis;"
-      })
-      .then(response => {
-        console.log(response.json());
-      })
-      .catch(err => {
-        console.error(err);
-      });
-    // getImg();
+  
+  const getPhoto=async()=>{
+    const res=await axios.get(`https://api.unsplash.com/search/photos/?client_id=Yo_kzLVGm0KQwhCmxu3UhDHNoL830EX5-z-7BUkhV2E&query=handshake`)
+    console.log(res);
+    setImgs(res.data.results);
   }
+   
+  
 
 
 
   useEffect(() => {
-    getToken();
-
+    getPhoto();
   }, [])
 
   return (
-    <div>TestAPI</div>
+    <div>
+      <img src={imgs[5]?.urls?.regular} alt="" />
+      {imgs?.map((img)=>{
+        return(
+          <img src={img.urls.regular}
+          style={{width:'300px'}}
+          ></img>
+        )
+      })}
+    </div>
   )
 }
 

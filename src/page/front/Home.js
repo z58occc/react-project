@@ -38,13 +38,27 @@ function Home() {
 
             <div className="container">
                 <Loading isLoading={isLoading}></Loading>
+
+                <div className="d-flex me-5 "
+                style={{
+                    justifyContent:'flex-end'
+                }}
+                >
+                    <Link
+                        to='./nexttime'
+                        type="button"
+                        className="btn btn-primary "
+                    >
+                        下次再買
+                    </Link>
+                </div>
                 <div className="row flex-md-row-reverse flex-column m-5"
                     style={{
-                        
-                        backgroundColor:'black'
+                        backgroundColor: 'black'
                     }}
                 >
-                    <div className="col-md-6" >
+
+                    <div className="col-md-6">
                         <img
                             src="https://images.unsplash.com/photo-1527690789675-4ea7d8da4fe3?q=80&w=2892&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" className="img-fluid" />
                     </div>
