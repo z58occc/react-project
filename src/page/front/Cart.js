@@ -47,6 +47,27 @@ function Cart() {
 
         }
     }
+    const addFavorite = (item) => {
+        const{product,id}=item
+        console.log(product)
+        let alreadyExists = false;
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        for (let index = 0; index < favorites.length; index++) {
+            if (favorites[index].id == product.id) {
+                alreadyExists = true;
+                break;
+            }
+        }
+        if (!alreadyExists) {
+            favorites.push(product);
+        }
+
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        removeCartItem(id)
+        
+
+
+    }
 
 
     return (
@@ -59,9 +80,11 @@ function Cart() {
                     {cartData?.carts?.map((item) => {
                         return (
                             <div className="d-flex mt-4 bg-light" key={item.id}>
-                                <img
-                                    className="object-cover"
-                                    src={item.product.imageUrl} alt="" style={{ width: "120px", }} />
+                                <div>
+                                    <img
+                                        className="object-cover"
+                                        src={item.product.imageUrl} alt="" style={{ width: "100px", height: '120px' }} />
+                                </div>
                                 <div className="w-100 p-3 position-relative ">
                                     <button
                                         type="button"
@@ -89,7 +112,18 @@ function Cart() {
                                             }
                                         </select>
                                     </div>
-                                    <p style={{float:'right'}} className="mb-0 ms-auto">NT$ {item.final_total}</p>
+                                    <p style={{ float: 'right' }} className="mb-0 ms-auto mt-3">NT$ {item.final_total}</p>
+                                    <p style={{
+                                        float: 'left',
+                                        fontSize: '12px',
+                                        textDecoration: 'underline',
+                                        cursor: 'pointer'
+                                    }}
+                                        className="mb-0 ms-auto mt-3 text-secondary"
+                                        onClick={() => addFavorite(item)}
+                                    >
+                                        放回下次再買
+                                    </p>
                                 </div>
                             </div>
                         )

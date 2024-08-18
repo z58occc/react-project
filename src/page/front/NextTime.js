@@ -3,7 +3,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
 import { useOutletContext } from "react-router-dom";
-import { type } from "@testing-library/user-event/dist/type";
 
 function NextTime() {
     const [myFavorites, setMyFavorites] = useState([]);
@@ -12,6 +11,9 @@ function NextTime() {
     const dispatch = useDispatch();
     const { getCart } = useOutletContext();
     const checked = useRef([]);
+    const allChoose = useRef();
+    const [disabled, setDisabled] = useState(false);
+
 
 
 
@@ -37,14 +39,29 @@ function NextTime() {
             console.log(error)
             setIsLoadingCart(false);
             dispatch(createAsyncMessage(error.response.data));
-
-
         }
 
     }
-    const clearFavorite = async () => {
-        localStorage.clear();
+
+    const addToCartAll = async () => {
+        for (let index = checked.current.length - 1; index >= 0; index--) {
+            if (checked?.current[index]?.checked) {
+                await addToCart(myFavorites[index]);
+            }
+        }
+        const remain = myFavorites.filter((_, index) => !checked?.current[index]?.checked);
+        setMyFavorites(remain);
+        localStorage.setItem('favorites', JSON.stringify(remain));
+
+
     }
+
+    const deleteFavoriteAll = () => {
+        const remain = myFavorites.filter((_, index) => !checked?.current[index]?.checked);
+        setMyFavorites(remain);
+        localStorage.setItem('favorites', JSON.stringify(remain));
+    }
+
     const deleteFavorite = (id) => {
 
         const filterFavorites = myFavorites.filter((item) => item.id != id);
@@ -56,6 +73,7 @@ function NextTime() {
 
     }
     const hadleChange = (e) => {
+        setDisabled(allChoose.current.checked);
         if (e.target.checked) {
             for (let index = 0; index < checked.current.length; index++) {
                 checked.current[index].checked = true;
@@ -69,27 +87,65 @@ function NextTime() {
     useEffect(() => {
         const favorites = JSON.parse(localStorage.getItem('favorites'))
         setMyFavorites(favorites);
-
     }, [])
 
 
     return (
         <div className="container vh-100">
             <div >
-                    <input type="checkbox"
-                        onChange={hadleChange}
-                    />
-                    <label htmlFor="" className="me-5">全選</label>
-                    <button type="button"
-                        className="btn btn-secondary me-5"
+                <input type="checkbox"
+                    onChange={hadleChange}
+                    className="ms-2"
+                    id='all'
+                    ref={allChoose}
+                />
+                <label htmlFor="all" className="me-5">全選</label>
+                <span
+                    style={{
+                        cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
+                        display: 'inline-block',
+                        width: '100px',
+                    }}
+                    className="me-5"
+                >
+                    <button
+                        className={`btn  p-0 w-100 rounded    ${(allChoose?.current?.checked||checked.current.some((item)=>item.checked)) ? '' : 'disabled'}`}
+                        onClick={addToCartAll}
+                        style={{
+                            cursor: `${allChoose?.current?.checked ? '' : 'not-allowed'}`,
+                            backgroundColor: 'lightgray',
+                            fontSize: '15px',
+                        }}
                     >
+                        <i
+                            className="bi bi-cart4"
+                        ></i>
                         放入購物車
                     </button>
-                    <button type="button"
-                        className="btn btn-secondary "
+                </span>
+                <span
+                    style={{
+                        cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
+                        display: 'inline-block',
+                        width: '80px',
+                    }}
+                >
+                    <button
+                        className={`btn   p-0 w-100 rounded ${allChoose?.current?.checked ? '' : 'disabled'} `}
+                        onClick={deleteFavoriteAll}
+                        style={{
+                            cursor: 'pointer',
+                            backgroundColor: 'lightgray',
+                            fontSize: '15px',
+                            padding: '5px'
+                        }}
                     >
+                        <i
+                            className="bi bi-trash"
+                        ></i>
                         刪除商品
                     </button>
+                </span>
             </div>
             {
                 localStorage.getItem('favorites') == null
