@@ -4,6 +4,7 @@ import { useOutletContext, useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
 import Loading from "../../components/Loading";
+import moment from "moment";
 
 
 function ProdeuctDetail() {
@@ -49,6 +50,9 @@ function ProdeuctDetail() {
 
     }
     const addFavorite = (product) => {
+        const createTime = new Date();
+        const momentTime = moment(createTime).unix();
+        console.log(momentTime);
         let alreadyExists = false;
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         for (let index = 0; index < favorites.length; index++) {
@@ -58,8 +62,10 @@ function ProdeuctDetail() {
             }
         }
         if (!alreadyExists) {
+            product.create_at=momentTime;
             favorites.push(product);
         }
+        
         localStorage.setItem('favorites', JSON.stringify(favorites));
 
 
@@ -67,6 +73,7 @@ function ProdeuctDetail() {
 
 
     useEffect(() => {
+        console.log(localStorage.getItem('favorites'))
         getProduct(id);
     }, [id])
 
@@ -132,21 +139,32 @@ function ProdeuctDetail() {
                                         </button>
                                     </div>
                                 </div>
-                                <button
-                                    type="button"
-                                    href="./checkout.html" className="btn btn-dark w-100 rounded-0 py-3"
-                                    onClick={() => addToCart()}
-                                    disabled={isLoadingCart}
-                                >
-                                    加入購物車
-                                </button>
-                                <i className="bi bi-heart-fill"
+                                <div className="d-flex  flex-column"
                                     style={{
-                                        color: 'red',
-                                        fontSize: '40px'
-                                    }}
-                                    onClick={() => addFavorite(product)}
-                                ></i>
+                                        justifyItems: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary w-100 rounded-0 py-3"
+                                        onClick={() => addToCart()}
+                                        disabled={isLoadingCart}
+                                        style={{
+                                            fontSize: "25px"
+                                        }}
+                                    >
+                                        加入購物車
+                                    </button>
+                                    <button
+                                        className="btn btn-secondary mt-1 p-3"
+                                        onClick={() => addFavorite(product)}
+                                        style={{
+                                            fontSize: '15px',
+                                        }}
+                                    >
+                                        加入下次再買清單
+                                    </button>
+                                </div>
                             </div>
                         </div>
 

@@ -13,6 +13,7 @@ function NextTime() {
     const checked = useRef([]);
     const allChoose = useRef();
     const [disabled, setDisabled] = useState(false);
+    
 
 
 
@@ -84,6 +85,25 @@ function NextTime() {
             }
         }
     }
+    let sortFavorites;
+    const handleSort = (sort) => {
+        switch (sort) {
+
+            case '1':
+                console.log(1);
+                sortFavorites = [...myFavorites].sort((a, b) => a.create_at - b.create_at);
+                break;
+            case '2':
+                console.log(2); 
+                sortFavorites = [...myFavorites].sort((a, b) => b.create_at - a.create_at);
+                break;
+
+            default:
+                break;
+        }
+        console.log(sortFavorites);
+        setMyFavorites(sortFavorites);
+    }
     useEffect(() => {
         const favorites = JSON.parse(localStorage.getItem('favorites'))
         setMyFavorites(favorites);
@@ -109,7 +129,7 @@ function NextTime() {
                     className="me-5"
                 >
                     <button
-                        className={`btn  p-0 w-100 rounded    ${(allChoose?.current?.checked||checked.current.some((item)=>item.checked)) ? '' : 'disabled'}`}
+                        className={`btn  p-0 w-100 rounded    ${(allChoose?.current?.checked || checked.current.some((item) => item.checked)) ? '' : 'disabled'}`}
                         onClick={addToCartAll}
                         style={{
                             cursor: `${allChoose?.current?.checked ? '' : 'not-allowed'}`,
@@ -145,6 +165,23 @@ function NextTime() {
                         ></i>
                         刪除商品
                     </button>
+                </span>
+                <span className="dropdown float-end me-7">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown button
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li>
+                            <span className="dropdown-item"
+                                onClick={() => handleSort('2')}
+                            >加入時間後⭢先
+                            </span>
+                        </li>
+                        <li><span className="dropdown-item"
+                            onClick={() => handleSort('1')}
+                        >加入時間先⭢後</span></li>
+                        <li><span className="dropdown-item" >Something else here</span></li>
+                    </ul>
                 </span>
             </div>
             {
