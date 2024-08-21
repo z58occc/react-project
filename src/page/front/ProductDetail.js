@@ -52,7 +52,6 @@ function ProdeuctDetail() {
     const addFavorite = (product) => {
         const createTime = new Date();
         const momentTime = moment(createTime).unix();
-        console.log(momentTime);
         let alreadyExists = false;
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         for (let index = 0; index < favorites.length; index++) {

@@ -30,14 +30,15 @@ function Products() {
 
     const hadleChangeType = async (e) => {
         setLoading(true);
-        const { innerText } = e.target;
-        const category = innerText;
+
+        const { htmlFor } = e.target;
+        const category = htmlFor;
         const typeRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?category=${category}`);
         console.log(typeRes.data.products);
         setProducts(typeRes.data.products);
         setLoading(false);
     }
-    
+
 
     useEffect(() => {
         if (searchWord) {
@@ -54,18 +55,22 @@ function Products() {
                 <label className="btn btn-outline-primary" htmlFor="btnradio1"
                     onClick={getProducts}
                 >全部</label>
-                <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off"  />
-                <label className="btn btn-outline-primary" htmlFor="btnradio2"
+                <input type="radio" className="btn-check" name="btnradio" id="gameConsole" autoComplete="off" />
+                <label className="btn btn-outline-primary" htmlFor="gameConsole"
                     onClick={hadleChangeType}
-                >遊戲主機及控制器</label>
+                >遊戲主機</label>
+                <input type="radio" className="btn-check" name="btnradio" id="controller" autoComplete="off" />
+                <label className="btn btn-outline-primary" htmlFor="controller"
+                    onClick={hadleChangeType}
+                >遊戲手把</label>
 
-                <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autoComplete="off" />
-                <label className="btn btn-outline-primary" htmlFor="btnradio3"
+                <input type="radio" className="btn-check" name="btnradio" id="apple" autoComplete="off" />
+                <label className="btn btn-outline-primary" htmlFor="apple"
                     onClick={hadleChangeType}
                 >蘋果</label>
 
-                <input type="radio" className="btn-check" name="btnradio" id="btnradio4" autoComplete="off" />
-                <label className="btn btn-outline-primary" htmlFor="btnradio4"
+                <input type="radio" className="btn-check" name="btnradio" id="others" autoComplete="off" />
+                <label className="btn btn-outline-primary" htmlFor="others"
                     onClick={hadleChangeType}
                 >其他</label>
             </div>
@@ -79,7 +84,7 @@ function Products() {
                                     src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
 
                                 <div className="card-body p-0">
-                                    <h4 className="mb-0 mt-2 text-center"><Link style={{textDecoration:'none'}} to={`/product/${product.id}`}>{product.title}</Link></h4>
+                                    <h4 className="mb-0 mt-2 text-center"><Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>{product.title}</Link></h4>
                                 </div>
 
                             </div>
