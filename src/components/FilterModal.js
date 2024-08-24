@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import moment from "moment";
+import { useState } from "react";
 
-function FilterModal({ closeFilterModal, setMyFavorites, myFavorites }) {
+function FilterModal({ closeFilterModal, setMyFavorites }) {
     const favorites = JSON.parse(localStorage.getItem('favorites'))
+    const [timeOption, setTimeOption] = useState('');
     const [typeState, setTypeState] = useState({
         alltype: true,
         apple: false,
@@ -11,115 +11,77 @@ function FilterModal({ closeFilterModal, setMyFavorites, myFavorites }) {
         others: false
     })
 
-    const [timeState, setTimeState] = useState({
-        alltime: {
-            status: true,
-            timeRange: {
-                start: 0
-            }
-        },
-        one_month: {
-            status: false,
-            timeRange: {
-                start: 0,
-                end: 86400 * 30
-            }
-        },
-        three_month: {
-            status: false,
-            timeRange: {
-                start: 86400 * 30,
-                end: 86400 * 30 * 3
-            }
-        },
-        half_year: {
-            status: false,
-            timeRange: {
-                start: 86400 * 30 * 3,
-                end: 86400 * 30 * 6
-            }
-        },
-        one_year: {
-            status: false,
-            timeRange: {
-                start: 86400 * 30 * 6,
-                end: 86400 * 30 * 12
-            }
-        },
-        over_one_year: {
-            status: false,
-            timeRange: {
-                start: 86400 * 30 * 12
-            }
-        },
-    })
-    const handleTime = (e) => {
-        const { id, checked } = e.target
-        if (id == 'alltime' && checked) {
-            setTimeState({
-                alltime: {
-                    ...timeState['alltime'],
-                    status: true
-                },
-                one_month: {
-                    ...timeState['one_month'],
-                    status: false
-                },
-                three_month: {
-                    ...timeState['three_month'],
-                    status: false
-                },
-                half_year: {
-                    ...timeState['half_year'],
-                    status: false
-                },
-                one_year: {
-                    ...timeState['one_year'],
-                    status: false
-                },
-                over_one_year: {
-                    ...timeState['over_one_year'],
-                    status: false
-                },
+    const timeRange = {
 
-            })
-        } else {
-            setTimeState({
-                ...timeState,
-                alltime: {
-                    ...timeState['alltime'],
-                    status: false
-                },
-                [id]: {
-                    ...timeState[id],
-                    status: checked
-                }
-            })
+        one_month:
+        {
+            start: 0,
+            end: 86400 * 30
         }
 
+        ,
+        three_month:
+        {
+            start: 86400 * 30,
+            end: 86400 * 30 * 3
+        }
+        ,
+        half_year:
+        {
+            start: 86400 * 30 * 3,
+            end: 86400 * 30 * 6
+        }
+        ,
+        one_year:
+        {
+            start: 86400 * 30 * 6,
+            end: 86400 * 30 * 12
+        }
+        ,
     }
-    const filerTime = () => {
-        const filterTimeArr = favorites.filter(favorite => {
-            const currentTime = Math.floor(Date.now() / 1000); // 当前时间的 Unix 时间戳
+    const handleTime = (e) => {
+        const { id } = e.target;
+        setTimeOption(id);
+    }
+    let filterTimeArr;
+    const filerTime = (filterArr) => {
+        const currentTime = Math.floor(Date.now() / 1000); // 当前时间的 Unix 时间戳
+        if (timeOption == 'alltime') {
+            filterTimeArr = filterArr;
+        } else {
+            let timeRangeOption;
+            switch (timeOption) {
+                case 'one_month':
+                    timeRangeOption = timeRange.one_month;
+                    break;
+                case 'three_month':
+                    timeRangeOption = timeRange.three_month;
 
-            return Object.keys(timeState).some(key => {
-                const { status, timeRange } = timeState[key];
-                const { start, end } = timeRange
-                if (status) {
-                    if (key === 'over_one_year') {
-                        return (currentTime - favorite.create_at) > start;
-                    }
-                    else {
-                        return (currentTime - favorite.create_at) >= start && (currentTime - favorite.create_at) < end;
-                    }
-                }
+                    break;
+                case 'half_year':
+                    timeRangeOption = timeRange.half_year;
 
-                return false;
+                    break;
+                case 'one_year':
+                    timeRangeOption = timeRange.one_year;
+
+                    break;
+                case 'over_one_year':
+                    filterTimeArr = filterArr.filter((item) => (currentTime - item.create_at) > timeRange.one_year.end);
+                    setMyFavorites(filterTimeArr);
+                    return;
+
+                default:
+                    filterTimeArr = filterArr;
+                    setMyFavorites(filterTimeArr);
+                    return;
+            }
+            filterTimeArr = filterArr.filter((item) => {
+                const timeDifference = currentTime - item.create_at;
+                return timeDifference > timeRangeOption.start && timeDifference < timeRangeOption.end;
             });
-        });
-        console.log(filterTimeArr)
+        }
         setMyFavorites(filterTimeArr);
-
     }
 
 
@@ -137,7 +99,6 @@ function FilterModal({ closeFilterModal, setMyFavorites, myFavorites }) {
                 controller: false,
                 others: false
             })
-            // return;
         } else {
             setTypeState({
                 ...typeState,
@@ -146,18 +107,17 @@ function FilterModal({ closeFilterModal, setMyFavorites, myFavorites }) {
             })
         }
     }
+    let filterArr;
     const filterFavorite = () => {
         if (typeState.alltype) {
+            filterArr = favorites;
             setMyFavorites(favorites);
         } else {
-            const filteArr = favorites.filter(favorite => typeState[favorite.category]);
-            setMyFavorites(filteArr);
+            filterArr = favorites.filter(favorite => typeState[favorite.category]);
+            setMyFavorites(filterArr);
         }
-        if (timeState.alltime.status) {
-            closeFilterModal();
-            return
-        }
-        filerTime();
+        console.log(filterArr);
+        filerTime(filterArr)
         closeFilterModal();
     }
     const reset = () => {
@@ -168,6 +128,7 @@ function FilterModal({ closeFilterModal, setMyFavorites, myFavorites }) {
             controller: false,
             others: false
         })
+        setTimeOption('');
     }
 
 
@@ -241,44 +202,38 @@ function FilterModal({ closeFilterModal, setMyFavorites, myFavorites }) {
                                     padding: '0px'
                                 }}>
                                 <li className="option">
-                                    <input type="checkbox" id='alltime'
-                                        checked={timeState.alltime.status}
+                                    <input type="radio" name='time' id='alltime'
                                         onChange={(e) => handleTime(e)}
+                                        checked={timeOption == 'alltime' || timeOption == ''}
                                     />
                                     <label htmlFor="alltime">全部</label>
                                 </li>
                                 <li className="option">
-                                    <input type="checkbox" id='one_month'
-                                        checked={timeState.one_month.status}
+                                    <input type="radio" name='time' id='one_month'
                                         onChange={(e) => handleTime(e)}
                                     />
                                     <label htmlFor="one_month">一個月內</label>
                                 </li>
                                 <li className="option">
-                                    <input type="checkbox" id='three_month'
-                                        checked={timeState.three_month.status}
+                                    <input type="radio" name='time' id='three_month'
                                         onChange={(e) => handleTime(e)}
-
                                     />
                                     <label htmlFor="three_month">三個月內</label>
                                 </li>
                                 <li className="option">
-                                    <input type="checkbox" id='half_year'
-                                        checked={timeState.half_year.status}
+                                    <input type="radio" name='time' id='half_year'
                                         onChange={(e) => handleTime(e)}
                                     />
                                     <label htmlFor="half_year">六個月內</label>
                                 </li>
                                 <li className="option">
-                                    <input type="checkbox" id='one_year'
-                                        checked={timeState.one_year.status}
+                                    <input type="radio" name='time' id='one_year'
                                         onChange={(e) => handleTime(e)}
                                     />
                                     <label htmlFor="one_year">一年內</label>
                                 </li>
                                 <li className="option">
-                                    <input type="checkbox" id='over_one_year'
-                                        checked={timeState.over_one_year.status}
+                                    <input type="radio" name='time' id='over_one_year'
                                         onChange={(e) => handleTime(e)}
                                     />
                                     <label htmlFor="over_one_year">超過一年</label>
