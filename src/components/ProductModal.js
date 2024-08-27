@@ -442,7 +442,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             className='form-control'
                                             onChange={handleChange}
                                             value={tempData.content}
-                                            style={{height:'300px'}}
+                                            style={{ height: '300px' }}
                                         />
                                     </label>
                                 </div>
@@ -465,19 +465,20 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                         </label>
                                     </div>
                                 </div>
+                                <div className='modal-footer mt-5'>
+                                    <button type='button' className='btn btn-secondary'
+                                        onClick={closeProductModal}>
+                                        關閉
+                                    </button>
+                                    <button type='button' className='btn btn-primary'
+                                        onClick={submit}>
+                                        儲存
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className='modal-footer'>
-                        <button type='button' className='btn btn-secondary'
-                            onClick={closeProductModal}>
-                            關閉
-                        </button>
-                        <button type='button' className='btn btn-primary'
-                            onClick={submit}>
-                            儲存
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>

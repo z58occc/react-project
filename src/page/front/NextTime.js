@@ -44,7 +44,9 @@ function NextTime() {
             setIsLoadingCart(false);
             dispatch(createAsyncMessage(error.response.data));
         }
-
+        const remain = myFavorites.filter((item) => item.id != myFavorite.id);
+        setMyFavorites(remain);
+        localStorage.setItem('favorites', JSON.stringify(remain));
     }
 
     const addToCartAll = async () => {
@@ -89,6 +91,14 @@ function NextTime() {
         }
     }
 
+    const handleDisabled = () => {
+        if (checked.current.some((item) => item.checked)) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
 
     let sortFavorites;
     const handleSort = (e) => {
@@ -123,19 +133,15 @@ function NextTime() {
     const closeFilterModal = () => {
         filterModal.current.hide();
     }
-    const defaultSort=()=>{
-        //一開始先讓他跑一個排序 之後再想要怎麼處理
-        
-    }
+
 
     useEffect(() => {
-        
         filterModal.current = new Modal('#filterModal');
         const favorites = JSON.parse(localStorage.getItem('favorites'))
         sortFavorites = [...favorites].sort((a, b) => a.create_at - b.create_at);
         setMyFavorites(sortFavorites);
 
-        
+
     }, [])
 
 
@@ -148,26 +154,29 @@ function NextTime() {
             ></FilterModal>
             <div className="ms-10 me-10 mt-5">
                 <div >
-                    <input type="checkbox"
-                        onChange={hadleChange}
-                        className="ms-2"
-                        id='all'
-                        ref={allChoose}
-                    />
-                    <label htmlFor="all" className="me-5">全選</label>
+                    <span className="float-start">
+                        <input type="checkbox"
+                            onChange={hadleChange}
+                            className="ms-2 "
+                            id='all'
+                            ref={allChoose}
+                        />
+                        <label htmlFor="all" className="me-5 ">全選</label>
+                    </span>
                     <span
                         style={{
-                            cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
+                            // cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
                             display: 'inline-block',
                             width: '100px',
+                            cursor: `${disabled ? '' : 'not-allowed'}`,
+
                         }}
-                        className="me-5"
+                        className="me-5 "
                     >
                         <button
-                            className={`btn  p-0 w-100 rounded`}
+                            className={`btn  float-start p-0 w-100 rounded ${disabled ? '' : 'disabled'}`}
                             onClick={addToCartAll}
                             style={{
-                                cursor: `${allChoose?.current?.checked ? '' : 'not-allowed'}`,
                                 backgroundColor: 'lightgray',
                                 fontSize: '15px',
                             }}
@@ -186,7 +195,7 @@ function NextTime() {
                         }}
                     >
                         <button
-                            className={`btn   p-0 w-100 rounded ${allChoose?.current?.checked ? '' : 'disabled'} `}
+                            className={`btn float-start  p-0 w-100 rounded ${disabled ? '' : 'disabled'} `}
                             onClick={deleteFavoriteAll}
                             style={{
                                 cursor: 'pointer',
@@ -201,21 +210,23 @@ function NextTime() {
                             刪除商品
                         </button>
                     </span>
-                    <button className="btn btn-secondary float-end "
+                    <button className="mybtn btn float-end"
                         onClick={openFilterModal}
+                        style={{
+                            cursor: 'pointer',
+                        }}
 
                     >
+                        <i className="bi bi-filter"></i>
                         篩選
                     </button>
                     <select className="form-select  me-7 float-end" aria-label="Default select example"
                         onChange={(e) => handleSort(e)}
                         style={{
-                            width: '200px'
+                            width: '200px',
+                            fontSize: '15px'
                         }}
                     >
-                        <option defaultValue disabled>
-                            加入時間（先⭢後）
-                        </option>
                         <option value="1"
                             className="dropdown-item"
                         >
@@ -262,6 +273,7 @@ function NextTime() {
                                             <th scope="row">
                                                 <input type="checkbox"
                                                     ref={(e) => checked.current[i] = e}
+                                                    onChange={handleDisabled}
                                                 />
                                             </th>
                                             <td >

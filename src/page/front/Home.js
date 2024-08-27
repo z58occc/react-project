@@ -40,17 +40,11 @@ function Home() {
                 <Loading isLoading={isLoading}></Loading>
 
                 <div className="d-flex me-5 "
-                style={{
-                    justifyContent:'flex-end'
-                }}
+                    style={{
+                        justifyContent: 'flex-end'
+                    }}
                 >
-                    <Link
-                        to='./nexttime'
-                        type="button"
-                        className="btn btn-primary "
-                    >
-                        下次再買
-                    </Link>
+                    
                 </div>
                 <div className="row flex-md-row-reverse flex-column m-5"
                     style={{
@@ -73,7 +67,8 @@ function Home() {
                                     ref={mySearch}
                                 />
                                 <Link to={`/products/${searchWord}`} className="btn btn-outline-primary flex-shrink-0" type="submit"
-                                >搜尋</Link>
+                                >搜尋
+                                </Link>
                             </div>
                         </div>
                     </div>

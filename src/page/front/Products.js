@@ -79,13 +79,17 @@ function Products() {
                     return (
                         <div key={product.id} className="col-md-3">
                             <div className="card border-0 mb-4 position-relative position-relative">
-                                <img
-                                    height={300}
-                                    src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
+                                <Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>
+                                    <img
+                                        height={300}
+                                        src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
 
-                                <div className="card-body p-0">
-                                    <h4 className="mb-0 mt-2 text-center"><Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>{product.title}</Link></h4>
-                                </div>
+                                    <div className="card-body p-0">
+                                        <h4 className="mb-0 mt-2 text-center">
+                                            {product.title}
+                                        </h4>
+                                    </div>
+                                </Link>
 
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
@@ -48,7 +48,7 @@ function Cart() {
         }
     }
     const addFavorite = (item) => {
-        const{product,id}=item
+        const { product, id } = item
         console.log(product)
         let alreadyExists = false;
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -64,10 +64,9 @@ function Cart() {
 
         localStorage.setItem('favorites', JSON.stringify(favorites));
         removeCartItem(id)
-        
-
-
     }
+
+
 
 
     return (
@@ -77,6 +76,12 @@ function Cart() {
                     <div className="d-flex justify-content-between">
                         <h2 className="mt-2"> 您的商品</h2>
                     </div>
+                    {cartData?.carts?.length == 0
+                        ?
+                        '無商品資料'
+                        :
+                        <></>
+                    }
                     {cartData?.carts?.map((item) => {
                         return (
                             <div className="d-flex mt-4 bg-light" key={item.id}>
@@ -128,12 +133,12 @@ function Cart() {
                             </div>
                         )
                     })}
-
                     <div className="d-flex justify-content-between mt-4">
                         <p className="mb-0 h4 fw-bold"> 總金額</p>
                         <p className="mb-0 h4 fw-bold">NT$ {cartData.final_total}</p>
                     </div>
-                    <NavLink to="./checkout" className="btn btn-dark w-100 mt-4 rounded-0 py-3">確認商品正確</NavLink>
+                    <NavLink to="./checkout" className={`${cartData?.carts?.length == 0 ? 'disabled' : ''} btn btn-dark w-100 mt-4 rounded-0 py-3`}>確認商品正確</NavLink>
+
                 </div>
             </div>
         </div>

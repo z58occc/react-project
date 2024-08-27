@@ -14,14 +14,30 @@ function ProdeuctDetail() {
     const [isLoadingCart, setIsLoadingCart] = useState(false);
     const [isLoading, setLoading] = useState(false);
     const { getCart } = useOutletContext();
+    const [alreadyExists, setAlreadyExists] = useState(false)
     const dispatch = useDispatch();
-    const [favorite, setFavorite] = useState({});
+    const [sameProducts, setSameProducts] = useState([]);
 
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const getProduct = async (id) => {
         setLoading(true);
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/product/${id}`);
         setProducts(productRes.data.product);
         setLoading(false);
+        for (let index = 0; index < favorites.length; index++) {
+            if (favorites[index].id == productRes.data.product.id) {
+                console.log(1);
+                setAlreadyExists(true);
+                break;
+            }
+        }
+        const productAllRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products/all`)
+        const similarArr = productAllRes.data.products
+            .filter((item) => item.category == productRes.data.product.category)
+            .filter((item) => item.id != productRes.data.product.id);
+
+        console.log(similarArr);
+        setSameProducts(similarArr);
     };
 
     const addToCart = async () => {
@@ -52,29 +68,25 @@ function ProdeuctDetail() {
     const addFavorite = (product) => {
         const createTime = new Date();
         const momentTime = moment(createTime).unix();
-        let alreadyExists = false;
-        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        for (let index = 0; index < favorites.length; index++) {
-            if (favorites[index].id == product.id) {
-                alreadyExists = true;
-                break;
-            }
-        }
+        dispatch(createAsyncMessage({
+            success: true,
+            type: 'success',
+            title: "成功",
+            message: '已加入下次再買清單'
+        }));
         if (!alreadyExists) {
-            product.create_at=momentTime;
+            product.create_at = momentTime;
             favorites.push(product);
         }
-        
         localStorage.setItem('favorites', JSON.stringify(favorites));
-
-
+        setAlreadyExists(true);
     }
 
 
+
     useEffect(() => {
-        console.log(localStorage.getItem('favorites'))
         getProduct(id);
-    }, [id])
+    }, [id, alreadyExists])
 
     return (
         <>
@@ -154,8 +166,9 @@ function ProdeuctDetail() {
                                     >
                                         加入購物車
                                     </button>
+
                                     <button
-                                        className="btn btn-secondary mt-1 p-3"
+                                        className='btn btn-secondary mt-1 p-3'
                                         onClick={() => addFavorite(product)}
                                         style={{
                                             fontSize: '15px',
@@ -186,10 +199,41 @@ function ProdeuctDetail() {
                                         style={{ whiteSpace: 'pre-wrap' }}
                                     >
                                         {`${product.content}`}
+                                        <div className="text-primary mb-1 mt-5">
+                                            <b>
+                                                你可能會有興趣的同類商品
+                                            </b>
+                                        </div>
+                                        <div className="row
+                            border border-bottom-0 border-top border-start-0 border-end-0">
+                                            {sameProducts?.map((product) => {
+                                                return (
+                                                    <div key={product.id} className="col-md-3 mt-3">
+                                                        <div className="card border-0 mb-4  position-relative position-relative">
+                                                            <Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>
+                                                                <img
+                                                                    height={150}
+                                                                    src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
+
+                                                                <div className="card-body p-0">
+                                                                    <h4 className="mb-0 mt-2 text-center">
+
+                                                                        {product.title}
+                                                                    </h4>
+                                                                </div>
+                                                            </Link>
+
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+
                                     </div>
 
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

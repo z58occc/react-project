@@ -57,24 +57,29 @@ function Navbar({ cartData }) {
                         </ul>
                     </div>
                     <div className="d-flex">
-                        <NavLink to="/cart" className='nav-link position-relative m-5'>
+                        <NavLink to="/cart" className={'nav-link position-relative m-5'}>
                             <i className="bi bi-cart-x-fill"></i>
                             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                 {cartData?.carts?.length}
                             </span>
                         </NavLink>
+                        <Link
+                            to='./nexttime'
+                            className="mt-5 mb-5 btn btn-primary"
+                        >
+                            下次再買
+                        </Link>
                     </div>
 
 
-                    <div className="btn-group me-7">
-                        <button type="button" className="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span className="visually-hidden">Toggle Dropdown</span>
+                    <div className="btn-group ">
+                        <button type="button" className="ms-3 btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                         </button>
-                        <ul className="dropdown-menu " aria-labelledby="dropdownMenuButton1" 
-                        style={{
-                            color:'orange'
-                        }}
-                         >
+                        <ul className="dropdown-menu " aria-labelledby="dropdownMenuButton1"
+                            style={{
+                                color: 'orange'
+                            }}
+                        >
                             <li>
                                 <div className="d-flex  ">
                                     <NavLink to="/admin/products"
