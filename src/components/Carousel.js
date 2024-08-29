@@ -1,6 +1,43 @@
 import { Link } from "react-router-dom"
-
+import { useEffect, useRef } from "react"
 function Carousel({ products }) {
+    const imgRef = useRef(null);
+    const otherImgRef = useRef([]);
+    const oldImg = imgRef?.current?.src
+    const otherOldImg = otherImgRef?.current?.map((img) => {
+        return (
+            img.src
+        )
+    })
+
+    const changeImg = (e) => {
+        const { src, name } = e.target;
+        if (name) {
+            for (let index = 0; index < otherImgRef.current.length; index++) {
+                if (otherImgRef.current[index].id == name) {
+                    otherImgRef.current[index].src = src;
+                }
+            }
+
+        } else {
+            imgRef.current.src = src;
+        }
+
+    }
+    const oriImg = (e) => {
+        const { name } = e.target;
+        if (name) {
+            for (let index = 0; index < otherImgRef.current.length; index++) {
+                if (otherImgRef.current[index].id == name) {
+                    otherImgRef.current[index].src = otherOldImg[index];
+                }
+            }
+        } else {
+            imgRef.current.src = oldImg
+        }
+    }
+
+
     return (
 
 
@@ -22,11 +59,14 @@ function Carousel({ products }) {
             </div>
 
             <div className="carousel-inner" >
+                {/* 第一頁 */}
                 <div className="carousel-item active">
                     <div className="row g-0">
                         <div className="col-8">
                             <Link to={`./product/${products[0]?.id}`}>
-                                <img src={products[0]?.imageUrl} className="object-cover d-block w-100" alt="..." />
+                                <img
+                                    ref={imgRef}
+                                    src={products[0]?.imageUrl} className="object-cover d-block w-100" alt="..." />
                             </Link>
                         </div>
                         <div className="col-4  bg-primary " >
@@ -45,13 +85,16 @@ function Carousel({ products }) {
                             <div className="row m-1" >
                                 {products[0]?.imagesUrl?.slice(0, 4).map((img, i) => {
                                     return (
-                                        <div className="col-6 g-3  " key={i}>
+                                        <div className="col-6 g-3  " key={i} >
                                             <img src={img} alt=""
                                                 style={{
                                                     height: "100px",
                                                     width: "100%"
                                                 }}
-                                                className="object-cover" />
+                                                className="object-cover"
+                                                onMouseOver={(e) => changeImg(e)}
+                                                onMouseOut={(e) => oriImg(e)}
+                                            />
                                         </div>
 
                                     )
@@ -65,13 +108,17 @@ function Carousel({ products }) {
                     </div>
                 </div>
 
+                {/* 其他頁 */}
                 {products?.slice(1, products.length).map((product, i) => {
                     return (
                         <div className="carousel-item " key={product?.id} >
                             <div className="row g-0">
                                 <div className="col-8">
                                     <Link to={`./product/${product?.id}`}>
-                                        <img src={product.imageUrl} className="object-cover d-block w-100" alt="..." />
+                                        <img src={product.imageUrl} className="object-cover d-block w-100" alt="..."
+                                            ref={(e) => otherImgRef.current[i] = e}
+                                            id={product?.id}
+                                        />
                                     </Link>
                                 </div>
                                 <div className="col-4" style={{ backgroundColor: 'orange' }}>
@@ -96,14 +143,18 @@ function Carousel({ products }) {
                                                             height: "100px",
                                                             width: "100%"
                                                         }}
-                                                        className="object-cover " />
+                                                        className="object-cover"
+                                                        name={product.id}
+                                                        onMouseOver={(e) => changeImg(e)}
+                                                        onMouseOut={(e) => oriImg(e)}
+                                                    />
                                                 </div>
 
                                             )
                                         })}
                                     </div>
                                     <div className="mt-7 w-25" style={{
-                                        textAlign:'center'
+                                        textAlign: 'center'
                                     }}>
                                         NT$ {product.price}
                                     </div>

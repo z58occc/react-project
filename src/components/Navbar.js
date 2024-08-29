@@ -1,11 +1,8 @@
 import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
-import { useRef } from "react";
 
 
 function Navbar({ cartData }) {
-    const [searchWord, setSearchWord] = useState('');
-    const mySearch = useRef();
 
     const [token, setToken] = useState(document.cookie);
 
@@ -13,12 +10,7 @@ function Navbar({ cartData }) {
         document.cookie = 'hextoken=';
         setToken(document.cookie);
     }
-    const search = (e) => {
-        setSearchWord(e.target.value);
-    }
-    const clearSearch = () => {
-        mySearch.current.value = '';
-    }
+    
 
 
 
@@ -52,6 +44,11 @@ function Navbar({ cartData }) {
                             <li className="nav-item active">
                                 <NavLink className="nav-link ps-0" to="/products">
                                     產品列表
+                                </NavLink>
+                            </li>
+                            <li className="nav-item active ms-5">
+                                <NavLink className="nav-link ps-0" to="/coupons">
+                                    優惠券列表
                                 </NavLink>
                             </li>
                         </ul>

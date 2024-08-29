@@ -4,6 +4,7 @@ import Dashboard from "./page/admin/Dashboard";
 import AdminProducts from "./page/admin/AdminProducts";
 import AdminCoupons from "./page/admin/AdminCoupons";
 import AdminOrders from "./page/admin/AdminOrder";
+import AdminArticle from "./page/admin/AdminArticle";
 import FrountLayout from "./page/front/FrountLayout";
 import Home from "./page/front/Home";
 import Products from "./page/front/Products";
@@ -14,6 +15,8 @@ import Success from "./page/front/Success";
 import TestAPI from "./page/front/testAPI";
 import ScrollToTop from "./components/ScrollToTop";
 import NextTime from "./page/front/NextTime";
+import Coupons from "./page/front/Coupons";
+
 
 function App() {
   return (
@@ -23,6 +26,7 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
+          <Route path="coupons" element={<Coupons></Coupons>}></Route>
           <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>
           <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>
@@ -36,6 +40,7 @@ function App() {
           <Route path="products" element={<AdminProducts></AdminProducts>}></Route>
           <Route path="coupons" element={<AdminCoupons></AdminCoupons>}></Route>
           <Route path="orders" element={<AdminOrders></AdminOrders>}></Route>
+          <Route path="articles" element={<AdminArticle></AdminArticle>}></Route>
         </Route>
       </Routes>
 

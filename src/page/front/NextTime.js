@@ -137,7 +137,7 @@ function NextTime() {
 
     useEffect(() => {
         filterModal.current = new Modal('#filterModal');
-        const favorites = JSON.parse(localStorage.getItem('favorites'))
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         sortFavorites = [...favorites].sort((a, b) => a.create_at - b.create_at);
         setMyFavorites(sortFavorites);
 

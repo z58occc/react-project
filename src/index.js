@@ -4,7 +4,7 @@ import './stylesheets/all.scss'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { HashRouter } from 'react-router-dom';
+import { HashRouter,BrowserRouter} from 'react-router-dom';
 import axios from 'axios';
 import { store } from './store';
 import { Provider } from 'react-redux';

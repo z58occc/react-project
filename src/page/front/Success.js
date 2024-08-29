@@ -1,20 +1,27 @@
-import { useParams } from "react-router-dom"
+import { useOutletContext, useParams } from "react-router-dom"
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 function Success() {
     const { orderId } = useParams();
     const [orderData, setOrderData] = useState({});
+    const { getCart } = useOutletContext();
 
 
-    const getCart = async () => {
+
+
+    const getOrder = async () => {
         const res = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/order/${orderId}`,
         );
         console.log(res);
         setOrderData(res.data.order)
     }
+
+    
+
     useEffect(() => {
         getCart();
+        getOrder();
     }, [orderId])
     return (
         <div className="container">
@@ -24,8 +31,8 @@ function Success() {
                     minHeight: "400px ",
                     backgroundImage: "url(https://images.unsplash.com/photo-1521791136064-7986c2920216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MjExMzl8MHwxfHNlYXJjaHw2fHxoYW5kc2hha2V8ZW58MHx8fHwxNzIzNjU1NTU5fDA&ixlib=rb-4.0.3&q=80&w=1080)",
                     backgroundPosition: "center center",
-                    backgroundRepeat:'no-repeat',
-                    backgroundSize:'cover'
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover'
                 }}>
             </div>
             <div className="mt-5 mb-7">
@@ -76,14 +83,6 @@ function Success() {
                                     })}
 
                                     <li className="list-group-item px-0 pb-0">
-                                        <table className="table text-muted">
-                                            <tbody>
-                                                {/* <tr>
-                                                    <th scope="row" className="border-0 px-0 pt-0 font-weight-normal">Payment</th>
-                                                    <td className="text-end border-0 px-0 pt-0">ApplePay</td>
-                                                </tr> */}
-                                            </tbody>
-                                        </table>
                                         <div className="d-flex justify-content-between mt-2">
                                             <p className="mb-0 h4 fw-bold">總金額</p>
                                             <p className="mb-0 h4 fw-bold">NT${orderData?.total}</p>
