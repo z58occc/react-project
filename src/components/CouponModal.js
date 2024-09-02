@@ -2,12 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
+    const [loading, setLoading] = useState(false);
     const [tempData, setTempData] = useState({
         title: "",
         is_enabled: 1,
-        percent: 80,
-        due_date: 1555459200,
-        code: "testCode",
+        percent: "",
+        due_date: "",
+        code: "",
     });
 
     const [date, setDate] = useState(new Date());
@@ -17,8 +18,8 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
             setTempData({
                 title: "",
                 is_enabled: 1,
-                percent: 80,
-                due_date: 1555459200,
+                percent: "",
+                due_date: "",
                 code: "testCode",
 
             });
@@ -31,7 +32,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
 
     const handleChange = (e) => {
         const { value, name } = e.target
-        if (['price', 'origin_price'].includes(name)) {
+        if (['percent'].includes(name)) {
             setTempData({
                 ...tempData,
                 [name]: Number(value)
@@ -51,6 +52,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
     }
 
     const submit = async () => {
+        setLoading(true);
         try {
             let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/coupon`;
             let method = 'post';
@@ -72,6 +74,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
         } catch (error) {
             console.log(error);
         }
+        setLoading(false);
     }
 
 
@@ -79,7 +82,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
         <div
             className='modal fade'
             tabIndex='-1'
-            id="productModal"
+            id="couponModal"
             aria-labelledby='exampleModalLabel'
             aria-hidden='true'
         >
@@ -115,12 +118,12 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                         <div className='row'>
                             <div className='col-md-6 mb-2'>
                                 <label className='w-100' htmlFor='percent'>
-                                    折扣（%）
+                                    折扣（％）
                                     <input
-                                        type='text'
+                                        type='number'
                                         name='percent'
                                         id='percent'
-                                        placeholder='請輸入折扣（%）'
+                                        placeholder='請輸入折扣（%)'
                                         className='form-control mt-1'
                                         value={tempData.percent}
                                         onChange={handleChange}
@@ -183,7 +186,9 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                             關閉
                         </button>
                         <button type='button' className='btn btn-primary'
-                            onClick={submit}>
+                            onClick={submit}
+                            disabled={loading}
+                        >
                             儲存
                         </button>
                     </div>

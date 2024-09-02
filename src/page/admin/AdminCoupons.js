@@ -16,7 +16,7 @@ function AdminCoupons() {
     const deleteModal = useRef(null);
 
     useEffect(() => {
-        couponModal.current = new Modal('#productModal', {
+        couponModal.current = new Modal('#couponModal', {
             backdrop: 'static'
         });
         deleteModal.current = new Modal('#deleteModal', {
@@ -29,7 +29,6 @@ function AdminCoupons() {
 
     const getCoupons = async (page = 1) => {
         const res = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/coupons?page=${page}`);
-        console.log(res);
         setCoupons(res.data.coupons);
         setPagination(res.data.pagination);
     }

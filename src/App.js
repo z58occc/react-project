@@ -15,7 +15,6 @@ import Success from "./page/front/Success";
 import TestAPI from "./page/front/testAPI";
 import ScrollToTop from "./components/ScrollToTop";
 import NextTime from "./page/front/NextTime";
-import Coupons from "./page/front/Coupons";
 
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
-          <Route path="coupons" element={<Coupons></Coupons>}></Route>
           <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>
           <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>

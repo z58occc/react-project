@@ -4,13 +4,59 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
+import { Tooltip } from "bootstrap";
+import Swal from "sweetalert2";
+import Loading from "../../components/Loading";
 
 
 
 function Cart() {
     const { cartData, getCart } = useOutletContext();
     const [loadingItems, setLoadingItem] = useState([]);
+    const [couponCode, setCouponCode] = useState('');
     const dispatch = useDispatch();
+
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl)
+    })
+
+    const handleCoupon = (e) => {
+        const { value } = e.target;
+        setCouponCode(value);
+    }
+
+    const checkCoupon = () => {
+        Swal.fire({
+            title: "你決定好了嗎？",
+            html: '<div><small>優惠券將套用到當前購物車內所有商品上</small></div> <div><small>若還有想購買之商品 請按繼續購物</small></div>',
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: '繼續購物',
+            confirmButtonText: "我決定好了!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "已使用優惠券",
+                    html: "<small>若要取消請清空購物車</small>",
+                    icon: "success"
+                });
+                sendCoupon();
+            }
+        });
+    }
+    const sendCoupon = async () => {
+
+        const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/coupon`, {
+            data: {
+                code: couponCode
+            }
+        })
+            .then(response => console.log(response));
+        getCart();
+    }
 
     const removeCartItem = async (id) => {
         try {
@@ -20,10 +66,18 @@ function Cart() {
         } catch (error) {
             console.log(error);
         }
-
-
-
     }
+    const removeCartAll = async () => {
+        try {
+            const res = await axios.delete(`/v2/api/${process.env.REACT_APP_API_PATH}/carts`)
+            getCart();
+            console.log(res);
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const updateCartItem = async (item, quantity) => {
         const data = {
             data: {
@@ -65,6 +119,36 @@ function Cart() {
         localStorage.setItem('favorites', JSON.stringify(favorites));
         removeCartItem(id)
     }
+    
+    const checkCart = () => {
+        if (!cartData.carts.every(item=>item.hasOwnProperty('coupon'))) {
+            Swal.fire({
+                title: "你決定好了嗎？",
+                html: '<div><small>優惠券將套用到當前購物車內所有商品上</small></div> <div><small>若還有想購買之商品 請按繼續購物</small></div>',
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: '繼續購物',
+                confirmButtonText: "我決定好了!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "已使用優惠券",
+                        html: "<small>若要取消請清空購物車</small>",
+                        icon: "success"
+                    });
+                    sendCoupon();
+                }
+            });
+        }else{
+            alert('test');
+        }
+    }
+
+
+
+
 
 
 
@@ -72,71 +156,120 @@ function Cart() {
     return (
         <div className="container">
             <div className="row justify-content-center">
-                <div className="col-md-6 bg-white py-5" style={{ minHeight: "calc(100vh - 56px - 76px)" }}>
+                <div className="col-md-6 bg-white py-5 " style={{ minHeight: "calc(100vh - 56px - 76px)" }}>
                     <div className="d-flex justify-content-between">
                         <h2 className="mt-2"> 您的商品</h2>
                     </div>
-                    {cartData?.carts?.length == 0
+
+
+                    {cartData?.carts?.length == 0 || cartData?.carts?.length == undefined
                         ?
                         '無商品資料'
                         :
-                        <></>
-                    }
-                    {cartData?.carts?.map((item) => {
-                        return (
-                            <div className="d-flex mt-4 bg-light" key={item.id}>
-                                <div>
-                                    <img
-                                        className="object-cover"
-                                        src={item.product.imageUrl} alt="" style={{ width: "100px", height: '120px' }} />
-                                </div>
-                                <div className="w-100 p-3 position-relative ">
-                                    <button
-                                        type="button"
-                                        className="position-absolute btn"
-                                        style={{ top: "10px", right: "10px", }}
-                                        onClick={() => { removeCartItem(item.id) }}
-                                    >
-                                        <i className="bi bi-x-circle-fill"></i>
-                                    </button>
-                                    <p className="mb-0 fw-bold">{item.product.title}</p>
-                                    <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>{item.product.description}</p>
-                                    <div className="d-flex justify-content-between align-items-center w-100">
-                                        <select name="" id="" className="form-select"
-                                            value={item.qty}
-                                            disabled={loadingItems.includes(item.id)}
-                                            onChange={(e) => {
-                                                updateCartItem(item, e.target.value * 1);
-                                            }}
-                                        >
-                                            {[...(new Array(20))].map((i, num) => {
-                                                return (
-                                                    <option value={num + 1} key={num}>{num + 1}</option>
-                                                )
-                                            })
-                                            }
-                                        </select>
-                                    </div>
-                                    <p style={{ float: 'right' }} className="mb-0 ms-auto mt-3">NT$ {item.final_total}</p>
-                                    <p style={{
-                                        float: 'left',
-                                        fontSize: '12px',
-                                        textDecoration: 'underline',
-                                        cursor: 'pointer'
-                                    }}
-                                        className="mb-0 ms-auto mt-3 text-secondary"
-                                        onClick={() => addFavorite(item)}
-                                    >
-                                        放回下次再買
-                                    </p>
-                                </div>
+                        <>
+                            <div className="d-flex justify-content-end">
+                                <button
+                                    className="btn btn-outline-danger rounded"
+                                    onClick={removeCartAll}
+                                >清空購物車</button>
                             </div>
-                        )
-                    })}
-                    <div className="d-flex justify-content-between mt-4">
+                            {cartData?.carts?.map((item) => {
+                                return (
+                                    <div className="d-flex mt-4 bg-light" key={item.id}>
+                                        <div>
+                                            <img
+                                                className="object-cover"
+                                                src={item.product.imageUrl} alt="" style={{ width: "100px", height: '120px' }} />
+                                        </div>
+                                        <div className="w-100 p-3 position-relative ">
+                                            <button
+                                                type="button"
+                                                className="position-absolute btn"
+                                                style={{ top: "10px", right: "10px", }}
+                                                onClick={() => { removeCartItem(item.id) }}
+                                            >
+                                                <i className="bi bi-x-circle-fill"></i>
+                                            </button>
+                                            <p className="mb-0 fw-bold">{item.product.title}</p>
+                                            <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>{item.product.description}</p>
+                                            <div className="d-flex justify-content-between align-items-center w-100">
+                                                <select name="" id="" className="form-select"
+                                                    value={item.qty}
+                                                    disabled={loadingItems.includes(item.id)}
+                                                    onChange={(e) => {
+                                                        updateCartItem(item, e.target.value * 1);
+                                                    }}
+                                                >
+                                                    {[...(new Array(20))].map((i, num) => {
+                                                        return (
+                                                            <option value={num + 1} key={num}>{num + 1}</option>
+                                                        )
+                                                    })
+                                                    }
+                                                </select>
+                                            </div>
+                                            <p style={{ float: 'right' }} className="mb-0 ms-auto mt-3">NT$ {item.total}</p>
+                                            <p style={{
+                                                float: 'left',
+                                                fontSize: '12px',
+                                                textDecoration: 'underline',
+                                                cursor: 'pointer'
+                                            }}
+                                                className="mb-0 ms-auto mt-3 text-secondary"
+                                                onClick={() => addFavorite(item)}
+                                            >
+                                                放回下次再買
+                                            </p>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                            <div className="  d-flex justify-content-end align-items-center mt-5"
+                                style={{
+                                    height: '30px'
+                                }}>
+                                <input type="text" className="form-control w-50 me-3 text-center
+                                 rounded-0 border-bottom border-top-0 border-start-0 border-end-0 shadow-none
+                                "
+                                    placeholder="請輸入折扣碼"
+                                    onChange={(e) => handleCoupon(e)}
+                                    disabled={cartData.total != cartData.final_total}
+                                />
+                                <button className="btn btn-outline-primary
+                                 border-top-0 border-start-0 border-end-0 border-bottom-0 rounded-0
+                                "
+                                    onClick={checkCoupon}
+                                    disabled={cartData.total != cartData.final_total}
+                                >
+                                    <i className="bi bi-send"
+                                        style={{ fontSize: '20px' }}
+                                    ></i>
+                                </button>
+                            </div>
+                            <button type="button" className="btn btn-primary float-end mt-3" data-bs-toggle="tooltip" data-bs-html="true" title="
+                                <div>9折優惠券：discount90</div>
+                                <div>8折優惠券：discount80</div>
+                                <div>7折優惠券：discount70</div>
+                            "
+                            >
+                                查看折扣碼
+                            </button>
+                        </>
+                    }
+                    <div className="d-flex justify-content-between mt-7">
                         <p className="mb-0 h4 fw-bold"> 總金額</p>
-                        <p className="mb-0 h4 fw-bold">NT$ {cartData.final_total}</p>
+                        <p className="mb-0 h4 fw-bold">
+                            NT$ {cartData.final_total}
+                            <span style={{
+                                fontSize: '15px'
+                            }}>
+                                {cartData.total != cartData.final_total ? '（已使用優惠券）' : ''}
+                            </span>
+                        </p>
                     </div>
+                    <button
+                        onClick={checkCart}
+                    >確認商品正確</button>
                     <NavLink to="./checkout" className={`${cartData?.carts?.length == 0 ? 'disabled' : ''} btn btn-dark w-100 mt-4 rounded-0 py-3`}>確認商品正確</NavLink>
 
                 </div>

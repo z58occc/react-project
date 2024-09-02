@@ -36,7 +36,6 @@ function ProdeuctDetail() {
             .filter((item) => item.category == productRes.data.product.category)
             .filter((item) => item.id != productRes.data.product.id);
 
-        console.log(similarArr);
         setSameProducts(similarArr);
     };
 
