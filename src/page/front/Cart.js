@@ -1,12 +1,11 @@
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
 import { Tooltip } from "bootstrap";
 import Swal from "sweetalert2";
-import Loading from "../../components/Loading";
 
 
 
@@ -15,11 +14,10 @@ function Cart() {
     const [loadingItems, setLoadingItem] = useState([]);
     const [couponCode, setCouponCode] = useState('');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new Tooltip(tooltipTriggerEl)
-    })
+
+
 
     const handleCoupon = (e) => {
         const { value } = e.target;
@@ -119,33 +117,37 @@ function Cart() {
         localStorage.setItem('favorites', JSON.stringify(favorites));
         removeCartItem(id)
     }
-    
+
     const checkCart = () => {
-        if (!cartData.carts.every(item=>item.hasOwnProperty('coupon'))) {
-            Swal.fire({
-                title: "你決定好了嗎？",
-                html: '<div><small>優惠券將套用到當前購物車內所有商品上</small></div> <div><small>若還有想購買之商品 請按繼續購物</small></div>',
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                cancelButtonText: '繼續購物',
-                confirmButtonText: "我決定好了!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: "已使用優惠券",
-                        html: "<small>若要取消請清空購物車</small>",
-                        icon: "success"
-                    });
-                    sendCoupon();
-                }
-            });
-        }else{
-            alert('test');
+        if (!cartData.carts.every(item => item.hasOwnProperty('coupon'))) {//cartData有資料沒套用coupon
+            if (cartData.carts.every(item => !item.hasOwnProperty('coupon'))) {//cartData全都沒套用coupon
+                navigate("./checkout")
+            } else {//cartData中coupon未全部套用
+                Swal.fire({
+                    title: "有商品還未使用優惠券喔！！",
+                    html: '<div><small>目前購物車內有符合條件之商品尚未使用優惠券</small></div> <div><small>若要使用優惠 請清空購物車後重新操作</small></div>',
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText: '繼續購物',
+                    confirmButtonText: "我要結帳"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        navigate("./checkout")
+                    }
+                });
+            }
+        } else {//cartData全都有套用coupon
+            navigate("./checkout")
         }
     }
-
+    useEffect(() => {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new Tooltip(tooltipTriggerEl)
+        })
+    })
 
 
 
@@ -164,7 +166,9 @@ function Cart() {
 
                     {cartData?.carts?.length == 0 || cartData?.carts?.length == undefined
                         ?
-                        '無商品資料'
+                        <div className="text-center  mt-5">
+                            <h1><i className="bi bi-emoji-surprise-fill me-3"></i>目前您的購物車沒有商品</h1>
+                        </div>
                         :
                         <>
                             <div className="d-flex justify-content-end">
@@ -268,10 +272,9 @@ function Cart() {
                         </p>
                     </div>
                     <button
+                        className={`${cartData?.carts?.length == 0 ? 'disabled' : ''} btn btn-dark w-100 mt-4 rounded-0 py-3`}
                         onClick={checkCart}
                     >確認商品正確</button>
-                    <NavLink to="./checkout" className={`${cartData?.carts?.length == 0 ? 'disabled' : ''} btn btn-dark w-100 mt-4 rounded-0 py-3`}>確認商品正確</NavLink>
-
                 </div>
             </div>
         </div>

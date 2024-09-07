@@ -3,18 +3,25 @@ import { useEffect, useRef, useState } from "react";
 import OrderModal from "../../components/OrderModal";
 import { Modal } from "bootstrap";
 import Pagination from "../../components/Pagination";
+import moment from "moment";
+import DeleteModal from "../../components/DeleteModal";
 
 
 function AdminOrders() {
     const [orders, setOrders] = useState([]);
-    const [tempOrder,setTempOrder]=useState({})
+    const [tempOrder, setTempOrder] = useState({})
     const orderModal = useRef(null);
+    const deleteModal = useRef(null);
     const [pagination, setPagination] = useState({});
     useEffect(() => {
         orderModal.current = new Modal('#orderModal', {
             backdrop: 'static'
         });
-        
+
+        deleteModal.current = new Modal('#deleteModal', {
+            backdrop: 'static'
+        });
+
         getOrders();
 
 
@@ -28,24 +35,47 @@ function AdminOrders() {
     const closeOrderModal = () => {
         orderModal.current.hide();
     }
+    const openDeleteModal = (order) => {
+        setTempOrder(order);
+        deleteModal.current.show();
+    }
+    const closeDeleteModal = () => {
+        deleteModal.current.hide();
+    }
 
-    const getOrders = async (page=1) => {
+    const getOrders = async (page = 1) => {
         const orderRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/orders?page=${page}`)
-        console.log(orderRes);
         setOrders(orderRes.data.orders);
+        console.log(orderRes.data.orders);
         setPagination(orderRes.data.pagination);
+    }
+    const deleteOrder = async (id) => {
+        try {
+            const res = await axios.delete(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/order/${id}`);
+            if (res.data.success) {
+                getOrders();
+                deleteModal.current.hide();
+            }
+        } catch (error) {
+            console.log((error));
+        }
     }
 
 
 
     return (
         <>
-            <OrderModal 
-            orders={orders} 
-            closeOrderModal={closeOrderModal}
-            tempOrder={tempOrder}
-            getOrders={getOrders}
+            <OrderModal
+                orders={orders}
+                closeOrderModal={closeOrderModal}
+                tempOrder={tempOrder}
+                getOrders={getOrders}
             ></OrderModal>
+            <DeleteModal
+                close={closeDeleteModal}
+                text={tempOrder.title}
+                handleDelete={deleteOrder}
+                id={tempOrder.id}></DeleteModal>
             {/* Products */}
             <div className="p-3">
                 <h3>訂單列表</h3>
@@ -68,10 +98,23 @@ function AdminOrders() {
                                 <tr key={order.id}>
                                     <td>{order.id}</td>
                                     <td>{order.user.email}</td>
-                                    <td>{order.total}</td>
-                                    <td>{order.is_paid.toString()}</td>
-                                    <td>{order.is_paid.toString()}</td>
-                                    <td></td>
+                                    <td>${order.total}</td>
+                                    <td>{order.is_paid ?
+                                        <span className="text-success">
+                                            付款完成
+                                        </span>
+                                        : "未付款"}</td>
+                                    <td>{order.payment_date
+                                        ?
+                                        moment.unix(order.payment_date).format('ll')
+                                        :
+                                        ""
+                                    }</td>
+                                    <td
+                                    style={{
+                                        maxWidth:'300px'
+                                    }}
+                                    >{order.user.message}</td>
                                     <td>
                                         <button
                                             type="button"
@@ -80,6 +123,13 @@ function AdminOrders() {
                                         >
                                             查看
                                         </button>
+                                        {/* <button
+                                            type="button"
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() => openDeleteModal(order)}
+                                        >
+                                            刪除
+                                        </button> */}
 
                                     </td>
                                 </tr>

@@ -20,7 +20,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                 is_enabled: 1,
                 percent: "",
                 due_date: "",
-                code: "testCode",
+                code: "",
 
             });
             setDate(new Date());
@@ -90,7 +90,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                 <div className='modal-content'>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                            {type === 'create' ? "建立新優惠卷" : `編輯${tempData.title}`}
+                            {type === 'create' ? "建立新優惠卷" : `編輯`}
 
                         </h1>
                         <button

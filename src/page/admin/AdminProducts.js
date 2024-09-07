@@ -59,7 +59,7 @@ function AdminProducts() {
                 deleteModal.current.hide();
             }
         } catch (error) {
-
+            console.log(error);
         }
     }
     return (
@@ -100,7 +100,7 @@ function AdminProducts() {
                             <tr key={product.id}>
                                 <td>{product.category}</td>
                                 <td>{product.title}</td>
-                                <td>{product.price}</td>
+                                <td>${product.price}</td>
                                 <td>{product.is_enabled ? '啟用' : '未啟用'}</td>
                                 <td>
                                     <button

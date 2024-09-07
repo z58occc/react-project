@@ -4,85 +4,107 @@ import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../sto
 import moment from "moment";
 
 
-function ArticleModal({ closeArticleModal, type, tempProduct }) {
+function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
+    const [tag, setTag] = useState('');
+
+    //取出token
+    const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("hextoken="))
+        ?.split("=")[1];
+    axios.defaults.headers.common['Authorization'] = token;
 
 
+    const uploadFile = async (e) => {
+        console.log(e.target.name)
+        const { name, files } = e.target
+        const file = files[0];
+        console.log(file);
+        if (!file) {
+            return;
+        }
 
+        const formData = new FormData();
+        formData.append('file-to-upload', file)
+        try {
+            const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/upload`, formData, {
+                headers: {
+                    authorization: token
+                }
+            })
+            console.log(res);
+            console.log(res.data.imageUrl);
+            if (e.target.name === "image") {
+                setTempData({
+                    ...tempData,
+                    [name]: res.data.imageUrl
+                })
+                console.log(tempData);
+            } else {
+                const index = parseInt(e.target.name);
+                setTempData({
+                    ...tempData,
+                    imagesUrl: tempData.imagesUrl.map((item, i) => i === index ? res.data.imageUrl : item)
+                })
 
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     const [tempData, setTempData] = useState({
         title: "test",
         description: "test",
-        image: "test",
-        tag:[''],
-        create_at:moment(new Date()).unix(),
-        author:"test",
-        isPublic:false,
+        image: "",
+        tag: [''],
+        create_at: moment(new Date()).unix(),
+        author: "test",
+        isPublic: true,
         content: "test",
     });
 
     const [, dispatch] = useContext(MessageContext);
-    const getProducts = async (page = 1) => {
-        const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/articles`);
-        console.log(productRes);
-    }
+
 
     useEffect(() => {
-        getProducts();
+
         if (type === 'create') {
             setTempData({
-                title: "",
-                category: "",
-                origin_price: 100,
-                price: 300,
-                unit: "",
-                description: "",
-                content: "",
-                is_enabled: 1,
-                imageUrl: '',
-                imagesUrl: [
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                ],
-
+                title: "test",
+                description: "test",
+                image: "",
+                tag: [''],
+                create_at: moment(new Date()).unix(),
+                author: "test",
+                isPublic: true,
+                content: "test",
             });
         } else if (type === 'edit') {
-            setTempData(tempProduct)
+            console.log(tempArticle);
+            setTempData(tempArticle);
         }
-    }, [type, tempProduct])
+    }, [type, tempArticle])
 
     const handleChange = (e) => {
         const { value, name } = e.target
-        if (['price', 'origin_price'].includes(name)) {
+        if (name === 'tag') {
+            setTag(value);
+        } else if (!name) {
             setTempData({
                 ...tempData,
-                [name]: Number(value)
-            })
-        } else if (name === 'is_enabled') {
-            setTempData({
-                ...tempData,
-                [name]: +e.target.checked,// boolean
-            })
-        }
-        else {
+                tag: [...tempData.tag, tag] // 新增value到陣列中
+            });
+            setTag('')
+        } else {
             setTempData({
                 ...tempData,
                 [name]: value
             })
         }
     }
-    const hadleChangeImages = (e) => {
-        const index = parseInt(e.target.name);
-        setTempData({
-            ...tempData,
-            imagesUrl: tempData.imagesUrl.map((item, i) => i === index ? e.target.value : item)
-        })
 
-    }
 
     const submit = async () => {
         console.log(tempData);
@@ -90,7 +112,7 @@ function ArticleModal({ closeArticleModal, type, tempProduct }) {
             let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/article`;
             let method = 'post';
             if (type === "edit") {
-                api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/product/${tempProduct.id}`;
+                api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/article/${tempArticle.id}`;
                 method = 'put';
             }
             const res = await axios[method](
@@ -101,12 +123,23 @@ function ArticleModal({ closeArticleModal, type, tempProduct }) {
             console.log(res);
             handleSuccessMessage(dispatch, res);
             closeArticleModal();
-            getProducts();
-
+            getArticles();
         } catch (error) {
             console.log(error);
             handleErrorMessage(dispatch, error);
         }
+    }
+    const removeTag = (index) => {
+        let removeTags = [...tempData.tag]
+        removeTags.splice(index, 1);
+        console.log(removeTags);
+        setTempData({
+            ...tempData,
+            tag: removeTags
+        })
+
+
+
     }
 
 
@@ -120,11 +153,12 @@ function ArticleModal({ closeArticleModal, type, tempProduct }) {
             aria-labelledby='exampleModalLabel'
             aria-hidden='true'
         >
+            {JSON.stringify(tempData)}
             <div className='modal-dialog modal-lg'>
                 <div className='modal-content'>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                            {type === 'create' ? "建立新商品" : `編輯${tempData.title}`}
+                            {type === 'create' ? "建立新文章" : `編輯${tempData?.title}`}
                         </h1>
                         <button
                             type='button'
@@ -135,87 +169,73 @@ function ArticleModal({ closeArticleModal, type, tempProduct }) {
                     </div>
                     <div className='modal-body'>
                         <div className='row'>
+                            <div className='col-sm-4'>
+                                <div className='form-group mb-5'>
+
+                                    <label className='w-100 ' htmlFor='image'>
+                                        輸入主圖網址
+                                        <input
+                                            type='text'
+                                            name='image'
+                                            id='image'
+                                            placeholder='請輸入圖片連結'
+                                            className='form-control'
+                                            onChange={handleChange}
+                                        />
+                                    </label>
+                                    <div className='form-group '>
+                                        <input
+                                            type='file'
+                                            id='customFile'
+                                            className='form-control'
+                                            name='image'
+                                            onChange={(e) => uploadFile(e)}
+                                        />
+                                    </div>
+                                    {
+                                        tempData?.image && <img className="w-100" src={tempData?.image} alt="..." />
+                                    }
+
+                                </div>
+                            </div>
+
 
                             <div className='col-sm-8'>
 
-                                <div className='form-group mb-2'>
-                                    <label className='w-100' htmlFor='title'>
-                                        標題
-                                        <input
-                                            type='text'
-                                            id='title'
-                                            name='title'
-                                            placeholder='請輸入標題'
-                                            className='form-control'
-                                            onChange={handleChange}
-                                            value={tempData.title}
-                                        />
-                                    </label>
-                                </div>
                                 <div className='row'>
                                     <div className='form-group mb-2 col-md-6'>
-                                        <label className='w-100' htmlFor='category'>
-                                            分類
+                                        <label className='w-100' htmlFor='title'>
+                                            標題
                                             <input
                                                 type='text'
-                                                id='category'
-                                                name='category'
+                                                id='title'
+                                                name='title'
                                                 placeholder='請輸入分類'
                                                 className='form-control'
                                                 onChange={handleChange}
-                                                value={tempData.category}
+                                                value={!!tempData?.title }
                                             />
                                         </label>
                                     </div>
                                     <div className='form-group mb-2 col-md-6'>
-                                        <label className='w-100' htmlFor='unit'>
-                                            單位
+                                        <label className='w-100' htmlFor='author'>
+                                            作者
                                             <input
-                                                type='unit'
-                                                id='unit'
-                                                name='unit'
+                                                type='author'
+                                                id='author'
+                                                name='author'
                                                 placeholder='請輸入單位'
                                                 className='form-control'
                                                 onChange={handleChange}
-                                                value={tempData.unit}
+                                                value={!!tempData?.author }
                                             />
                                         </label>
                                     </div>
                                 </div>
-                                <div className='row'>
-                                    <div className='form-group mb-2 col-md-6'>
-                                        <label className='w-100' htmlFor='origin_price'>
-                                            原價
-                                            <input
-                                                type='number'
-                                                id='origin_price'
-                                                name='origin_price'
-                                                placeholder='請輸入原價'
-                                                className='form-control'
-                                                onChange={handleChange}
-                                                value={tempData.origin_price}
-                                            />
-                                        </label>
-                                    </div>
-                                    <div className='form-group mb-2 col-md-6'>
-                                        <label className='w-100' htmlFor='price'>
-                                            售價
-                                            <input
-                                                type='number'
-                                                id='price'
-                                                name='price'
-                                                placeholder='請輸入售價'
-                                                className='form-control'
-                                                onChange={handleChange}
-                                                value={tempData.price}
-                                            />
-                                        </label>
-                                    </div>
-                                </div>
-                                <hr />
+                                <br />
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='description'>
-                                        產品描述
+                                        文章簡述
                                         <textarea
                                             type='text'
                                             id='description'
@@ -223,14 +243,13 @@ function ArticleModal({ closeArticleModal, type, tempProduct }) {
                                             placeholder='請輸入產品描述'
                                             className='form-control'
                                             onChange={handleChange}
-                                            value={tempData.description.trim()}
+                                            value={!!tempData?.description?.trim() }
                                         />
                                     </label>
-
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='w-100' htmlFor='content'>
-                                        說明內容
+                                        文章內容
                                         <textarea
                                             type='text'
                                             id='content'
@@ -238,31 +257,67 @@ function ArticleModal({ closeArticleModal, type, tempProduct }) {
                                             placeholder='請輸入產品說明內容'
                                             className='form-control'
                                             onChange={handleChange}
-                                            value={tempData.content}
+                                            value={tempData?.content}
                                             style={{ height: '300px' }}
                                         />
                                     </label>
                                 </div>
+                                <br />
+                                {tempData?.tag?.map((item, i) => {
+                                    return (
+                                        item
+                                            ?
+                                            <button onClick={() => removeTag(i)} key={i} type="button" className="me-3    rounded btn btn-outline-primary position-relative"
+                                            >
+                                                {item}
+                                                <span className="position-absolute top-0 start-100 translate-middle  bi bi-x-circle-fill "
+                                                    style={{
+                                                        opacity: '0.5'
+                                                    }}>
+                                                </span>
+                                            </button>
+                                            :
+                                            ""
+                                    )
+                                })}
                                 <div className='form-group mb-2'>
+                                    <div className='form-group mb-2'>
+                                        <i className="bi bi-plus-lg float-end btn "
+                                            onClick={handleChange}
+                                            name='plus'
+                                        ></i>
+                                        <input
+                                            type='text'
+                                            id='tag'
+                                            name='tag'
+                                            placeholder='請輸入自訂標籤'
+                                            className='ms-3 mb-5 w-50 text-center float-end 
+                                                form-control rounded-0 border-bottom border-top-0 border-start-0 border-end-0 shadow-none
+                                                '
+                                            onChange={handleChange}
+                                            value={!!tag}
+                                        />
+                                    </div>
+                                    <br />
                                     <div className='form-check'>
                                         <label
                                             className='w-100 form-check-label'
-                                            htmlFor='is_enabled'
+                                            htmlFor='isPublic'
                                         >
-                                            是否啟用
+                                            是否公開
                                             <input
                                                 type='checkbox'
-                                                id='is_enabled'
-                                                name='is_enabled'
+                                                id='isPublic'
+                                                name='isPublic'
                                                 placeholder='請輸入產品說明內容'
                                                 className='form-check-input'
                                                 onChange={handleChange}
-                                                checked={!!tempData.is_enabled}
+                                                checked={!!tempData?.isPublic}
                                             />
                                         </label>
                                     </div>
                                 </div>
-                                <div className='modal-footer mt-5'>
+                                <div className='modal-footer mt-3'>
                                     <button type='button' className='btn btn-secondary'
                                         onClick={closeArticleModal}>
                                         關閉

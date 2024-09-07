@@ -37,6 +37,24 @@ export const Input = ({ id, labelText, register, type, errors, rules }) => {
         </>
     );
 };
+export const Textarea = ({ id, labelText, register, type, errors, rules }) => {
+    return (
+        <>
+            <label htmlFor={id} className='form-label'>
+                {labelText}
+            </label>
+            <textarea
+                id={id}
+                type={type}
+                className={`form-control ${errors[id] && 'is-invalid'}`}
+                {...register(id, rules)}
+            />
+            {errors[id] && (
+                <div className='invalid-feedback'>{errors[id]?.message}</div>
+            )}
+        </>
+    );
+};
 export const Select = ({ id, labelText, register, errors, rules, children, disabled = false }) => {
     return (
         <>

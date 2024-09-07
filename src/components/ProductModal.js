@@ -169,7 +169,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 <div className='modal-content'>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                            {type === 'create' ? "建立新商品" : `編輯${tempData.title}`}
+                            {type === 'create' ? "建立新商品" : `編輯`}
                         </h1>
                         <button
                             type='button'
@@ -359,15 +359,17 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                     <div className='form-group mb-2 col-md-6'>
                                         <label className='w-100' htmlFor='category'>
                                             分類
-                                            <input
-                                                type='text'
-                                                id='category'
+                                            <select className="form-select" aria-label="Default select example"
                                                 name='category'
-                                                placeholder='請輸入分類'
-                                                className='form-control'
                                                 onChange={handleChange}
                                                 value={tempData.category}
-                                            />
+                                            >
+                                                <option value="" disabled>請選擇分類</option>
+                                                <option value="apple">apple</option>
+                                                <option value="others">others</option>
+                                                <option value="gameConsole">gameConsole</option>
+                                                <option value="controller">controller</option>
+                                            </select>
                                         </label>
                                     </div>
                                     <div className='form-group mb-2 col-md-6'>

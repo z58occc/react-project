@@ -12,7 +12,6 @@ function FrountLayout() {
         try {
             const res = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/cart`,);
             setCartData(res.data.data);
-            console.log(res.data.data);
         }
         catch (error) {
             console.log(error);

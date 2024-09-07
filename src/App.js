@@ -8,6 +8,7 @@ import AdminArticle from "./page/admin/AdminArticle";
 import FrountLayout from "./page/front/FrountLayout";
 import Home from "./page/front/Home";
 import Products from "./page/front/Products";
+import Articles from "./page/front/Articles";
 import ProdeuctDetail from "./page/front/ProductDetail";
 import Cart from "./page/front/Cart";
 import Checkout from "./page/front/Checkout";
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
+          <Route path="articles" element={<Articles></Articles>}></Route>
           <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>
           <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>

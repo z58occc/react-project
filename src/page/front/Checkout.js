@@ -1,12 +1,12 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { Input } from "../../components/FontElements";
+import { Textarea } from "../../components/FontElements";
 import axios from "axios";
 
 
 function Checkout() {
     const { cartData } = useOutletContext();
-
 
     const {
         register,
@@ -19,8 +19,7 @@ function Checkout() {
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
-        const { name, email, tel, address } = data;
-        console.log(name, email, tel, address)
+        const { name, email, tel, address, message } = data;
         const form = {
             data: {
                 user: {
@@ -28,6 +27,7 @@ function Checkout() {
                     email,
                     tel,
                     address,
+                    message,
                 },
             }
         }
@@ -113,6 +113,22 @@ function Checkout() {
                                             required: '地址為必填',
                                         }}
                                     ></Input>
+                                </div>
+                                <div className="">
+                                    <Textarea
+                                        id='message'
+                                        labelText='留言'
+                                        type='Textarea'
+                                        errors={errors}
+                                        register={register}
+                                        rules={{
+                                            maxLength: {
+                                                value: 100,
+                                                message: '留言最大字數為100',
+                                            },
+                                        }}
+                                    ></Textarea>
+                                    
                                 </div>
                             </div>
                         </div>

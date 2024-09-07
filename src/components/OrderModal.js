@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
+import moment from "moment/moment";
 
-function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
+function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
     const [tempData, setTempData] = useState({
         create_at: 1523539519,
         id: "",
-        is_paid: false,
+        is_paid: "",
         message: "",
         products: {
             L8nBrq8Ym4ARI1Kog4t: {
@@ -24,28 +25,36 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
         num: 2
 
     });
-    useEffect(()=>{
+    useEffect(() => {
         setTempData(tempOrder)
-    },[tempOrder])
+    }, [tempOrder])
 
 
     const [, dispatch] = useContext(MessageContext);
 
     const handleChange = (e) => {
-        console.log(e.target.value)
-        const { value, name } = e.target;
-        if(name ==="is_paid"){
+        const { value, name, checked } = e.target;
+        if (name === "is_paid") {
+            if (checked) {
+                setTempData({
+                    ...tempData,
+                    [name]: e.target.checked,
+                    payment_date: moment(new Date()).unix()
+                })
+            } else {
+                setTempData({
+                    ...tempData,
+                    [name]: e.target.checked,
+                    payment_date: ''
+                })
+            }
+        } else {
             setTempData({
                 ...tempData,
-                [name]:e.target.checked
-            })
-        }else{
-            setTempData({
-                ...tempData,
-                [name]:value
+                [name]: value
             })
         }
-        
+
     }
 
     const submit = async () => {
@@ -88,7 +97,7 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                 <div className='modal-content'>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                            {`查看 ${tempOrder.id}`}
+                            {`查看 ${tempData?.id}`}
                         </h1>
                         <button
                             type='button'
@@ -106,7 +115,7 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                     readOnly
                                     className='form-control-plaintext'
                                     id='staticEmail'
-                                    defaultValue={tempOrder?.user?.email}
+                                    defaultValue={tempData?.user?.email}
                                 />
                             </div>
                         </div>
@@ -118,7 +127,7 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                     readOnly
                                     className='form-control-plaintext'
                                     id='staticEmail'
-                                    defaultValue={tempOrder?.user?.name}
+                                    defaultValue={tempData?.user?.name}
                                 />
                             </div>
                         </div>
@@ -129,7 +138,7 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                     type='text'
                                     readOnly
                                     className='form-control-plaintext'
-                                    defaultValue={tempOrder?.user?.address}
+                                    defaultValue={tempData?.user?.address}
                                 />
                             </div>
                         </div>
@@ -142,11 +151,11 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                     cols='30'
                                     readOnly
                                     className='form-control-plaintext'
-                                    defaultValue={tempOrder.message}
+                                    defaultValue={tempData?.user?.message}
                                 />
                             </div>
                         </div>
-                        {tempOrder.products && (
+                        {tempData?.products && (
                             <table className='table'>
                                 <thead>
                                     <tr>
@@ -155,17 +164,17 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.values(tempOrder.products).map((cart) => (
-                                        <tr key={cart.id}>
-                                            <td>{cart.product.title}</td>
-                                            <td>{cart.qty}</td>
+                                    {Object.values(tempData?.products).map((cart) => (
+                                        <tr key={cart?.id}>
+                                            <td>{cart?.product?.title}</td>
+                                            <td>{cart?.qty}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td className='border-0 text-end'>總金額</td>
-                                        <td className='border-0'>${tempOrder.total}</td>
+                                        <td className='border-0'>${tempData?.total}</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -181,8 +190,9 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                         name='is_paid'
                                         id='is_paid'
                                         onChange={handleChange}
+                                        checked={!!tempData?.is_paid}
                                     />
-                                    付款狀態 ({tempOrder.is_paid ? '已付款' : '未付款'})
+                                    付款狀態 ({tempData?.is_paid ? '已付款' : '未付款'})
                                 </label>
                             </div>
                             <div className='mb-4'>
@@ -193,6 +203,7 @@ function OrderModal({ closeOrderModal, orders, getOrders, type, tempOrder }) {
                                     className='form-select'
                                     name='status'
                                     onChange={handleChange}
+                                    value={tempData?.status || 0}
                                 >
                                     <option value={0}>未確認</option>
                                     <option value={1}>已確認</option>

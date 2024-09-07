@@ -2,9 +2,18 @@ import { useRef, useState, useEffect } from "react";
 import ArticleModal from "../../components/ArticleModal";
 import DeleteModal from "../../components/DeleteModal";
 import { Modal } from "bootstrap";
+import axios from "axios";
+import moment from "moment";
+import 'moment/locale/zh-tw';
+import Pagination from "../../components/Pagination";
+
+
 
 
 function AdminArticle() {
+    const [articles, setArticles] = useState([]);
+    const [pagination, setPagination] = useState({});
+
 
     //type:決定 modal 展開的用途
     const [type, setType] = useState('create');//edit
@@ -13,17 +22,51 @@ function AdminArticle() {
     const articleModal = useRef(null);
     const deleteModal = useRef(null);
 
-    const openArticleModal = (type, article) => {
+    const openArticleModal = async (type, article) => {
         setType(type);
-        setTempArticle(article);
-        articleModal.current.show();
+        try {
+            const response = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/article/${article.id}`);
+            setTempArticle(response.data.article);
+            articleModal.current.show();
+        } catch (error) {
+            console.log(error);
+        }   
     }
     const closeArticleModal = () => {
         articleModal.current.hide();
     }
+    const openDeleteModal = (article) => {
+        setTempArticle(article);
+        deleteModal.current.show();
+    }
+    const closeDeleteModal = () => {
+        deleteModal.current.hide();
+
+    }
+    const getArticles = async (page=1) => {
+        const articleRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/articles?page=${page}`);
+        setArticles(articleRes.data.articles);
+        setPagination(articleRes.data.pagination);
+    }
+    const deleteArticle = async (id) => {
+        try {
+            const res = await axios.delete(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/article/${id}`);
+            if (res.data.success) {
+                getArticles();
+                deleteModal.current.hide();
+            }
+        } catch (error) {
+
+        }
+    }
 
     useEffect(() => {
+        moment.locale('zh-tw');
+        getArticles();
         articleModal.current = new Modal('#articleModal', {
+            backdrop: 'static'
+        });
+        deleteModal.current = new Modal('#deleteModal', {
             backdrop: 'static'
         });
     }, [])
@@ -32,17 +75,17 @@ function AdminArticle() {
         <div className="p-3">
             <ArticleModal
                 closeArticleModal={closeArticleModal}
-            ></ArticleModal>
-            {/* <ProductModal closeProductModal={closeProductModal} getProducts={getProducts}
-                tempProduct={tempProduct}
                 type={type}
-            ></ProductModal>
+                tempArticle={tempArticle}
+                getArticles={getArticles}
+            ></ArticleModal>
             <DeleteModal
                 close={closeDeleteModal}
-                text={tempProduct.title}
-                handleDelete={deleteProduct}
-                id={tempProduct.id}></DeleteModal> */}
-            <h3>產品列表</h3>
+                text={tempArticle?.title}
+                handleDelete={deleteArticle}
+                id={tempArticle?.id}>
+            </DeleteModal>
+            <h3>文章列表</h3>
             <hr />
             <div className="text-end">
                 <button
@@ -56,45 +99,48 @@ function AdminArticle() {
             <table className="table">
                 <thead>
                     <tr>
-                        <th scope="col">分類</th>
-                        <th scope="col">名稱</th>
-                        <th scope="col">售價</th>
-                        <th scope="col">啟用狀態</th>
+                        <th scope="col">編號</th>
+                        <th scope="col">標題</th>
+                        <th scope="col">作者</th>
+                        <th scope="col">公開狀態</th>
+                        <th scope="col">建立時間</th>
                         <th scope="col">編輯</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {products.map((product) => {
+                    {articles.map((article) => {
                         return (
-                            <tr key={product.id}>
-                                <td>{product.category}</td>
-                                <td>{product.title}</td>
-                                <td>{product.price}</td>
-                                <td>{product.is_enabled ? '啟用' : '未啟用'}</td>
+                            <tr key={article.id}>
+                                <td>{article.num}</td>
+                                <td>{article.title}</td>
+                                <td>{article.author}</td>
+                                <td>{article.isPublic ? '啟用' : '未啟用'}</td>
+                                <td>{moment.unix(article.create_at).format('LLL')}</td>
                                 <td>
                                     <button
                                         type="button"
                                         className="btn btn-primary btn-sm"
-                                        onClick={() => openProductModal('edit', product)}>
+                                        onClick={() => openArticleModal('edit', article)}
+                                    >
                                         編輯
                                     </button>
                                     <button
                                         type="button"
                                         className="btn btn-outline-danger btn-sm ms-2"
-                                        onClick={() => openDeleteModal(product)}
+                                        onClick={() => openDeleteModal(article)}
                                     >
                                         刪除
                                     </button>
                                 </td>
                             </tr>
                         )
-                    })} */}
+                    })}
 
                 </tbody>
             </table>
 
-            {/* <Pagination pagination={pagination}
-            changePage={getProducts}></Pagination> */}
+            <Pagination pagination={pagination}
+            changePage={getArticles}></Pagination>
         </div>
     )
 }
