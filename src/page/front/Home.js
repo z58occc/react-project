@@ -2,7 +2,7 @@ import Carousel from "../../components/Carousel";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Loading from "../../components/Loading";
-import { Link, } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
 
 
 function Home() {
@@ -12,6 +12,7 @@ function Home() {
     const [isLoading, setLoading] = useState(false);
     const [searchWord, setSearchWord] = useState('');
     const mySearch = useRef();
+    const navigate=useNavigate();
 
 
     const search = (e) => {
@@ -28,7 +29,11 @@ function Home() {
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?page=${page}`);
         setProducts(productRes.data.products);
         setLoading(false);
-
+    }
+    const handleKeyEnter = (e) => {
+        if (e.code == 'Enter') {
+            navigate(`/products/${searchWord}`)
+        }
     }
     useEffect(() => {
         getProducts(1);
@@ -44,7 +49,7 @@ function Home() {
                         justifyContent: 'flex-end'
                     }}
                 >
-                    
+
                 </div>
                 <div className="row flex-md-row-reverse flex-column m-5"
                     style={{
@@ -65,6 +70,7 @@ function Home() {
                                 <input className="form-control w-50 me-2" type="search" placeholder="今天想來點..." aria-label="Search"
                                     onChange={search}
                                     ref={mySearch}
+                                    onKeyUp={(e) => handleKeyEnter(e)}
                                 />
                                 <Link to={`/products/${searchWord}`} className="btn btn-outline-primary flex-shrink-0" type="submit"
                                 >搜尋

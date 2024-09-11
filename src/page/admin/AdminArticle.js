@@ -115,7 +115,7 @@ function AdminArticle() {
                                 <td>{article.title}</td>
                                 <td>{article.author}</td>
                                 <td>{article.isPublic ? '啟用' : '未啟用'}</td>
-                                <td>{moment.unix(article.create_at).format('LLL')}</td>
+                                <td>{moment.unix(article.create_at).format('YYYY-MM-DD')}</td>
                                 <td>
                                     <button
                                         type="button"

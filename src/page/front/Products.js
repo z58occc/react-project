@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import Loading from "../../components/Loading";
 import { useParams } from "react-router-dom";
@@ -13,16 +13,30 @@ function Products() {
     const { searchWord } = useParams();
     const regex = new RegExp(searchWord, 'i');
     const [searchRes, setSearchRes] = useState(true);
+    const [reSearch, setReSearch] = useState('');
+    const navigate = useNavigate();
+
+    const mySearch = useRef();
+
+    const search = (e) => {
+        setReSearch(e.target.value);
+    }
+
 
     const getProductsAll = async () => {
+        setLoading(true);
         const productAllRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products/all`)
         const searchArr = productAllRes.data.products.filter((item) => regex.test(item.title));
         if (searchArr.length == 0) {
             setSearchRes(false);
+        } else {
+            setSearchRes(true);
         }
         setProducts(searchArr);
+        setLoading(false);
     }
     const getProducts = async (page = 1) => {
+        setSearchRes(true);
         setLoading(true);
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?page=${page}  `);
         setProducts(productRes.data.products);
@@ -32,13 +46,16 @@ function Products() {
 
     const hadleChangeType = async (e) => {
         setLoading(true);
-
         const { htmlFor } = e.target;
         const category = htmlFor;
         const typeRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?category=${category}`);
-        console.log(typeRes.data.products);
         setProducts(typeRes.data.products);
         setLoading(false);
+    }
+    const handleKeyEnter = (e) => {
+        if (e.code == 'Enter') {
+            navigate(`/products/${reSearch}`)
+        }
     }
 
 
@@ -78,13 +95,32 @@ function Products() {
             </div>
             {!searchRes
                 ?
-                <div className="text-center  mt-10 mb-10">
-                    <h1><i className="bi bi-emoji-surprise-fill me-3"
-                    style={{
-                        fontSize:'80px'//  9/8待調整
-                    }}
-                    ></i>目前您的購物車沒有商品</h1>
-                </div> :
+                <>
+
+                    <div className="text-center  mt-10  "
+                        style={{
+                            fontSize: '40px'
+                        }}
+                    >
+                        <i className="bi bi-emoji-surprise-fill me-3"></i>
+                        目前沒有符合搜尋的商品
+                    </div>
+                    <>
+
+                        <br />
+                        <div className="d-flex justify-content-center mb-10" role="search"
+                            style={{
+                                height: "40px"
+                            }}>
+                            <input className="form-control w-25 me-2" type="search" placeholder="重新搜尋？" aria-label="Search"
+                                onChange={search}
+                                ref={mySearch}
+                                onKeyUp={(e) => handleKeyEnter(e)}
+                            />
+                        </div>
+                    </>
+                </>
+                :
                 <div className="row">
                     {products.map((product) => {
                         return (

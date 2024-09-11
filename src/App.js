@@ -9,13 +9,16 @@ import FrountLayout from "./page/front/FrountLayout";
 import Home from "./page/front/Home";
 import Products from "./page/front/Products";
 import Articles from "./page/front/Articles";
+import OrderQuery from "./page/front/OrderQuery";
 import ProdeuctDetail from "./page/front/ProductDetail";
+import ArticleDetail from "./page/front/ArticleDetail";
 import Cart from "./page/front/Cart";
 import Checkout from "./page/front/Checkout";
 import Success from "./page/front/Success";
 import TestAPI from "./page/front/testAPI";
 import ScrollToTop from "./components/ScrollToTop";
 import NextTime from "./page/front/NextTime";
+
 
 
 function App() {
@@ -26,11 +29,13 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
-          <Route path="articles" element={<Articles></Articles>}></Route>
+          <Route path="article" element={<Articles></Articles>}></Route>
+          <Route path="orderQuery" element={<OrderQuery></OrderQuery>}></Route>
           <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>
           <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>
           <Route path="product/:id" element={<ProdeuctDetail></ProdeuctDetail>}></Route>
+          <Route path="article/:id" element={<ArticleDetail></ArticleDetail>}></Route>
           <Route path="cart" element={<Cart></Cart>}></Route>
           <Route path="/cart/checkout" element={<Checkout></Checkout>}></Route>
           <Route path="success/:orderId" element={<Success></Success>}></Route>

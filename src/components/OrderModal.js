@@ -205,10 +205,10 @@ function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
                                     onChange={handleChange}
                                     value={tempData?.status || 0}
                                 >
-                                    <option value={0}>未確認</option>
-                                    <option value={1}>已確認</option>
-                                    <option value={2}>外送中</option>
-                                    <option value={3}>已送達</option>
+                                    <option value="未確認">未確認</option>
+                                    <option value="已確認">已確認</option>
+                                    <option value="外送中">外送中</option>
+                                    <option value="已送達">已送達</option>
                                 </select>
                             </div>
                         </div>

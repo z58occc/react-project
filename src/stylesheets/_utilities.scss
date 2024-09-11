@@ -61,3 +61,13 @@
   .mybtn:hover{
     background-color: orange;
   }
+  .next-article:hover{
+    text-decoration: underline;
+  }
+  .tag{
+    cursor:not-allowed
+  }
+  .font-size:hover{
+    color: orange;
+    cursor: pointer;
+  }

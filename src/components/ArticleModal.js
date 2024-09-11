@@ -88,7 +88,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
     }, [type, tempArticle])
 
     const handleChange = (e) => {
-        const { value, name } = e.target
+        const { value, name,checked } = e.target
         if (name === 'tag') {
             setTag(value);
         } else if (!name) {
@@ -97,7 +97,14 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                 tag: [...tempData.tag, tag] // 新增value到陣列中
             });
             setTag('')
-        } else {
+        }else if(name ==="isPublic"){
+            setTempData({
+                ...tempData,
+                isPublic:checked
+            })
+        }
+         else {
+            console.log(name,value)
             setTempData({
                 ...tempData,
                 [name]: value
@@ -153,7 +160,6 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
             aria-labelledby='exampleModalLabel'
             aria-hidden='true'
         >
-            {JSON.stringify(tempData)}
             <div className='modal-dialog modal-lg'>
                 <div className='modal-content'>
                     <div className='modal-header'>
@@ -295,7 +301,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                                 form-control rounded-0 border-bottom border-top-0 border-start-0 border-end-0 shadow-none
                                                 '
                                             onChange={handleChange}
-                                            value={!!tag}
+                                            value={tag||''}
                                         />
                                     </div>
                                     <br />
@@ -312,7 +318,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                                 placeholder='請輸入產品說明內容'
                                                 className='form-check-input'
                                                 onChange={handleChange}
-                                                checked={!!tempData?.isPublic}
+                                                checked={tempData?.isPublic}
                                             />
                                         </label>
                                     </div>

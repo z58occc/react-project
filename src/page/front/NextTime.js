@@ -165,11 +165,9 @@ function NextTime() {
                     </span>
                     <span
                         style={{
-                            // cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
                             display: 'inline-block',
                             width: '100px',
                             cursor: `${disabled ? '' : 'not-allowed'}`,
-
                         }}
                         className="me-5 "
                     >
@@ -253,7 +251,14 @@ function NextTime() {
                 {
                     localStorage.getItem('favorites') == null
                         ?
-                        '沒東西'
+                        <div className="text-center  mt-10  "
+                            style={{
+                                fontSize: '60px'
+                            }}
+                        >
+                            <i className="bi bi-emoji-surprise-fill me-3"></i>
+                            目前下次再買清單沒有商品
+                        </div>
                         :
                         <table className="table ">
                             <thead >
