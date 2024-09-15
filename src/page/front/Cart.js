@@ -34,26 +34,42 @@ function Cart() {
             cancelButtonColor: "#d33",
             cancelButtonText: '繼續購物',
             confirmButtonText: "我決定好了!"
-        }).then((result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: "已使用優惠券",
-                    html: "<small>若要取消請清空購物車</small>",
-                    icon: "success"
-                });
-                sendCoupon();
+                const success = await sendCoupon();
+                if (success) {
+                    Swal.fire({
+                        title: "已使用優惠券",
+                        html: "<small>若要取消請清空購物車</small>",
+                        icon: "success"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "發生錯誤",
+                        html: "<small>無法使用優惠券，請查看折扣碼是否正確</small>",
+                        icon: "error"
+                    });
+                }
+
+
             }
         });
     }
     const sendCoupon = async () => {
+        try {
+            const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/coupon`, {
+                data: {
+                    code: couponCode
+                }
+            })
+                .then(response => console.log(response));
+            getCart();
+            return true
+        } catch (error) {
+            console.log(error);
+            return false
+        }
 
-        const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/coupon`, {
-            data: {
-                code: couponCode
-            }
-        })
-            .then(response => console.log(response));
-        getCart();
     }
 
     const removeCartItem = async (id) => {
@@ -239,6 +255,7 @@ function Cart() {
                                     onChange={(e) => handleCoupon(e)}
                                     disabled={cartData.total != cartData.final_total}
                                 />
+                                {/* 使用優惠券按鈕 */}
                                 <button className="btn btn-outline-primary
                                  border-top-0 border-start-0 border-end-0 border-bottom-0 rounded-0
                                 "

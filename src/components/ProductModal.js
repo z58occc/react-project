@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 
 
@@ -45,7 +45,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 category: "",
                 origin_price: 100,
                 price: 300,
-                unit: "",
+                unit: "個",
                 description: "",
                 content: "",
                 is_enabled: 1,
@@ -154,6 +154,27 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
             console.log(error);
         }
     }
+
+    // const inputRef = useRef(null);
+
+    useEffect(() => {
+        const inputs = document.querySelectorAll('input[type="number"]');
+
+        const handleWheel = (e) => {
+            e.preventDefault();
+        };
+
+        inputs.forEach(input => {
+            // 為每個 input 添加非 passive 的事件監聽器
+            input.addEventListener('wheel', handleWheel, { passive: false });
+        });
+
+        return () => {
+            inputs.forEach(input => {
+                input.removeEventListener('wheel', handleWheel);
+            });
+        };
+    }, []);
 
 
     return (
@@ -396,9 +417,10 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                                 id='origin_price'
                                                 name='origin_price'
                                                 placeholder='請輸入原價'
-                                                className='form-control'
+                                                className='form-control noscroll'
                                                 onChange={handleChange}
                                                 value={tempData.origin_price}
+                                            // ref={inputRef}
                                             />
                                         </label>
                                     </div>
@@ -443,6 +465,7 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                                             placeholder='請輸入產品說明內容'
                                             className='form-control'
                                             onChange={handleChange}
+
                                             value={tempData.content}
                                             style={{ height: '300px' }}
                                         />

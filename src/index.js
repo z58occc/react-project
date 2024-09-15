@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import "quill/dist/quill.core.css"; 
 import './stylesheets/all.scss'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import App from './App';

@@ -1,12 +1,24 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 import moment from "moment";
+// import Editor from "./Editor";
+
 
 
 function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
     const [tag, setTag] = useState('');
-
+    const [tempData, setTempData] = useState({
+        title: "",
+        description: "",
+        image: "",
+        tag: [''],
+        create_at: moment(new Date()).unix(),
+        author: "",
+        isPublic: true,
+        content: "",
+    });
+    // const [tempQuill, setTempQuill] = useState({});
     //取出token
     const token = document.cookie
         .split("; ")
@@ -54,57 +66,59 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
     }
 
 
-    const [tempData, setTempData] = useState({
-        title: "test",
-        description: "test",
-        image: "",
-        tag: [''],
-        create_at: moment(new Date()).unix(),
-        author: "test",
-        isPublic: true,
-        content: "test",
-    });
+
 
     const [, dispatch] = useContext(MessageContext);
 
 
     useEffect(() => {
-
         if (type === 'create') {
             setTempData({
-                title: "test",
-                description: "test",
+                title: "",
+                description: "",
                 image: "",
                 tag: [''],
                 create_at: moment(new Date()).unix(),
-                author: "test",
+                author: "",
                 isPublic: true,
-                content: "test",
+                content: "",
             });
         } else if (type === 'edit') {
-            console.log(tempArticle);
             setTempData(tempArticle);
         }
     }, [type, tempArticle])
 
     const handleChange = (e) => {
-        const { value, name,checked } = e.target
+        const { value, name, checked } = e.target
         if (name === 'tag') {
             setTag(value);
         } else if (!name) {
             setTempData({
                 ...tempData,
-                tag: [...tempData.tag, tag] // 新增value到陣列中
+                tag: [...tempData.tag, tag.trim()] // 新增value到陣列中
             });
             setTag('')
-        }else if(name ==="isPublic"){
+        } else if (name === "isPublic") {
             setTempData({
                 ...tempData,
-                isPublic:checked
+                isPublic: checked
             })
+        } else if (name === "content" && tempData.content.length <= 100) {
+            if (value.length > 50) {
+                setTempData({
+                    ...tempData,
+                    [name]: value,
+                    description: value.slice(0, 100)
+                })
+            } else {
+                setTempData({
+                    ...tempData,
+                    [name]: value,
+                    description: value
+                })
+            }
         }
-         else {
-            console.log(name,value)
+        else {
             setTempData({
                 ...tempData,
                 [name]: value
@@ -114,7 +128,6 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
 
 
     const submit = async () => {
-        console.log(tempData);
         try {
             let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/article`;
             let method = 'post';
@@ -144,10 +157,14 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
             ...tempData,
             tag: removeTags
         })
-
-
-
     }
+    // useEffect(() => {
+    //     setTempData({
+    //         ...tempData,
+    //         content:tempQuill
+
+    //     })
+    // }, [tempQuill])
 
 
 
@@ -160,6 +177,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
             aria-labelledby='exampleModalLabel'
             aria-hidden='true'
         >
+
             <div className='modal-dialog modal-lg'>
                 <div className='modal-content'>
                     <div className='modal-header'>
@@ -201,6 +219,40 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                     {
                                         tempData?.image && <img className="w-100" src={tempData?.image} alt="..." />
                                     }
+                                    <div style={{
+                                        maxHeight: "300px", /* 限制容器的最大高度 */
+                                        overflow: "auto" /* 當內容超過時，顯示滾動條 */
+                                    }}>
+                                        {tempData?.tag?.map((item, i) => {
+                                            return (
+                                                item
+                                                    ?
+                                                    <button onClick={() => removeTag(i)} key={i} type="button" className={`
+                                        me-3 mt-1    rounded btn btn-outline-primary position-relative`}
+                                                    >
+                                                        <div
+                                                            style={{
+                                                                maxWidth: "200px", /* 限制按鈕最大寬度 */
+                                                                overflow: 'hidden', /* 隱藏超出部分 */
+                                                                textOverflow: 'ellipsis', /* 顯示省略號 */
+                                                                whiteSpace: 'nowrap' /* 強制單行顯示 */
+                                                            }}
+                                                        >
+                                                            {item}
+                                                        </div>
+                                                        <span className="position-absolute top-0 start-100 translate-middle    bi bi-x-circle-fill "
+                                                            style={{
+                                                                opacity: '0.5',
+                                                            }}
+                                                        >
+                                                        </span>
+                                                    </button>
+                                                    :
+                                                    ''
+
+                                            )
+                                        })}
+                                    </div>
 
                                 </div>
                             </div>
@@ -219,7 +271,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                                 placeholder='請輸入分類'
                                                 className='form-control'
                                                 onChange={handleChange}
-                                                value={!!tempData?.title }
+                                                value={tempData?.title || ''}
                                             />
                                         </label>
                                     </div>
@@ -233,7 +285,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                                 placeholder='請輸入單位'
                                                 className='form-control'
                                                 onChange={handleChange}
-                                                value={!!tempData?.author }
+                                                value={tempData?.author || ''}
                                             />
                                         </label>
                                     </div>
@@ -249,11 +301,14 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                             placeholder='請輸入產品描述'
                                             className='form-control'
                                             onChange={handleChange}
-                                            value={!!tempData?.description?.trim() }
+                                            value={tempData?.description?.trim() || ''}
                                         />
                                     </label>
                                 </div>
                                 <div className='form-group mb-2'>
+                                    {/* <Editor
+                                        setTempQuill={setTempQuill}
+                                    ></Editor> */}
                                     <label className='w-100' htmlFor='content'>
                                         文章內容
                                         <textarea
@@ -263,29 +318,13 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                             placeholder='請輸入產品說明內容'
                                             className='form-control'
                                             onChange={handleChange}
-                                            value={tempData?.content}
+                                            value={tempData?.content || ''}
                                             style={{ height: '300px' }}
                                         />
                                     </label>
                                 </div>
                                 <br />
-                                {tempData?.tag?.map((item, i) => {
-                                    return (
-                                        item
-                                            ?
-                                            <button onClick={() => removeTag(i)} key={i} type="button" className="me-3    rounded btn btn-outline-primary position-relative"
-                                            >
-                                                {item}
-                                                <span className="position-absolute top-0 start-100 translate-middle  bi bi-x-circle-fill "
-                                                    style={{
-                                                        opacity: '0.5'
-                                                    }}>
-                                                </span>
-                                            </button>
-                                            :
-                                            ""
-                                    )
-                                })}
+
                                 <div className='form-group mb-2'>
                                     <div className='form-group mb-2'>
                                         <i className="bi bi-plus-lg float-end btn "
@@ -301,7 +340,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                                 form-control rounded-0 border-bottom border-top-0 border-start-0 border-end-0 shadow-none
                                                 '
                                             onChange={handleChange}
-                                            value={tag||''}
+                                            value={tag || ''}
                                         />
                                     </div>
                                     <br />
@@ -318,7 +357,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                                 placeholder='請輸入產品說明內容'
                                                 className='form-check-input'
                                                 onChange={handleChange}
-                                                checked={tempData?.isPublic}
+                                                checked={tempData?.isPublic || false}
                                             />
                                         </label>
                                     </div>
@@ -338,8 +377,8 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                     </div>
 
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 export default ArticleModal;

@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 import moment from "moment/moment";
 
-function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
+function QueryModal({ closeOrderModal, tempOrder }) {
+    const [progress, setProgress] = useState(0);
     const [tempData, setTempData] = useState({
-        create_at: 1523539519,
+        create_at: "",
         id: "",
         is_paid: "",
         message: "",
@@ -27,70 +27,36 @@ function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
 
     });
     useEffect(() => {
-        setTempData(tempOrder)
+        setTempData({
+            ...tempOrder,
+            create_at: moment.unix(tempOrder?.create_at).format('ll')
+        })
+        const { status } = tempOrder;
+        switch (status) {
+            case "未確認":
+                setProgress(0);
+                break;
+            case "已確認":
+                setProgress(33);
+                break;
+            case "外送中":
+                setProgress(66);
+                break;
+            case "已送達":
+                setProgress(99);
+                break;
+
+            default:
+                break;
+        }
     }, [tempOrder])
-
-
-    const [, dispatch] = useContext(MessageContext);
-
-    const handleChange = (e) => {
-        const { value, name, checked } = e.target;
-        if (name === "is_paid") {
-            if (checked) {
-                setTempData({
-                    ...tempData,
-                    [name]: e.target.checked,
-                    payment_date: moment(new Date()).unix()
-                })
-            } else {
-                setTempData({
-                    ...tempData,
-                    [name]: e.target.checked,
-                    payment_date: ''
-                })
-            }
-        } else {
-            setTempData({
-                ...tempData,
-                [name]: value
-            })
-        }
-
-    }
-
-    const submit = async () => {
-        try {
-            let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/order/${tempOrder.id}`;
-            let method = 'put';
-
-            const res = await axios[method](
-                api, {
-                data: tempData
-            }
-            );
-            console.log(res);
-            handleSuccessMessage(dispatch, res);
-            getOrders();
-            closeOrderModal();
-        } catch (error) {
-            console.log(error);
-            handleErrorMessage(dispatch, error);
-        }
-    }
-
-
-
-
-
-
-
 
 
     return (
         <div
             className='modal fade'
             tabIndex='-1'
-            id='orderModal'
+            id='queryModal'
             aria-labelledby='exampleModalLabel'
             aria-hidden='true'
         >
@@ -107,7 +73,37 @@ function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
                             onClick={closeOrderModal}
                         />
                     </div>
+
                     <div className='modal-body'>
+                        <div>
+                            配送進度：{tempData?.status}
+                        </div>
+                        <table className="table mt-3 mb-0 table-bordered border-primary small-table"
+                            style={{
+                                tableLayout: 'fixed',
+                                fontSize: '13px'
+                            }}
+                        >
+                            <tbody>
+                                <tr className="text-center ">
+                                    <td className={progress >= 33 ? 'table-primary' : ""}>已確認</td>
+                                    <td className={progress >= 66 ? 'table-primary' : ""}>外送中</td>
+                                    <td className={progress >= 99 ? 'table-primary' : ""}>已送達</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div className='mb-3 mt-3 row'>
+                            <span className='col-sm-2  col-form-label'>購買日期</span>
+                            <div className='col-sm-10  '>
+                                <input
+                                    type='text'
+                                    readOnly
+                                    className='form-control-plaintext'
+                                    id='staticEmail'
+                                    defaultValue={tempData?.create_at}
+                                />
+                            </div>
+                        </div>
                         <div className='mb-3 row'>
                             <span className='col-sm-2 col-form-label'>Email</span>
                             <div className='col-sm-10'>
@@ -143,6 +139,18 @@ function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
                                 />
                             </div>
                         </div>
+                        <div className='mb-3 row'>
+                            <span className='col-sm-2 col-form-label'>付款狀態</span>
+                            <div className='col-sm-10'>
+                                <input
+                                    type='text'
+                                    readOnly
+                                    className='form-control-plaintext'
+                                    defaultValue={tempData?.is_paid ? '已付款' : '未付款'}
+                                />
+                            </div>
+                        </div>
+
                         <div className='mb-3 row'>
                             <span className='col-sm-2 col-form-label'>留言</span>
                             <div className='col-sm-10'>
@@ -180,59 +188,22 @@ function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
                                 </tfoot>
                             </table>
                         )}
-
-                        <div>
-                            <h5 className='mt-4'>修改訂單狀態</h5>
-                            <div className='form-check mb-4'>
-                                <label className='form-check-label' htmlFor='is_paid'>
-                                    <input
-                                        className='form-check-input'
-                                        type='checkbox'
-                                        name='is_paid'
-                                        id='is_paid'
-                                        onChange={handleChange}
-                                        checked={!!tempData?.is_paid}
-                                    />
-                                    付款狀態 ({tempData?.is_paid ? '已付款' : '未付款'})
-                                </label>
-                            </div>
-                            <div className='mb-4'>
-                                <span className='col-sm-2 col-form-label d-block'>
-                                    外送進度
-                                </span>
-                                <select
-                                    className='form-select'
-                                    name='status'
-                                    onChange={handleChange}
-                                    value={tempData?.status || 0}
-                                >
-                                    <option value="未確認">未確認</option>
-                                    <option value="已確認">已確認</option>
-                                    <option value="外送中">外送中</option>
-                                    <option value="已送達">已送達</option>
-                                </select>
-                            </div>
-                        </div>
                     </div>
                     <div className='modal-footer'>
-                        <button
-                            type='button'
-                            className='btn btn-secondary'
-                            onClick={closeOrderModal}
-                        >
-                            關閉
-                        </button>
-                        <button type='button' className='btn btn-primary'
-                            onClick={submit}>
-                            儲存
-                        </button>
+                            <button
+                                type='button'
+                                className='btn btn-secondary'
+                                onClick={closeOrderModal}
+                            >
+                                關閉
+                            </button>
                     </div>
                 </div>
             </div>
         </div>
     )
 }
-export default OrderModal;
+export default QueryModal;
 
 
 

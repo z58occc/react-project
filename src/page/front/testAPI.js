@@ -27,14 +27,16 @@ function TestAPI() {
 
   return (
     <div>
-      <img src={imgs[5]?.urls?.regular} alt="" />
-      {imgs?.map((img)=>{
+      <img src={imgs[5]?.urls?.regular} 
+      className="border-triangle"
+      alt="" />
+      {/* {imgs?.map((img)=>{
         return(
           <img src={img.urls.regular}
           style={{width:'300px'}}
           ></img>
         )
-      })}
+      })} */}
     </div>
   )
 }

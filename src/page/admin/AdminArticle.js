@@ -24,6 +24,7 @@ function AdminArticle() {
 
     const openArticleModal = async (type, article) => {
         setType(type);
+        setTempArticle(article);
         try {
             const response = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/article/${article.id}`);
             setTempArticle(response.data.article);

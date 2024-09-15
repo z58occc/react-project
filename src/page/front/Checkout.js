@@ -7,6 +7,7 @@ import axios from "axios";
 
 function Checkout() {
     const { cartData } = useOutletContext();
+    console.log(cartData);
 
     const {
         register,
@@ -128,7 +129,7 @@ function Checkout() {
                                             },
                                         }}
                                     ></Textarea>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -143,7 +144,7 @@ function Checkout() {
                             <h4 className="mb-4">選購項目</h4>
                             {cartData?.carts?.map((item) => {
                                 return (
-                                    <div className="d-flex m-3" key={item.id}>
+                                    <div className="d-flex m-3 mt-5" key={item.id}>
                                         <div>
                                             <img src={item.product.imageUrl} alt="..." className="me-2 " style={{ width: '48px', height: "48px", objectFit: "cover" }} />
                                         </div>
@@ -152,9 +153,24 @@ function Checkout() {
                                                 <p className="mb-0">{item.product.title}</p>
                                                 <p className="mb-0">x{item.qty}</p>
                                             </div>
-                                            <div className="d-flex justify-content-between">
+                                            <div className="d-flex justify-content-between mt-auto">
                                                 <p className="text-muted mb-0"><small>NT${item.product.price}</small></p>
-                                                <p className="mb-0">NT${item.final_total}</p>
+                                                <p className={`${item.total != item.final_total
+                                                    ?
+                                                    'text-secondary fs-7 text-decoration-line-through'
+                                                    :
+                                                    ''
+                                                    }
+                                                            mb-0`}>NT${item.total}</p>
+                                            </div>
+                                            <div className={`${item.total == item.final_total
+                                                ?
+                                                'd-none'
+                                                :
+                                                ''
+                                                }
+                                                            text-end`}>
+                                                NT${item.final_total}
                                             </div>
                                         </div>
                                     </div>
@@ -162,10 +178,10 @@ function Checkout() {
                                 )
                             })}
 
-
+                            <hr />
                             <div className="d-flex justify-content-between mt-4">
                                 <p className="mb-0 h4 fw-bold">總金額</p>
-                                <p className="mb-0 h4 fw-bold">NT${cartData.total}</p>
+                                <p className="mb-0 h4 fw-bold">NT${cartData.final_total}</p>
                             </div>
                         </div>
                     </div>

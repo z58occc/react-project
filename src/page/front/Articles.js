@@ -3,22 +3,28 @@ import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../../components/Pagination";
+import Loading from "../../components/Loading";
 
 function Articles() {
     const [articles, setArticles] = useState([]);
     const [pagination, setPagination] = useState({});
+    const [isLoading, setLoading] = useState(false);
 
-    const getArticles = async (page=1) => {
+
+    const getArticles = async (page = 1) => {
+        setLoading(true);
         const articleRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles?page=${page}`);
         console.log(articleRes);
         setArticles(articleRes.data.articles);
         setPagination(articleRes.data.pagination);
+        setLoading(false);
     }
     useEffect(() => {
         getArticles();
     }, [])
     return (
         <div className=" container mb-10">
+            <Loading isLoading={isLoading}></Loading>
             {articles.map((article) => {
                 return (
                     <div className="row mt-5" key={article.id}>
@@ -49,8 +55,7 @@ function Articles() {
                             </div>
                             <div>
                                 <big>
-                                    {article.description}
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. In mollitia libero nemo, tempore, fugit ab optio ducimus architecto tenetur sint veritatis consequuntur saepe itaque eveniet maiores, cum earum. Quae, mollitia.
+                                    {article.description}...
                                 </big>
                             </div>
                         </div>

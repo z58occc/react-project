@@ -1,18 +1,20 @@
 .object-cover {
   object-fit: cover;
 }
-
-.carousel-indicators {
-  position: absolute;
-  bottom: -50px;
-  ;
-  /* 根據需要調整 */
-
-  z-index: 2;
+.sameType{
+  z-index: 0;
 }
-
-.carousel {
-  position: relative;
+.sameType>button  {
+  width: 10px !important;
+  /* 小圆点的宽度 */
+  height: 10px !important;
+  /* 小圆点的高度 */
+  border-radius: 50% !important
+    /* 设为圆形 */
+}
+.sameType>.carousel-control-prev-icon{
+  position: absolute;
+  bottom: 100px;
 }
 
 .carousel-item img {
@@ -28,13 +30,12 @@
 
 }
 
-.carousel-control-prev-icon {
+.product-carousel>.carousel-control-prev>.carousel-control-prev-icon {
   position: absolute;
   left: -50px;
-
 }
 
-.carousel-control-next-icon {
+.product-carousel>.carousel-control-next>.carousel-control-next-icon {
   position: absolute;
   right: -50px;
 
@@ -45,29 +46,62 @@
   position: absolute;
 }
 
-  .bi-caret-up {
-    top: 180px;
-    /* right: -15px; */
-  }
+.bi-caret-up {
+  top: 180px;
+  /* right: -15px; */
+}
 
-  .bi-caret-down {
-    top: 190px;
-    /* right: -15px; */
-  }
-  ul>li.option{
-    display: table-cell;
-    padding: 8px 25px 8px 0;
-  }
-  .mybtn:hover{
-    background-color: orange;
-  }
-  .next-article:hover{
-    text-decoration: underline;
-  }
-  .tag{
-    cursor:not-allowed
-  }
-  .font-size:hover{
-    color: orange;
-    cursor: pointer;
-  }
+.bi-caret-down {
+  top: 190px;
+  /* right: -15px; */
+}
+
+ul>li.option {
+  display: table-cell;
+  padding: 8px 25px 8px 0;
+}
+
+.mybtn:hover {
+  background-color: orange;
+}
+
+.next-article:hover {
+  text-decoration: underline;
+}
+
+.tag {
+  cursor: not-allowed
+}
+
+.font-size:hover {
+  color: orange;
+  cursor: pointer;
+}
+
+.small-table td,
+.small-table th {
+  padding: 0px;
+  /* 減小內邊距 */
+  color: white;
+}
+
+.table-progress {
+  background-color: orange;
+  color: orange;
+}
+
+.outline {
+  outline: orange 3px solid;
+}
+
+.triangle {
+  width: 0;
+  height: 0;
+  border: transparent 15px solid;
+  border-bottom-color: orange;
+  z-index: 100;
+}
+
+// .sameType>img{
+//   height: 150px;
+// }

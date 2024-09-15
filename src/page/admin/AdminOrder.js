@@ -13,6 +13,7 @@ function AdminOrders() {
     const orderModal = useRef(null);
     const deleteModal = useRef(null);
     const [pagination, setPagination] = useState({});
+    
     useEffect(() => {
         orderModal.current = new Modal('#orderModal', {
             backdrop: 'static'
@@ -35,10 +36,7 @@ function AdminOrders() {
     const closeOrderModal = () => {
         orderModal.current.hide();
     }
-    const openDeleteModal = (order) => {
-        setTempOrder(order);
-        deleteModal.current.show();
-    }
+    
     const closeDeleteModal = () => {
         deleteModal.current.hide();
     }

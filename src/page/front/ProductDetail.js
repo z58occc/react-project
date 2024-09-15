@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useOutletContext, useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
 import Loading from "../../components/Loading";
 import moment from "moment";
+import SameTypeCarousel from "../../components/SameTypeCarousel";
+
+
 
 
 function ProdeuctDetail() {
@@ -17,13 +20,17 @@ function ProdeuctDetail() {
     const [alreadyExists, setAlreadyExists] = useState(false)
     const dispatch = useDispatch();
     const [sameProducts, setSameProducts] = useState([]);
+    const imgRef = useRef('');
+    const [tempSrc, setTempSrc] = useState('');
+
 
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     const getProduct = async (id) => {
         setLoading(true);
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/product/${id}`);
         setProducts(productRes.data.product);
-        setLoading(false);
+        setTempSrc(productRes.data.product.imagesUrl[0])
+        console.log(productRes.data.product)
         for (let index = 0; index < favorites.length; index++) {
             if (favorites[index].id == productRes.data.product.id) {
                 console.log(1);
@@ -37,6 +44,7 @@ function ProdeuctDetail() {
             .filter((item) => item.id != productRes.data.product.id);
 
         setSameProducts(similarArr);
+        setLoading(false);
     };
 
     const addToCart = async () => {
@@ -81,11 +89,22 @@ function ProdeuctDetail() {
         setAlreadyExists(true);
     }
 
+    const changeImg = (e) => {
+        console.log(e.target);
+        console.log(e.target.src)
+        const { src } = e.target;
+        setTempSrc(src);
+        imgRef.current.src = src;
+
+    }
+
 
 
     useEffect(() => {
         getProduct(id);
     }, [id, alreadyExists])
+
+
 
     return (
         <>
@@ -95,20 +114,32 @@ function ProdeuctDetail() {
                     <div className="col-md-8" >
                         <div className="row">
                             <img
-                                src={`${product.imageUrl}`} className="img-fluid object-cover"
+                                src={product?.imagesUrl?.[0]} className="img-fluid object-cover "
                                 style={{
                                     height: '500px'
                                 }}
+                                ref={imgRef}
                             />
                         </div>
-                        <div className="row g-1 mt-1">
+                        <div className="row g-1  ">
                             {product?.imagesUrl?.map((img, i) => {
                                 return (
-                                    <div className="col" key={i}>
-                                        <img src={`${img}`} className="w-100" alt="..."
+                                    <div className="col position-relative" key={i}>
+                                        <div className={`${img != tempSrc
+                                            ?
+                                            'opacity-0'
+                                            :
+                                            ''
+                                            }
+                                            triangle  position-absolute start-50 top-0 translate-middle`}
+                                        ></div>
+                                        <img src={`${img}`} className={`${img == tempSrc ? "outline" : ""} w-100 mt-3 object-cover`}
+                                            alt="..."
                                             style={{
-                                                height: '100px'
+                                                height: '100px',
+                                                cursor: 'pointer',
                                             }}
+                                            onClick={(e) => changeImg(e)}
                                         />
                                     </div>
                                 )
@@ -117,7 +148,7 @@ function ProdeuctDetail() {
 
 
                     </div>
-                    <div className="col-md-4 d-flex flex-column  mt-3 ">
+                    <div className="col-md-4 d-flex flex-column">
                         <div className="">
                             <div
                                 style={{
@@ -126,8 +157,17 @@ function ProdeuctDetail() {
                                 }}
                                 to={`./product/${product?.id}`}
                             >
+
                                 <h2 className="mb-0">{product.title}</h2>
                                 <p className="fw-bold">NT$ {product.price}</p>
+                                <div>
+                                    <img
+                                        src={product?.imageUrl} className="img-fluid object-cover w-100 mb-5"
+                                        style={{
+                                            height: '200px'
+                                        }}
+                                    />
+                                </div>
                                 <p>{product.description}</p>
                                 <div className="input-group mb-3 border mt-3">
                                     <div className="input-group-prepend">
@@ -193,44 +233,19 @@ function ProdeuctDetail() {
                                         <i className="bi bi-dash"></i>
                                     </div>
                                 </div>
-                                <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                    <div className="card-body pb-5"
+                                <div id="collapseOne" className="collapse show " aria-labelledby="headingOne" data-bs-parent="#accordionExample ">
+                                    <div className="card-body pb-5 "
                                         style={{ whiteSpace: 'pre-wrap' }}
                                     >
                                         {`${product.content}`}
-                                        <div className="text-primary mb-1 mt-5">
-                                            <b>
-                                                你可能會有興趣的同類商品
-                                            </b>
-                                        </div>
-                                        <div className="row
-                            border border-bottom-0 border-top border-start-0 border-end-0">
-                                            {sameProducts?.map((product) => {
-                                                return (
-                                                    <div key={product.id} className="col-md-3 mt-3">
-                                                        <div className="card border-0 mb-4  position-relative position-relative">
-                                                            <Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>
-                                                                <img
-                                                                    height={150}
-                                                                    src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
-
-                                                                <div className="card-body p-0">
-                                                                    <h4 className="mb-0 mt-2 text-center">
-
-                                                                        {product.title}
-                                                                    </h4>
-                                                                </div>
-                                                            </Link>
-
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })}
-                                        </div>
 
                                     </div>
-
+                                    
                                 </div>
+
+                                <SameTypeCarousel
+                                    sameProducts={sameProducts}
+                                ></SameTypeCarousel>
                             </div>
 
 
@@ -238,7 +253,7 @@ function ProdeuctDetail() {
                     </div>
                 </div>
 
-            </div>
+            </div >
         </>
     )
 }

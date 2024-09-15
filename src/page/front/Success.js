@@ -17,7 +17,7 @@ function Success() {
         setOrderData(res.data.order)
     }
 
-    
+
 
     useEffect(() => {
         getCart();
@@ -38,12 +38,20 @@ function Success() {
             <div className="mt-5 mb-7">
                 <div className="row">
                     <div className="col-md-6">
-                        <h2>購買成功</h2>
-                        <p>親愛的顧客，
-
-                            感謝您的購買！您的訂單已成功完成。
-
-                            我們將盡快處理並安排發貨。您可以隨時通過我們的網站追蹤訂單狀態。如果您有任何問題或需要進一步的協助，請隨時聯繫我們的客服團隊。
+                        <h1>購買成功</h1>
+                        <h3>訂單編號：
+                            <input type="text"
+                                defaultValue={orderData.id}
+                                disabled
+                                className="w-50"
+                            />
+                        </h3>
+                        <div>
+                            <b className="text-primary">
+                                您的訂單已成功完成，請記下您的訂單編號 ! ! !
+                            </b>
+                        </div>
+                        <p> 以便隨時通過我們的網站追蹤訂單狀態。如果您有任何問題或需要進一步的協助，請隨時聯繫我們的客服團隊。
                             <br />
                             <br />
 
@@ -74,7 +82,22 @@ function Success() {
                                                         </div>
                                                         <div className="d-flex justify-content-between mt-auto">
                                                             <p className="text-muted mb-0"><small>NT${item.product.price}</small></p>
-                                                            <p className="mb-0">NT${item.total}</p>
+                                                            <p className={`${item.total != item.final_total
+                                                                ?
+                                                                'text-secondary fs-7 text-decoration-line-through'
+                                                                :
+                                                                ''
+                                                                }
+                                                            mb-0`}>NT${item.total}</p>
+                                                        </div>
+                                                        <div className={`${item.total == item.final_total
+                                                                ?
+                                                                'd-none'
+                                                                :
+                                                                ''
+                                                                }
+                                                            text-end`}>
+                                                            NT${item.final_total}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -85,7 +108,8 @@ function Success() {
                                     <li className="list-group-item px-0 pb-0">
                                         <div className="d-flex justify-content-between mt-2">
                                             <p className="mb-0 h4 fw-bold">總金額</p>
-                                            <p className="mb-0 h4 fw-bold">NT${orderData?.total}</p>
+                                            <p className="mb-0 h4 fw-bold">NT${orderData?.total}
+                                            </p>
                                         </div>
                                     </li>
                                 </ul>

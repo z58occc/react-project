@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 function Carousel({ products }) {
     const imgRef = useRef(null);
     const otherImgRef = useRef([]);
@@ -41,13 +41,20 @@ function Carousel({ products }) {
     return (
 
 
-        <div id="carouselExampleIndicators" className="carousel slide"
+        <div id="carouselExampleIndicators" className="carousel slide product-carousel"
             style={{
                 width: "1200px",
-
+                position: 'relative'
             }}>
 
-            <div className="carousel-indicators">
+            <div className="carousel-indicators"
+                style={{
+                    position: "absolute",
+                    bottom: "-50px",
+                    /* 根據需要調整 */
+                    zIndex: "2"
+                }}
+            >
                 <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
 
                 {products?.slice(1, products.length).map((_, i) => {
