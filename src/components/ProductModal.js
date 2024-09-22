@@ -19,8 +19,8 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
     const [tempData, setTempData] = useState({
         title: "",
         category: "",
-        origin_price: 100,
-        price: 300,
+        origin_price: 0,
+        price: 0,
         unit: "",
         description: "",
         content: "",
@@ -43,8 +43,8 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
             setTempData({
                 title: "",
                 category: "",
-                origin_price: 100,
-                price: 300,
+                origin_price: 0,
+                price: 0,
                 unit: "個",
                 description: "",
                 content: "",
@@ -141,7 +141,6 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                     ...tempData,
                     [name]: res.data.imageUrl
                 })
-                console.log(tempData);
             } else {
                 const index = parseInt(e.target.name);
                 setTempData({

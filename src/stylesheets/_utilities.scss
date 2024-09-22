@@ -1,10 +1,12 @@
 .object-cover {
   object-fit: cover;
 }
-.sameType{
+
+.sameType {
   z-index: 0;
 }
-.sameType>button  {
+
+.sameType>button {
   width: 10px !important;
   /* 小圆点的宽度 */
   height: 10px !important;
@@ -12,7 +14,8 @@
   border-radius: 50% !important
     /* 设为圆形 */
 }
-.sameType>.carousel-control-prev-icon{
+
+.sameType>.carousel-control-prev-icon {
   position: absolute;
   bottom: 100px;
 }
@@ -102,6 +105,138 @@ ul>li.option {
   z-index: 100;
 }
 
-// .sameType>img{
-//   height: 150px;
-// }
+li>.nav-link {
+  margin-right: 3rem;
+  color: white !important;
+}
+
+li>.nav-link:hover {
+  color: black !important;
+}
+
+li>.active {
+  color: black !important;
+}
+
+.homepage {
+  display: none;
+}
+
+.order-query-img {
+  width: 500px;
+}
+
+.oreder-query-input {
+  width: 25%;
+}
+
+.order-query-button {
+  margin-left: 30px;
+}
+
+@media(max-width:768px) {
+
+  li>.nav-link {
+    border-bottom: solid;
+    margin-right: 0px;
+    color: black !important;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .homepage {
+    display: block;
+  }
+
+  .hero-image {
+    display: none;
+  }
+
+  .carousel {
+    display: none;
+  }
+
+  .home-article-description {
+    display: none;
+  }
+
+  .product-description,
+  .article-title,
+  .article-description {
+    //   style={{
+    //     maxWidth: "200px", /* 限制按鈕最大寬度 */
+    //     overflow: 'hidden', /* 隱藏超出部分 */
+    //     textOverflow: 'ellipsis', /* 顯示省略號 */
+    //     whiteSpace: 'nowrap' /* 強制單行顯示 */
+    // }}
+    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .product-title {
+    order: 2;
+  }
+
+  .product-img {
+    order: 1;
+  }
+
+  .add-to-cart {
+    order: 3;
+    margin-bottom: 30px;
+  }
+
+  .latest-articles {
+    display: none;
+  }
+
+  .order-query-img {
+    width: 300px;
+  }
+
+  .order-query-button {
+    margin-top: 20px;
+  }
+
+  .oreder-query-input {
+    width: 100%;
+  }
+
+  .nexttime-right {
+    margin-top: 30px;
+  }
+
+  .nexttime-button {
+    width: 100px;
+  }
+
+  .nexttime-change {
+    width: 300px;
+  }
+
+}
+
+.navbar-custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.navbar-custom-scroll {
+  -ms-overflow-style: none;
+}
+
+@include media-breakpoint-down(md) {
+  .custom-header-md-open {
+    position: absolute;
+    top: 100%;
+    right: 0px;
+    left: 0px;
+  }
+}
+
+.collapse {
+  transition: none !important;
+}

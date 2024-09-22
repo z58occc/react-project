@@ -7,6 +7,7 @@ import moment from "moment";
 
 
 function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
+    const imgRef = useRef(null);
     const [tag, setTag] = useState('');
     const [tempData, setTempData] = useState({
         title: "",
@@ -83,8 +84,11 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                 isPublic: true,
                 content: "",
             });
+            console.log(imgRef.current.value)
+            imgRef.current.value = "";
         } else if (type === 'edit') {
             setTempData(tempArticle);
+            imgRef.current.value=tempData.image
         }
     }, [type, tempArticle])
 
@@ -103,25 +107,11 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                 ...tempData,
                 isPublic: checked
             })
-        } else if (name === "content" && tempData.content.length <= 100) {
-            if (value.length > 50) {
-                setTempData({
-                    ...tempData,
-                    [name]: value,
-                    description: value.slice(0, 100)
-                })
-            } else {
-                setTempData({
-                    ...tempData,
-                    [name]: value,
-                    description: value
-                })
-            }
         }
         else {
             setTempData({
                 ...tempData,
-                [name]: value
+                [name]: value.trim()
             })
         }
     }
@@ -205,6 +195,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                             placeholder='請輸入圖片連結'
                                             className='form-control'
                                             onChange={handleChange}
+                                            ref={imgRef}
                                         />
                                     </label>
                                     <div className='form-group '>
@@ -222,13 +213,15 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                                     <div style={{
                                         maxHeight: "300px", /* 限制容器的最大高度 */
                                         overflow: "auto" /* 當內容超過時，顯示滾動條 */
-                                    }}>
+                                    }}
+
+                                    >
                                         {tempData?.tag?.map((item, i) => {
                                             return (
                                                 item
                                                     ?
                                                     <button onClick={() => removeTag(i)} key={i} type="button" className={`
-                                        me-3 mt-1    rounded btn btn-outline-primary position-relative`}
+                                        me-3 mt-2    rounded btn btn-outline-primary position-relative`}
                                                     >
                                                         <div
                                                             style={{

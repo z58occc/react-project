@@ -3,40 +3,20 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 function TestAPI() {
-  const api = 'https://api.unsplash.com/search/photos/';
-  const accessKey = 'Yo_kzLVGm0KQwhCmxu3UhDHNoL830EX5-z-7BUkhV2E';
-  const filterString='animal'
-
-  const [imgs,setImgs]=useState([]);
-
-
   
-  const getPhoto=async()=>{
-    const res=await axios.get(`https://api.unsplash.com/search/photos/?client_id=Yo_kzLVGm0KQwhCmxu3UhDHNoL830EX5-z-7BUkhV2E&query=handshake`)
-    console.log(res);
-    setImgs(res.data.results);
+  const pay=async()=>{
+    const res= await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/pay/-O75AkjRliB36gtDnUUM`)
+    .then(res=>console.log(res))
+    .catch(err=>console.log(err))
   }
    
   
 
-
-
-  useEffect(() => {
-    getPhoto();
-  }, [])
-
   return (
     <div>
-      <img src={imgs[5]?.urls?.regular} 
-      className="border-triangle"
-      alt="" />
-      {/* {imgs?.map((img)=>{
-        return(
-          <img src={img.urls.regular}
-          style={{width:'300px'}}
-          ></img>
-        )
-      })} */}
+      <button onClick={pay}>
+        test
+      </button>
     </div>
   )
 }

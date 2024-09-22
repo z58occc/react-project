@@ -29,7 +29,8 @@ function App() {
         <Route path="/" element={<FrountLayout />}>
           <Route path="" element={<Home></Home>}></Route>
           <Route path="products" element={<Products></Products>}></Route>
-          <Route path="article" element={<Articles></Articles>}></Route>
+          <Route path="articles" element={<Articles></Articles>}></Route>
+          <Route path="articles/:tag" element={<Articles></Articles>}></Route>
           <Route path="orderQuery" element={<OrderQuery></OrderQuery>}></Route>
           <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>

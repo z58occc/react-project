@@ -26,15 +26,15 @@ function ArticleDetail() {
         setLoading(true);
         const articleRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/article/${id}`);
         setArticle(articleRes.data.article);
-        console.log(articleRes.data.article);
 
-        const articleAllRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles`)
-        console.log(articleAllRes);
-        setArticleAll(articleAllRes.data.articles);
-        const articleArr = articleAllRes.data.articles;
-        for (let index = 0; index < articleArr.length; index++) {
-            if (articleArr[index].id == articleRes.data.article.id) {
-                setArticleNum(articleArr[index].num)
+        const articlesPage1 = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles`)
+        const articlesPage2 = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles?page=2`)
+        const articlesArr = [...articlesPage1.data.articles, ...articlesPage2.data.articles];
+        setArticleAll(articlesArr);
+
+        for (let index = 0; index < articlesArr.length; index++) {
+            if (articlesArr[index].id == articleRes.data.article.id) {
+                setArticleNum(articlesArr[index].num)
                 break;
             }
         }
@@ -49,39 +49,41 @@ function ArticleDetail() {
         <div className="container">
             <div className=" mb-5 row">
                 <Loading isLoading={isLoading}></Loading>
-                <div className="col-9">
+                <div className="col-sm-9 mt-5">
                     <div>
                         {article?.tag?.map((item, i) => {
                             return (
                                 item
                                     ?
-                                    <button key={i} type="button" className="me-3  pt-0 pb-0  btn btn-secondary tag"
-                                        disabled
-                                        style={{
-                                            maxWidth: "200px", /* 限制按鈕最大寬度 */
-                                            overflow: 'hidden', /* 隱藏超出部分 */
-                                            textOverflow: 'ellipsis', /* 顯示省略號 */
-                                            whiteSpace: 'nowrap' /* 強制單行顯示 */
-                                        }}
-                                    >
-                                        {item}
-                                    </button>
+                                    <Link key={i} to={`/articles/${item}`}>
+                                        <button  type="button" className="me-3  pt-0 pb-0  btn btn-secondary tag"
+                                            disabled
+                                            style={{
+                                                maxWidth: "200px", /* 限制按鈕最大寬度 */
+                                                overflow: 'hidden', /* 隱藏超出部分 */
+                                                textOverflow: 'ellipsis', /* 顯示省略號 */
+                                                whiteSpace: 'nowrap' /* 強制單行顯示 */
+                                            }}
+                                        >
+                                            {item}
+                                        </button>
+                                    </Link>
                                     :
                                     ""
 
                             )
                         })}
                     </div>
-                    <div>
+                    <div className="mt-3">
                         <h1>
                             {article.title}
                         </h1>
                     </div>
-                    <div className="d-flex justify-content-between ">
+                    <div className="mt-3 d-flex justify-content-between ">
                         <big>
                             作者：{article.author} /{moment.unix(article.create_at).format('YYYY-MM-DD')}
                         </big>
-                        <div className="me-10 ">
+                        <div className="me-3 ">
                             字級
                             <b style={{
                                 fontSize: '25px'
@@ -96,14 +98,22 @@ function ArticleDetail() {
                             >A</b>
                         </div>
                     </div>
-                    <hr />
+                    <hr className="mt-0" />
                     <div style={{
                         fontSize: '20px'
                     }}
                         className="position-relative"
                     >
+                        <div className="text-secondary
+                         ">
+                            {article.description}
+                        </div>
+                        <hr
+                            style={{
+                                borderWidth: '1px',
+                            }} />
                         <div>
-                            <img className="img-fluid object-cover w-100" src={article.image} alt=""
+                            <img className="img-fluid object-cover w-100 mt-3" src={article.image} alt=""
                                 style={{
                                     height: "500px"
                                 }} />
@@ -118,7 +128,7 @@ function ArticleDetail() {
                         </div>
                         <Link to={`/article`}>
                             <button className="btn btn-outline-secondary
-                position-absolute botton-0 end-0    
+                position-absolute botton-0 end-0 mt-3    
                 "
                             >回文章列表</button>
                         </Link>
@@ -172,8 +182,8 @@ function ArticleDetail() {
                         </div>
                     </div>
                 </div>
-                <div className="col-3">
-                    <div>
+                <div className="col-3 mt-5 latest-articles">
+                    <div >
                         <h3 className="mb-3 row g-0 "
                         >
                             <span
@@ -191,27 +201,34 @@ function ArticleDetail() {
                                 NEW ARTICLES
                             </b>
                         </h3>
-                        {articleAll.slice(0, 5).map((article) => {
+                        {articleAll?.slice(0, 5).map((article) => {
                             return (
-                                <div className="row mb-5" key={article.id}>
-                                    <div className="col-4">
-                                        <img src={article.image} alt=""
+                                <Link to={`/article/${article.id}`}
+                                    style={{
+                                        textDecoration: 'none',
+                                    }}
+                                    className="text-secondary"
+                                    key={article.id}
+                                >
+                                    <div className="row mb-5">
+                                        <div className="col-4">
+                                            <img src={article.image} alt=""
+                                                style={{
+                                                    width: '87px',
+                                                    height: '63px'
+                                                }}
+                                                className="object-cover w-100"
+                                            />
+                                        </div>
+                                        <div className="col-8"
                                             style={{
-                                                width: '87px',
-                                                height: '63px'
+                                                fontSize: '12px'
                                             }}
-                                            className="object-cover w-100"
-                                        />
+                                        >
+                                            {article.description}
+                                        </div>
                                     </div>
-                                    <div className="col-8"
-                                        style={{
-                                            fontSize: '12px'
-                                        }}
-                                    >
-                                        {article.description}
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam ipsa doloribus cupiditate t
-                                    </div>
-                                </div>
+                                </Link>
                             )
                         })}
                     </div>

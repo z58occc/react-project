@@ -4,6 +4,7 @@ import Loading from "../../components/Loading";
 import { Modal } from "bootstrap";
 import QueryModal from "../../components/QueryModal";
 import Swal from "sweetalert2";
+import search from '../../search.webp'
 
 function OrderQuery() {
     const [order, setOrder] = useState({});
@@ -18,8 +19,12 @@ function OrderQuery() {
 
 
     const getOrder = async (id) => {
+        console.log(1);
+
         setLoading(true);
-        const orderRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/order/${id}`)
+        console.log(inputRef.current.value.trim());
+        const orderRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/order/${id}`);
+        setOrder(orderRes.data.order);
         if (orderRes.data.order == null) {
             setLoading(false);
             Swal.fire({
@@ -29,9 +34,12 @@ function OrderQuery() {
             });
             return
         }
-        setOrder(orderRes.data.order);
         queryModal.current.show();
         console.log(orderRes);
+
+
+
+
         setLoading(false);
     }
     const closeQueryModal = () => {
@@ -44,25 +52,43 @@ function OrderQuery() {
     }, [])
 
     return (
-        <div className="container vh-100 ">
+        <div className="container vh-100 mt-5 ">
             <Loading isLoading={isLoading}></Loading>
             <QueryModal
-                tempOrder={order}
+                tempOrder={order || {}}
                 closeOrderModal={closeQueryModal}
             ></QueryModal>
-            <div className="row " >
+            <form className="row justify-content-center justify-content-sm-start "
+                onSubmit={() => getOrder(inputRef.current.value.trim())}
+            >
                 <span className="col-auto"
                     style={{
                         fontSize: "25px"
                     }}>
                     請輸入你的訂單編號：
                 </span>
-                <input type="text" className="col-auto col-form-control w-25" ref={inputRef}
+                <input type="text" className="oreder-query-input col-auto col-form-control " ref={inputRef}
                     onKeyUp={(e) => handleKeyEnter(e)}
+                    required
                 />
-                <button type="button" className="col-auto ms-3 btn btn-outline-primary"
-                    onClick={() => getOrder(inputRef.current.value.trim())}>查詢</button>
+                <div
+                    className="col-auto d-flex justify-content-center"
+                >
+                    <button type="submit" className="order-query-button    btn btn-outline-primary">
+                        查詢
+                    </button>
+                </div>
+            </form>
+            <div className=" text-center mt-5">
+                <img src={search} alt=""
+                    className="order-query-img"
+                    style={{
+                        // width: '500px'
+                    }}
+                />
             </div>
+
+
         </div>
     )
 }

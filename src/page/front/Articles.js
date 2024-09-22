@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Pagination from "../../components/Pagination";
 import Loading from "../../components/Loading";
 
@@ -9,18 +9,33 @@ function Articles() {
     const [articles, setArticles] = useState([]);
     const [pagination, setPagination] = useState({});
     const [isLoading, setLoading] = useState(false);
+    const tag = useParams();
 
 
     const getArticles = async (page = 1) => {
         setLoading(true);
         const articleRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles?page=${page}`);
-        console.log(articleRes);
         setArticles(articleRes.data.articles);
         setPagination(articleRes.data.pagination);
         setLoading(false);
     }
+
+    const getTagArticles = async () => {
+        setLoading(true);
+        const articlesPage1 = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles`)
+        const articlesPage2 = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/articles?page=2`)
+        const articlesArr = [...articlesPage1.data.articles, ...articlesPage2.data.articles];
+        const articleFilter = articlesArr.filter(item => item?.tag?.includes(tag.tag));
+        setArticles(articleFilter);
+        setLoading(false);
+    }
+
     useEffect(() => {
-        getArticles();
+        if (tag.tag) {
+            getTagArticles();
+        } else {
+            getArticles(1);
+        }
     }, [])
     return (
         <div className=" container mb-10">
@@ -28,16 +43,19 @@ function Articles() {
             {articles.map((article) => {
                 return (
                     <div className="row mt-5" key={article.id}>
-                        <div className="col-4">
+                        <div className="col-sm-4">
                             <Link to={`/article/${article.id}`}
                                 style={{
                                     textDecoration: 'none'
                                 }}>
-                                <img className="img-fluid" src={article.image} alt=""
+                                <img className="img-fluid object-cover w-100" src={article.image} alt=""
+                                    style={{
+                                        height: '300px'
+                                    }}
                                 />
                             </Link>
                         </div>
-                        <div className="col-8">
+                        <div className="col-sm-8">
                             <div>
                                 <h3>
                                     <Link to={`/article/${article.id}`}
@@ -53,9 +71,9 @@ function Articles() {
                                     作者：{article.author} /{moment.unix(article.create_at).format('YYYY-MM-DD')}
                                 </small>
                             </div>
-                            <div>
+                            <div className="article-description">
                                 <big>
-                                    {article.description}...
+                                    {article.description}
                                 </big>
                             </div>
                         </div>

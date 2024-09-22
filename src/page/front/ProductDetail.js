@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { useOutletContext, useParams, Link } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
 import Loading from "../../components/Loading";
@@ -30,7 +30,6 @@ function ProdeuctDetail() {
         const productRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/product/${id}`);
         setProducts(productRes.data.product);
         setTempSrc(productRes.data.product.imagesUrl[0])
-        console.log(productRes.data.product)
         for (let index = 0; index < favorites.length; index++) {
             if (favorites[index].id == productRes.data.product.id) {
                 console.log(1);
@@ -90,8 +89,6 @@ function ProdeuctDetail() {
     }
 
     const changeImg = (e) => {
-        console.log(e.target);
-        console.log(e.target.src)
         const { src } = e.target;
         setTempSrc(src);
         imgRef.current.src = src;
@@ -110,13 +107,89 @@ function ProdeuctDetail() {
         <>
             <Loading isLoading={isLoading}></Loading>
             <div className="container">
-                <div className="row  m-1">
+                <div className="row d-flex flex-row-reverse   m-1 ">
+
+                    
+                    <div
+                        className=" col-md-4 d-flex flex-column"
+                        style={{
+                            textDecoration: 'none',
+                            color: 'black',
+                        }}
+                        to={`./product/${product?.id}`}
+                    >
+                        <div className="product-title">
+                            <h2 className=" mb-0">{product.title}</h2>
+                            <p className="fw-bold">NT$ {product.price}</p>
+                        </div>
+                        <div className="product-img">
+                            <img
+                                src={product?.imageUrl} className="img-fluid object-cover w-100 mb-5"
+                                style={{
+                                    height: '250px'
+                                }}
+                            />
+
+
+                        </div>
+                        <div className="add-to-cart">
+                            <p>{product.description}</p>
+                            <div className="input-group mb-3 border mt-3">
+                                <div className="input-group-prepend">
+                                    <button className="btn btn-outline-dark rounded-0 border-0 py-3" type="button" id="button-addon1"
+                                        onClick={() => setCartQuantity((pre) => pre === 1 ? pre : pre - 1)}
+                                    >
+                                        <i className="bi bi-dash-circle"></i>
+                                    </button>
+                                </div>
+                                <input
+                                    value={cartQuantity}
+                                    readOnly
+                                    type="number" className="form-control border-0 text-center my-auto shadow-none" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                                <div className="input-group-append">
+                                    <button className="btn btn-outline-dark rounded-0 border-0 py-3" type="button" id="button-addon2"
+                                        onClick={() => setCartQuantity((pre) => pre + 1)}
+                                    >
+                                        <i className="bi bi-plus-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="d-flex  flex-column"
+                                style={{
+                                    justifyItems: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                <button
+                                    type="button"
+                                    className="btn btn-primary w-100 rounded-0 py-3"
+                                    onClick={() => addToCart()}
+                                    disabled={isLoadingCart}
+                                    style={{
+                                        fontSize: "25px"
+                                    }}
+                                >
+                                    加入購物車
+                                </button>
+
+                                <button
+                                    className='btn btn-secondary mt-1 p-3'
+                                    onClick={() => addFavorite(product)}
+                                    style={{
+                                        fontSize: '15px',
+                                    }}
+                                >
+                                    加入下次再買清單
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
                     <div className="col-md-8" >
                         <div className="row">
                             <img
                                 src={product?.imagesUrl?.[0]} className="img-fluid object-cover "
                                 style={{
-                                    height: '500px'
+                                    height: '500px',
                                 }}
                                 ref={imgRef}
                             />
@@ -148,78 +221,6 @@ function ProdeuctDetail() {
 
 
                     </div>
-                    <div className="col-md-4 d-flex flex-column">
-                        <div className="">
-                            <div
-                                style={{
-                                    textDecoration: 'none',
-                                    color: 'black',
-                                }}
-                                to={`./product/${product?.id}`}
-                            >
-
-                                <h2 className="mb-0">{product.title}</h2>
-                                <p className="fw-bold">NT$ {product.price}</p>
-                                <div>
-                                    <img
-                                        src={product?.imageUrl} className="img-fluid object-cover w-100 mb-5"
-                                        style={{
-                                            height: '200px'
-                                        }}
-                                    />
-                                </div>
-                                <p>{product.description}</p>
-                                <div className="input-group mb-3 border mt-3">
-                                    <div className="input-group-prepend">
-                                        <button className="btn btn-outline-dark rounded-0 border-0 py-3" type="button" id="button-addon1"
-                                            onClick={() => setCartQuantity((pre) => pre === 1 ? pre : pre - 1)}
-                                        >
-                                            <i className="bi bi-dash-circle"></i>
-                                        </button>
-                                    </div>
-                                    <input
-                                        value={cartQuantity}
-                                        readOnly
-                                        type="number" className="form-control border-0 text-center my-auto shadow-none" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" />
-                                    <div className="input-group-append">
-                                        <button className="btn btn-outline-dark rounded-0 border-0 py-3" type="button" id="button-addon2"
-                                            onClick={() => setCartQuantity((pre) => pre + 1)}
-                                        >
-                                            <i className="bi bi-plus-circle"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="d-flex  flex-column"
-                                    style={{
-                                        justifyItems: 'center',
-                                        alignItems: 'center'
-                                    }}>
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary w-100 rounded-0 py-3"
-                                        onClick={() => addToCart()}
-                                        disabled={isLoadingCart}
-                                        style={{
-                                            fontSize: "25px"
-                                        }}
-                                    >
-                                        加入購物車
-                                    </button>
-
-                                    <button
-                                        className='btn btn-secondary mt-1 p-3'
-                                        onClick={() => addFavorite(product)}
-                                        style={{
-                                            fontSize: '15px',
-                                        }}
-                                    >
-                                        加入下次再買清單
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
                 </div>
                 <div className="row justify-content-between mt-4 mb-7">
                     <div className="col-md-7">
@@ -240,7 +241,7 @@ function ProdeuctDetail() {
                                         {`${product.content}`}
 
                                     </div>
-                                    
+
                                 </div>
 
                                 <SameTypeCarousel

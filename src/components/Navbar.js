@@ -1,126 +1,127 @@
 import { NavLink, Link } from "react-router-dom";
-import { useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
+import logo from '../logo.png'
+import { Collapse } from "bootstrap";
 
 function Navbar({ cartData }) {
 
-    const [token, setToken] = useState(document.cookie);
+    const navCollapse = useRef(null)
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-    const logout = () => {
-        document.cookie = 'hextoken=';
-        setToken(document.cookie);
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        // 監聽螢幕大小改變
+        window.addEventListener('resize', handleResize);
+
+        // 清除事件監聽器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const style = {
+        // color: windowWidth < 768 ? 'blue' : 'green', // 根據螢幕大小改變文字顏色
+        // fontSize: windowWidth < 768 ? '24px' : '16px' // 根據螢幕大小改變文字大小
+        backgroundColor: windowWidth < 768 ? "rgb(211, 211, 211, 0.8)" : '',
+        textAlign: windowWidth < 768 ? 'center' : ''
+
+    };
+
+    const hideCollapse = () => {
+        navCollapse.current.hide();
     }
-    
+
+
+    useEffect(() => {
+        navCollapse.current = new Collapse('#navbarNav', {
+            toggle: false
+        });
+    }, [])
+
 
 
 
 
     return (
 
-        <div className="bg-white sticky-top">
-
-            <div className="collapse" id="navbarToggleExternalContent">
-                <div className="bg-dark p-4">
-                    <h5 className="text-white h4">Collapsed content</h5>
-                    <span className="text-muted">Toggleable via the navbar brand.</span>
+        <div className=" sticky-top "
+            style={{
+                backgroundColor: 'lightcoral'
+            }}
+        >
+            <nav className="navbar px-0 navbar-expand-lg navbar-light "
+                style={{
+                    height: '65px'
+                }}
+            >
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse  custom-header-md-open" id="navbarNav"
+                    style={style}
+                >
+                    <NavLink
+                        className="logo nav-link navbar-brand " to='/'
+                    >
+                        <img src={logo} alt=""
+                            style={{
+                                height: '150px'
+                            }}
+                        />
+                    </NavLink>
+                    <ul className="navbar-nav flex-grow-1">
+                        <li className="nav-item ">
+                            <NavLink className="homepage nav-link  ps-0" to="/"
+                                onClick={hideCollapse}
+                            >
+                                首頁
+                            </NavLink>
+                        </li>
+                        <li className="nav-item    ">
+                            <NavLink className="nav-link   ps-0" to="/products"
+                                onClick={hideCollapse}
+                            >
+                                產品列表
+                            </NavLink>
+                        </li>
+                        <li className="nav-item  ">
+                            <NavLink className="nav-link  ps-0" to="/articles"
+                                onClick={hideCollapse}
+                            >
+                                文章列表
+                            </NavLink>
+                        </li>
+                        <li className="nav-item  ">
+                            <NavLink className="nav-link  ps-0" to="/orderQuery"
+                                onClick={hideCollapse}
+                            >
+                                訂單查詢
+                            </NavLink>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            <nav className="navbar navbar-dark bg-dark">
-                <div className="container-fluid">
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
+                <div className="d-flex me-5">
+                    <NavLink to="/cart" className={'nav-link position-relative  me-5'}>
+                        <i className="bi bi-cart-x-fill"
+                            style={{
+                                fontSize: '25px'
+                            }}
+                        ></i>
+                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {cartData?.carts?.length}
+                        </span>
+                    </NavLink>
+                    <Link
+                        to='./nexttime'
+                        className="  btn btn-primary    "
+                    >
+                        下次再買
+                    </Link>
                 </div>
             </nav>
-            <div className="container">
-                <nav className="navbar px-0 navbar-expand-lg navbar-light bg-white ">
-                    <NavLink
-                        className="navbar-brand " to='/'
-                    >
-                        Home
-                    </NavLink>
-                    <div className="collapse navbar-collapse bg-white custom-header-md-open ms-5" id="navbarNav">
-                        <ul className="navbar-nav">
-                            <li className="nav-item  me-5">
-                                <NavLink className="nav-link ps-0" to="/products">
-                                    產品列表
-                                </NavLink>
-                            </li>
-                            <li className="nav-item me-5">
-                                <NavLink className="nav-link ps-0" to="/article">
-                                    文章列表
-                                </NavLink>
-                            </li>
-                            <li className="nav-item ">
-                                <NavLink className="nav-link ps-0" to="/orderQuery">
-                                    訂單查詢
-                                </NavLink>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="d-flex">
-                        <NavLink to="/cart" className={'nav-link position-relative m-5'}>
-                            <i className="bi bi-cart-x-fill"></i>
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {cartData?.carts?.length}
-                            </span>
-                        </NavLink>
-                        <Link
-                            to='./nexttime'
-                            className="mt-5 mb-5 btn btn-primary"
-                        >
-                            下次再買
-                        </Link>
-                    </div>
-
-
-                    <div className="btn-group ">
-                        <button type="button" className="ms-3 btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                        </button>
-                        <ul className="dropdown-menu " aria-labelledby="dropdownMenuButton1"
-                            style={{
-                                color: 'orange'
-                            }}
-                        >
-                            <li>
-                                <div className="d-flex  ">
-                                    <NavLink to="/admin/products"
-                                        className='nav-link  w-100 dropdown-item'
-                                    >
-                                        去後台
-                                    </NavLink>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="d-flex">
-                                    {token !== 'hextoken=' ?
-                                        (
-                                            <button
-                                                onClick={logout}
-                                                className='nav-link   w-100 dropdown-item'>
-                                                登出
-                                            </button>
-                                        )
-                                        : (
-                                            <NavLink
-                                                to="/login" className='nav-link position-relative  w-100
-                                                dropdown-item'>
-                                                登入
-                                            </NavLink>
-                                        )
-                                    }
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-
-
-
-
-
-                </nav>
-            </div>
         </div>
     )
 }

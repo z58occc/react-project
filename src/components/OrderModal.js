@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 import moment from "moment/moment";
 
-function OrderModal({ closeOrderModal, getOrders, tempOrder }) {
+function OrderModal({ closeOrderModal, getOrders, tempOrder  }) {
     const [tempData, setTempData] = useState({
         create_at: 1523539519,
         id: "",

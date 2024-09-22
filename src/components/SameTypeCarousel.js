@@ -10,9 +10,21 @@ function SameTypeCarousel({ sameProducts }) {
                     right: '-720px'
                 }}
             >
+                {/* {sameProducts.slice(0,mapTimes).map(()=>{
+                    return(
+                        
+                    )
+                })} */}
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active  " aria-current="true " aria-label="Slide 1">
                 </button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                {sameProducts?.slice(4, 8).length > 0
+                    ?
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    :
+                    ""
+                }
+
+
             </div>
             <div className="carousel-inner">
                 <div className="text-primary mb-1 ">
@@ -46,31 +58,38 @@ function SameTypeCarousel({ sameProducts }) {
                         })}
                     </div>
                 </div>
-                <div className="carousel-item">
-                    <div className="row
-                            border border-bottom-0 border-top border-start-0 border-end-0">
-                        {sameProducts?.slice(4, 8).map((product) => {
-                            return (
-                                <div key={product.id} className="col-md-3 mt-3">
-                                    <div className="card border-0 mb-4  position-relative position-relative">
-                                        <Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>
-                                            <img
-                                                style={{ height: '150px' }}
-                                                src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
+                {sameProducts?.slice(4, 8).length > 0
+                    ?
+                    <div className="carousel-item">
+                        <div className="row
+                        border border-bottom-0 border-top border-start-0 border-end-0">
+                            {sameProducts?.slice(4, 8).map((product) => {
+                                return (
+                                    <div key={product.id} className="col-md-3 mt-3">
+                                        <div className="card border-0 mb-4  position-relative position-relative">
+                                            <Link style={{ textDecoration: 'none' }} to={`/product/${product.id}`}>
+                                                <img
+                                                    style={{ height: '150px' }}
+                                                    src={product.imageUrl} className="card-img-top rounded-0 object-cover" alt="..." />
 
-                                            <div className="card-body p-0">
-                                                <h4 className="mb-0 mt-2 text-center">
+                                                <div className="card-body p-0">
+                                                    <h4 className="mb-0 mt-2 text-center">
 
-                                                    {product.title}
-                                                </h4>
-                                            </div>
-                                        </Link>
+                                                        {product.title}
+                                                    </h4>
+                                                </div>
+                                            </Link>
 
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })}
-                    </div>                </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                    :
+                    ""
+                }
+
 
             </div>
             <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev"

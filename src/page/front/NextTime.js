@@ -18,11 +18,6 @@ function NextTime() {
     const filterModal = useRef(null);
 
 
-
-
-
-
-
     const addToCart = async (myFavorite) => {
         const data = {
             data: {
@@ -152,102 +147,106 @@ function NextTime() {
                 setMyFavorites={setMyFavorites}
                 myFavorites={myFavorites}
             ></FilterModal>
-            <div className="ms-10 me-10 mt-5">
-                <div >
-                    <span className="float-start">
-                        <input type="checkbox"
-                            onChange={hadleChange}
-                            className="ms-2 "
-                            id='all'
-                            ref={allChoose}
-                        />
-                        <label htmlFor="all" className="me-5 ">全選</label>
-                    </span>
-                    <span
-                        style={{
-                            display: 'inline-block',
-                            width: '100px',
-                            cursor: `${disabled ? '' : 'not-allowed'}`,
-                        }}
-                        className="me-5 "
-                    >
-                        <button
-                            className={`btn  float-start p-0 w-100 rounded ${disabled ? '' : 'disabled'}`}
-                            onClick={addToCartAll}
+            <div className=" mt-5">
+                <div className="d-flex   justify-content-sm-between flex-sm-row flex-column">
+                    <div >
+                        <span >
+                            <input type="checkbox"
+                                onChange={hadleChange}
+                                className="ms-2 "
+                                id='all'
+                                ref={allChoose}
+                            />
+                            <label htmlFor="all" className="me-5 ">全選</label>
+                        </span>
+                        <span
                             style={{
-                                backgroundColor: 'lightgray',
-                                fontSize: '15px',
+                                display: 'inline-block',
+                                width: '100px',
+                                cursor: `${disabled ? '' : 'not-allowed'}`,
+                            }}
+                            className="me-5 "
+                        >
+                            <button
+                                className={`btn   p-0 w-100 rounded ${disabled ? '' : 'disabled'}`}
+                                onClick={addToCartAll}
+                                style={{
+                                    backgroundColor: 'lightgray',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                <i
+                                    className="bi bi-cart4"
+                                ></i>
+                                放入購物車
+                            </button>
+                        </span>
+                        <span
+                            style={{
+                                cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
+                                display: 'inline-block',
+                                width: '80px',
                             }}
                         >
-                            <i
-                                className="bi bi-cart4"
-                            ></i>
-                            放入購物車
-                        </button>
-                    </span>
-                    <span
-                        style={{
-                            cursor: `${disabled ? 'pointer' : 'not-allowed'}`,
-                            display: 'inline-block',
-                            width: '80px',
-                        }}
-                    >
-                        <button
-                            className={`btn float-start  p-0 w-100 rounded ${disabled ? '' : 'disabled'} `}
-                            onClick={deleteFavoriteAll}
+                            <button
+                                className={`btn   p-0 w-100 rounded ${disabled ? '' : 'disabled'} `}
+                                onClick={deleteFavoriteAll}
+                                style={{
+                                    cursor: 'pointer',
+                                    backgroundColor: 'lightgray',
+                                    fontSize: '15px',
+                                    padding: '5px'
+                                }}
+                            >
+                                <i
+                                    className="bi bi-trash"
+                                ></i>
+                                刪除商品
+                            </button>
+                        </span>
+                    </div>
+                    <div className="d-flex  nexttime-right" >
+                        <select className="form-select  me-7 " aria-label="Default select example"
+                            onChange={(e) => handleSort(e)}
+                            style={{
+                                width: '200px',
+                                fontSize: '15px'
+                            }}
+                        >
+                            <option value="1"
+                                className="dropdown-item"
+                            >
+                                加入時間（先⭢後）
+                            </option>
+                            <option value="2"
+                                className="dropdown-item"
+                            >
+                                加入時間（後⭢先）
+                            </option>
+                            <option value="3"
+                                className="dropdown-item"
+                            >
+                                價格（低⭢高）
+                            </option>
+                            <option value="4"
+                                className="dropdown-item"
+                            >
+                                價格（高⭢低）
+                            </option>
+                        </select>
+                        <button className="mybtn btn "
+                            onClick={openFilterModal}
                             style={{
                                 cursor: 'pointer',
-                                backgroundColor: 'lightgray',
-                                fontSize: '15px',
-                                padding: '5px'
                             }}
+
                         >
-                            <i
-                                className="bi bi-trash"
-                            ></i>
-                            刪除商品
+                            <i className="bi bi-filter"></i>
+                            篩選
                         </button>
-                    </span>
-                    <button className="mybtn btn float-end"
-                        onClick={openFilterModal}
-                        style={{
-                            cursor: 'pointer',
-                        }}
-
-                    >
-                        <i className="bi bi-filter"></i>
-                        篩選
-                    </button>
-                    <select className="form-select  me-7 float-end" aria-label="Default select example"
-                        onChange={(e) => handleSort(e)}
-                        style={{
-                            width: '200px',
-                            fontSize: '15px'
-                        }}
-                    >
-                        <option value="1"
-                            className="dropdown-item"
-                        >
-                            加入時間（先⭢後）
-                        </option>
-                        <option value="2"
-                            className="dropdown-item"
-                        >
-                            加入時間（後⭢先）
-                        </option>
-                        <option value="3"
-                            className="dropdown-item"
-                        >
-                            價格（低⭢高）
-                        </option>
-                        <option value="4"
-                            className="dropdown-item"
-                        >
-                            價格（高⭢低）
-                        </option>
-                    </select>
-
+                    </div>
                 </div>
+
                 {
                     localStorage.getItem('favorites') == null
                         ?
@@ -260,84 +259,85 @@ function NextTime() {
                             目前下次再買清單沒有商品
                         </div>
                         :
-                        <table className="table ">
-                            <thead >
-
-                                <tr className="table-secondary ">
-                                    <th className="col"></th>
-                                    <th className="col"></th>
-                                    <th className="col text-center">商品明細</th>
-                                    <th className="col"></th>
-                                    <th className="col text-center">變更</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {myFavorites?.map((myFavorite, i) => {
-                                    return (
-                                        <tr key={myFavorite.id}>
-                                            <th scope="row">
-                                                <input type="checkbox"
-                                                    ref={(e) => checked.current[i] = e}
-                                                    onChange={handleDisabled}
-                                                />
-                                            </th>
-                                            <td >
-                                                <img src={myFavorite.imageUrl}
-                                                    alt=""
-                                                    style={{
-                                                        height: '100px',
+                        <div className="table-responsive mt-5">
+                            <table className="table "
+                            >
+                                <thead >
+                                    <tr className="table-secondary ">
+                                        <th className="col"></th>
+                                        <th className="col"></th>
+                                        <th className="col text-center">商品明細</th>
+                                        <th className="col"></th>
+                                        <th className="col text-center">變更</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {myFavorites?.map((myFavorite, i) => {
+                                        return (
+                                            <tr key={myFavorite.id}>
+                                                <th scope="row">
+                                                    <input type="checkbox"
+                                                        ref={(e) => checked.current[i] = e}
+                                                        onChange={handleDisabled}
+                                                    />
+                                                </th>
+                                                <td >
+                                                    <img src={myFavorite.imageUrl}
+                                                        alt=""
+                                                        style={{
+                                                            height: '100px',
+                                                            width: '100px'
+                                                        }}
+                                                        className="object-cover"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <div>
+                                                        <h4>
+                                                            {myFavorite.title}
+                                                        </h4>
+                                                    </div>
+                                                    <div>
+                                                        <small>
+                                                            {myFavorite.description}
+                                                        </small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style={{
                                                         width: '100px'
-                                                    }}
-                                                    className="object-cover"
-                                                />
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <h4>
-                                                        {myFavorite.title}
-                                                    </h4>
-                                                </div>
-                                                <div>
-                                                    <small>
-                                                        {myFavorite.description}
-                                                    </small>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div style={{
-                                                    width: '100px'
-                                                }}>
-                                                    NT$ {myFavorite.price}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center'
-                                                }}>
+                                                    }}>
+                                                        NT$ {myFavorite.price}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div
+                                                        className="d-sm-flex nexttime-change  "
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            href="./checkout.html" className="nexttime-button w-100 btn btn-dark  rounded py-3"
+                                                            onClick={() => addToCart(myFavorite)}
+                                                            disabled={isLoadingCart}
+                                                        >
+                                                            加入購物車
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="nexttime-button w-100 btn btn-secondary m-sm-0 mt-5 rounded"
+                                                            onClick={() => deleteFavorite(myFavorite.id)}
+                                                        >
+                                                            刪除商品
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
 
-                                                    <button
-                                                        type="button"
-                                                        href="./checkout.html" className="btn btn-dark  rounded py-3"
-                                                        onClick={() => addToCart(myFavorite)}
-                                                        disabled={isLoadingCart}
-                                                    >
-                                                        加入購物車
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-secondary ms-1 rounded"
-                                                        onClick={() => deleteFavorite(myFavorite.id)}
-                                                    >
-                                                        刪除商品
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
                 }
             </div>
 
