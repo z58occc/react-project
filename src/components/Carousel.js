@@ -24,7 +24,7 @@ function Carousel({ products }) {
         }
 
     }
-    const oriImg = (e) => {
+    const oriImg = (e) => {//滑鼠離開後 把原本的圖換回來
         const { name } = e.target;
         if (name) {
             for (let index = 0; index < otherImgRef.current.length; index++) {

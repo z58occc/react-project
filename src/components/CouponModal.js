@@ -178,7 +178,7 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                                 type='checkbox'
                                 id='is_enabled'
                                 name='is_enabled'
-                                checked={!!tempData.is_enabled}
+                                checked={!!tempData.is_enabled}//!!用來轉成布林值
                                 onChange={handleChange}
                             />
                             是否啟用
