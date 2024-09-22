@@ -77,7 +77,8 @@ function Home() {
                                     ref={mySearch}
                                     onKeyUp={(e) => handleKeyEnter(e)}
                                 />
-                                <Link to={`/products/${searchWord}`} className="btn btn-outline-primary flex-shrink-0" type="submit"
+                                <Link to={`/products/${searchWord}`} className= {`btn btn-outline-primary flex-shrink-0
+                                ${searchWord?'':'disabled'}`} type="submit"
                                 >搜尋
                                 </Link>
                             </div>

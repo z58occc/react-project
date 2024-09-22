@@ -126,7 +126,7 @@ function ArticleDetail() {
                         >
                             {article.content}
                         </div>
-                        <Link to={`/article`}>
+                        <Link to={`/articles`}>
                             <button className="btn btn-outline-secondary
                 position-absolute botton-0 end-0 mt-3    
                 "

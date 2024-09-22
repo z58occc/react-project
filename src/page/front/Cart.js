@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
 import { Tooltip } from "bootstrap";
@@ -62,7 +62,7 @@ function Cart() {
                     code: couponCode
                 }
             })
-                .then(response => console.log(response));
+                // .then(response => console.log(response));
             getCart();
             return true
         } catch (error) {
@@ -76,7 +76,6 @@ function Cart() {
         try {
             const res = await axios.delete(`/v2/api/${process.env.REACT_APP_API_PATH}/cart/${id}`,)
             getCart();
-            console.log(res);
         } catch (error) {
             console.log(error);
         }
@@ -85,7 +84,6 @@ function Cart() {
         try {
             const res = await axios.delete(`/v2/api/${process.env.REACT_APP_API_PATH}/carts`)
             getCart();
-            console.log(res);
 
         } catch (error) {
             console.log(error);
@@ -106,10 +104,8 @@ function Cart() {
             )
             dispatch(createAsyncMessage(res.data));
             getCart();
-            console.log(res);
             setLoadingItem(loadingItems.filter((loadingObject) => loadingObject !== item.id))
         } catch (error) {
-            console.log(error);
             dispatch(createAsyncMessage(error.response.data));
             setLoadingItem(loadingItems.filter((loadingObject) => loadingObject !== item.id));
 
@@ -117,7 +113,6 @@ function Cart() {
     }
     const addFavorite = (item) => {
         const { product, id } = item
-        console.log(product)
         let alreadyExists = false;
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         for (let index = 0; index < favorites.length; index++) {
@@ -197,9 +192,11 @@ function Cart() {
                                 return (
                                     <div className="d-flex mt-4 bg-light" key={item.id}>
                                         <div>
-                                            <img
-                                                className="object-cover"
-                                                src={item.product.imageUrl} alt="" style={{ width: "100px", height: '120px' }} />
+                                            <Link to={`/product/${item.product.id}`}>
+                                                <img
+                                                    className="object-cover"
+                                                    src={item.product.imageUrl} alt="" style={{ width: "100px", height: '120px' }} />
+                                            </Link>
                                         </div>
                                         <div className="w-100 p-3 position-relative ">
                                             <button
@@ -210,7 +207,14 @@ function Cart() {
                                             >
                                                 <i className="bi bi-x-circle-fill"></i>
                                             </button>
-                                            <p className="mb-0 fw-bold">{item.product.title}</p>
+                                            <Link to={`/product/${item.product.id}`} 
+                                            style={{
+                                                textDecoration:'none',
+                                                color:'black'
+                                            }}
+                                            >
+                                                <p className="mb-0 fw-bold">{item.product.title}</p>
+                                            </Link>
                                             <p className="mb-1 text-muted" style={{ fontSize: "14px" }}>{item.product.description}</p>
                                             <div className="d-flex justify-content-between align-items-center w-100">
                                                 <select name="" id="" className="form-select"

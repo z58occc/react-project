@@ -29,10 +29,8 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
 
 
     const uploadFile = async (e) => {
-        console.log(e.target.name)
         const { name, files } = e.target
         const file = files[0];
-        console.log(file);
         if (!file) {
             return;
         }
@@ -45,21 +43,17 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                     authorization: token
                 }
             })
-            console.log(res);
-            console.log(res.data.imageUrl);
             if (e.target.name === "image") {
                 setTempData({
                     ...tempData,
                     [name]: res.data.imageUrl
                 })
-                console.log(tempData);
             } else {
                 const index = parseInt(e.target.name);
                 setTempData({
                     ...tempData,
                     imagesUrl: tempData.imagesUrl.map((item, i) => i === index ? res.data.imageUrl : item)
                 })
-
             }
         } catch (error) {
             console.log(error);
@@ -84,7 +78,6 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                 isPublic: true,
                 content: "",
             });
-            console.log(imgRef.current.value)
             imgRef.current.value = "";
         } else if (type === 'edit') {
             setTempData(tempArticle);
@@ -130,19 +123,16 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                 data: tempData
             }
             );
-            console.log(res);
             handleSuccessMessage(dispatch, res);
             closeArticleModal();
             getArticles();
         } catch (error) {
-            console.log(error);
             handleErrorMessage(dispatch, error);
         }
     }
     const removeTag = (index) => {
         let removeTags = [...tempData.tag]
         removeTags.splice(index, 1);
-        console.log(removeTags);
         setTempData({
             ...tempData,
             tag: removeTags
@@ -172,7 +162,7 @@ function ArticleModal({ closeArticleModal, type, getArticles, tempArticle }) {
                 <div className='modal-content'>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                            {type === 'create' ? "建立新文章" : `編輯${tempData?.title}`}
+                            {type === 'create' ? "建立新文章" : `編輯`}
                         </h1>
                         <button
                             type='button'

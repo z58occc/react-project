@@ -15,7 +15,6 @@ import ArticleDetail from "./page/front/ArticleDetail";
 import Cart from "./page/front/Cart";
 import Checkout from "./page/front/Checkout";
 import Success from "./page/front/Success";
-import TestAPI from "./page/front/testAPI";
 import ScrollToTop from "./components/ScrollToTop";
 import NextTime from "./page/front/NextTime";
 
@@ -34,7 +33,6 @@ function App() {
           <Route path="orderQuery" element={<OrderQuery></OrderQuery>}></Route>
           <Route path="nexttime" element={<NextTime></NextTime>}></Route>
           <Route path="products/:searchWord" element={<Products></Products>}></Route>
-          <Route path="testAPI" element={<TestAPI></TestAPI>}></Route>
           <Route path="product/:id" element={<ProdeuctDetail></ProdeuctDetail>}></Route>
           <Route path="article/:id" element={<ArticleDetail></ArticleDetail>}></Route>
           <Route path="cart" element={<Cart></Cart>}></Route>

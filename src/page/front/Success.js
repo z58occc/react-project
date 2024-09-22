@@ -1,20 +1,41 @@
-import { useOutletContext, useParams } from "react-router-dom"
+import { useOutletContext, useParams, Link } from "react-router-dom"
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { Tooltip } from "bootstrap";
 
 function Success() {
     const { orderId } = useParams();
     const [orderData, setOrderData] = useState({});
     const { getCart } = useOutletContext();
+    const tooltipRef = useRef(null);
 
+    useEffect(() => {
+        const tooltipTriggerEl = document.querySelector('[data-bs-toggle="tooltip"]');
+        if (tooltipTriggerEl) {
+            const tooltipInstance = new Tooltip(tooltipTriggerEl);
+            tooltipRef.current = tooltipInstance; // 保存实例到ref
+        }
+    }, []);
+
+  
 
 
 
     const getOrder = async () => {
         const res = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/order/${orderId}`,
         );
-        console.log(res);
         setOrderData(res.data.order)
+    }
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(orderData.id)
+        .then(()=>tooltipRef.current.show())
+        .catch((err)=>console.log(err));
+        setTimeout(() => {
+            if (tooltipRef.current) {
+                tooltipRef.current.hide(); // 调用hide方法
+            }
+        }, 3000);
     }
 
 
@@ -39,13 +60,27 @@ function Success() {
                 <div className="row">
                     <div className="col-md-6">
                         <h1>購買成功</h1>
-                        <h3>訂單編號：
-                            <input type="text"
-                                defaultValue={orderData.id}
-                                disabled
-                                className="w-50"
-                            />
-                        </h3>
+                        <div className="d-flex">
+                            <h3>訂單編號：
+                                <input type="text"
+                                    defaultValue={orderData.id}
+                                    disabled
+                                    className="w-50"
+                                />
+                            </h3>
+
+
+                            <i
+                                data-bs-toggle="tooltip" data-bs-html="true" title="已複製成功"
+                                data-bs-trigger='manual'
+                                onClick={copyToClipboard}
+                                className="bi bi-copy "
+                                style={{
+                                    fontSize: '25px',
+                                    cursor: 'pointer'
+                                }}
+                            ></i>
+                        </div>
                         <div>
                             <b className="text-primary">
                                 您的訂單已成功完成，請記下您的訂單編號 ! ! !
@@ -58,7 +93,7 @@ function Success() {
                             再次感謝您的支持！
 
                             祝您購物愉快！</p>
-                        <a href="./index.html" className="btn btn-outline-dark me-2 rounded-0 mb-4">回到首頁</a>
+                        <Link to='/' className="btn btn-outline-dark me-2 rounded-0 mb-4">回到首頁</Link>
                     </div>
                     <div className="col-md-6">
                         <div className="card rounded-0 py-4">
@@ -91,11 +126,11 @@ function Success() {
                                                             mb-0`}>NT${item.total}</p>
                                                         </div>
                                                         <div className={`${item.total == item.final_total
-                                                                ?
-                                                                'd-none'
-                                                                :
-                                                                ''
-                                                                }
+                                                            ?
+                                                            'd-none'
+                                                            :
+                                                            ''
+                                                            }
                                                             text-end`}>
                                                             NT${item.final_total}
                                                         </div>

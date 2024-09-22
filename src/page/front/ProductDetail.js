@@ -32,7 +32,6 @@ function ProdeuctDetail() {
         setTempSrc(productRes.data.product.imagesUrl[0])
         for (let index = 0; index < favorites.length; index++) {
             if (favorites[index].id == productRes.data.product.id) {
-                console.log(1);
                 setAlreadyExists(true);
                 break;
             }
@@ -58,16 +57,12 @@ function ProdeuctDetail() {
             const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/cart`,
                 data,
             );
-            console.log(res);
             dispatch(createAsyncMessage(res.data));
             getCart();
             setIsLoadingCart(false);
         } catch (error) {
-            console.log(error)
             setIsLoadingCart(false);
             dispatch(createAsyncMessage(error.response.data));
-
-
         }
 
     }

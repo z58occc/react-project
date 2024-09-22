@@ -13,7 +13,7 @@ function AdminOrders() {
     const orderModal = useRef(null);
     const deleteModal = useRef(null);
     const [pagination, setPagination] = useState({});
-    
+
     useEffect(() => {
         orderModal.current = new Modal('#orderModal', {
             backdrop: 'static'
@@ -36,7 +36,7 @@ function AdminOrders() {
     const closeOrderModal = () => {
         orderModal.current.hide();
     }
-    
+
     const closeDeleteModal = () => {
         deleteModal.current.hide();
     }
@@ -44,7 +44,6 @@ function AdminOrders() {
     const getOrders = async (page = 1) => {
         const orderRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/admin/orders?page=${page}`)
         setOrders(orderRes.data.orders);
-        console.log(orderRes.data.orders);
         setPagination(orderRes.data.pagination);
     }
     const deleteOrder = async (id) => {
@@ -58,6 +57,8 @@ function AdminOrders() {
             console.log((error));
         }
     }
+
+   
 
 
 
@@ -109,9 +110,9 @@ function AdminOrders() {
                                         ""
                                     }</td>
                                     <td
-                                    style={{
-                                        maxWidth:'300px'
-                                    }}
+                                        style={{
+                                            maxWidth: '300px'
+                                        }}
                                     >{order.user.message}</td>
                                     <td>
                                         <button

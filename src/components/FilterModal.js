@@ -116,7 +116,6 @@ function FilterModal({ closeFilterModal, setMyFavorites }) {
             filterArr = favorites.filter(favorite => typeState[favorite.category]);
             setMyFavorites(filterArr);
         }
-        console.log(filterArr);
         filerTime(filterArr)
         closeFilterModal();
     }
@@ -137,7 +136,6 @@ function FilterModal({ closeFilterModal, setMyFavorites }) {
 
     return (
         <div id="filterModal" className="modal" tabIndex="-1">
-            {JSON.stringify(typeState)};
             <div className="modal-dialog modal-lg">
                 <div className="modal-content">
                     <div className="modal-header">

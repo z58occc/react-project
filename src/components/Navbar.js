@@ -66,7 +66,7 @@ function Navbar({ cartData }) {
                     <NavLink
                         className="logo nav-link navbar-brand " to='/'
                     >
-                        <img src={logo} alt=""
+                        <img  src={logo} alt=""
                             style={{
                                 height: '150px'
                             }}

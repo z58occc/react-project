@@ -7,7 +7,6 @@ import axios from "axios";
 
 function Checkout() {
     const { cartData } = useOutletContext();
-    console.log(cartData);
 
     const {
         register,
@@ -32,12 +31,9 @@ function Checkout() {
                 },
             }
         }
-        console.log(errors);
-        console.log(data);
         const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/order`,
             form,
         );
-        console.log(res);
         navigate(`/success/${res.data.orderId}`)
     };
 

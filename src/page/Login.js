@@ -19,8 +19,6 @@ function Login() {
         try {
             const res = await axios.post('/v2/admin/signin', data)
             const { token, expired } = res.data
-            console.log(res.data);
-
             document.cookie =
                 `hextoken=${token}; expires=${new Date(expired)}`;;
             //儲存token
@@ -28,7 +26,6 @@ function Login() {
                 navigate('/admin/products')
             }
         } catch (error) {
-            console.log(error);
             setLoginState(error.response.data);
         }
 

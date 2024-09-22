@@ -31,7 +31,6 @@ export const messageSlice = createSlice({
             // },2000);
         },
         removeMessage(state, action) {
-            console.log('removeMessage', action.payload);
             const index = state.findIndex(item => item === action.payload);
             state.splice(index, 1);
         }
@@ -42,7 +41,6 @@ export const messageSlice = createSlice({
 export const createAsyncMessage = createAsyncThunk(
     'message/createAsyncMessage',
     async function (payload, { dispatch, requestId }) {
-        // console.log('createAsyncMessage',payload,{dispatch,params});
         dispatch(messageSlice.actions.createMessage({
             ...payload,
             id: requestId,

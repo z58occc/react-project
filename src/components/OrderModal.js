@@ -68,12 +68,10 @@ function OrderModal({ closeOrderModal, getOrders, tempOrder  }) {
                 data: tempData
             }
             );
-            console.log(res);
             handleSuccessMessage(dispatch, res);
             getOrders();
             closeOrderModal();
         } catch (error) {
-            console.log(error);
             handleErrorMessage(dispatch, error);
         }
     }

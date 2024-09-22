@@ -9,7 +9,6 @@ export const Editor = ({setTempQuill}) => {
     // 使用 setTimeout 取得增加 style 樣式的 HTML
     // 我將編輯器的語法用 console 印出來，使用時只要處理這段 HtmlContent 即可
     setTimeout(() => {
-      console.log("HtmlContent", editor.root.innerHTML);
       setTempQuill(editor.root.innerHTML)
       
     }, 20);

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
 
 
@@ -94,7 +94,6 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
     }
 
     const submit = async () => {
-        console.log(tempData);
         try {
             let api = `/v2/api/${process.env.REACT_APP_API_PATH}/admin/product`;
             let method = 'post';
@@ -107,21 +106,17 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                 data: tempData
             }
             );
-            console.log(res);
             handleSuccessMessage(dispatch, res);
             closeProductModal();
             getProducts();
 
         } catch (error) {
-            console.log(error);
             handleErrorMessage(dispatch, error);
         }
     }
     const uploadFile = async (e) => {
-        console.log(e.target.name)
         const { name, files } = e.target
         const file = files[0];
-        console.log(file);
         if (!file) {
             return;
         }
@@ -134,8 +129,6 @@ function ProductModal({ closeProductModal, getProducts, type, tempProduct }) {
                     authorization: token
                 }
             })
-            console.log(res);
-            console.log(res.data.imageUrl);
             if (e.target.name === "imageUrl") {
                 setTempData({
                     ...tempData,

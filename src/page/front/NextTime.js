@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createAsyncMessage } from "../../slice/messageSlice";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, Link } from "react-router-dom";
 import FilterModal from "../../components/FilterModal";
 import { Modal } from "bootstrap";
 
@@ -17,8 +17,7 @@ function NextTime() {
     const [disabled, setDisabled] = useState(false);
     const filterModal = useRef(null);
 
-
-    const addToCart = async (myFavorite) => {
+    const addToCart = async (myFavorite, all = false) => {
         const data = {
             data: {
                 product_id: myFavorite.id,
@@ -30,37 +29,39 @@ function NextTime() {
             const res = await axios.post(`/v2/api/${process.env.REACT_APP_API_PATH}/cart`,
                 data,
             );
-            console.log(res);
             dispatch(createAsyncMessage(res.data));
             getCart();
             setIsLoadingCart(false);
         } catch (error) {
-            console.log(error)
             setIsLoadingCart(false);
             dispatch(createAsyncMessage(error.response.data));
         }
-        const remain = myFavorites.filter((item) => item.id != myFavorite.id);
-        setMyFavorites(remain);
-        localStorage.setItem('favorites', JSON.stringify(remain));
+        //觸發addToCartAll時 避免更動myFavorites陣列 造成myFavorites跟checked.current的index會對不上
+        if (!all) {
+            const remain = myFavorites.filter((item) => item.id != myFavorite.id);
+            setMyFavorites(remain);
+            localStorage.setItem('favorites', JSON.stringify(remain));
+        }
     }
 
     const addToCartAll = async () => {
         for (let index = checked.current.length - 1; index >= 0; index--) {
             if (checked?.current[index]?.checked) {
-                await addToCart(myFavorites[index]);
+                await addToCart(myFavorites[index], true);
             }
         }
         const remain = myFavorites.filter((_, index) => !checked?.current[index]?.checked);
         setMyFavorites(remain);
         localStorage.setItem('favorites', JSON.stringify(remain));
-
-
     }
 
     const deleteFavoriteAll = () => {
         const remain = myFavorites.filter((_, index) => !checked?.current[index]?.checked);
-        setMyFavorites(remain);
         localStorage.setItem('favorites', JSON.stringify(remain));
+        if (remain.length == 0) {
+            localStorage.clear();
+        }
+        setMyFavorites(remain);
     }
 
     const deleteFavorite = (id) => {
@@ -101,19 +102,15 @@ function NextTime() {
         switch (value) {
 
             case '1':
-                console.log(1);
                 sortFavorites = [...myFavorites].sort((a, b) => a.create_at - b.create_at);
                 break;
             case '2':
-                console.log(2);
                 sortFavorites = [...myFavorites].sort((a, b) => b.create_at - a.create_at);
                 break;
             case '3':
-                console.log(3);
                 sortFavorites = [...myFavorites].sort((a, b) => a.price - b.price);
                 break;
             case '4':
-                console.log(4);
                 sortFavorites = [...myFavorites].sort((a, b) => b.price - a.price);
                 break;
 
@@ -135,13 +132,11 @@ function NextTime() {
         const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         sortFavorites = [...favorites].sort((a, b) => a.create_at - b.create_at);
         setMyFavorites(sortFavorites);
-
-
     }, [])
 
 
     return (
-        <div className="container vh-100 ">
+        <div className="container ">
             <FilterModal
                 closeFilterModal={closeFilterModal}
                 setMyFavorites={setMyFavorites}
@@ -250,9 +245,11 @@ function NextTime() {
                 {
                     localStorage.getItem('favorites') == null
                         ?
-                        <div className="text-center  mt-10  "
+                        <div className="text-center   "
                             style={{
-                                fontSize: '60px'
+                                fontSize: '60px',
+                                marginTop: '200px',
+                                marginBottom: '300px'
                             }}
                         >
                             <i className="bi bi-emoji-surprise-fill me-3"></i>
@@ -261,6 +258,9 @@ function NextTime() {
                         :
                         <div className="table-responsive mt-5">
                             <table className="table "
+                                style={{
+                                    marginBottom: '300px'
+                                }}
                             >
                                 <thead >
                                     <tr className="table-secondary ">
@@ -282,20 +282,29 @@ function NextTime() {
                                                     />
                                                 </th>
                                                 <td >
-                                                    <img src={myFavorite.imageUrl}
-                                                        alt=""
-                                                        style={{
-                                                            height: '100px',
-                                                            width: '100px'
-                                                        }}
-                                                        className="object-cover"
-                                                    />
+                                                    <Link to={`/product/${myFavorite.id}`}>
+                                                        <img src={myFavorite.imageUrl}
+                                                            alt=""
+                                                            style={{
+                                                                height: '100px',
+                                                                width: '100px'
+                                                            }}
+                                                            className="object-cover"
+                                                        />
+                                                    </Link>
                                                 </td>
                                                 <td>
                                                     <div>
-                                                        <h4>
-                                                            {myFavorite.title}
-                                                        </h4>
+                                                        <Link to={`/product/${myFavorite.id}`}
+                                                            style={{
+                                                                textDecoration: 'none',
+                                                                color: 'black'
+                                                            }}
+                                                        >
+                                                            <h4>
+                                                                {myFavorite.title}
+                                                            </h4>
+                                                        </Link>
                                                     </div>
                                                     <div>
                                                         <small>

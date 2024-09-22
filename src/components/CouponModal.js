@@ -1,5 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../store/messageStore";
+
 
 function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
     const [loading, setLoading] = useState(false);
@@ -12,6 +14,9 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
     });
 
     const [date, setDate] = useState(new Date());
+
+    const [, dispatch] = useContext(MessageContext);
+
 
     useEffect(() => {
         if (type === 'create') {
@@ -68,11 +73,11 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                 }
             }
             );
-            console.log(res);
+            handleSuccessMessage(dispatch, res);
             closeModal();
             getCoupons();
         } catch (error) {
-            console.log(error);
+            handleErrorMessage(dispatch, error);
         }
         setLoading(false);
     }
@@ -147,7 +152,6 @@ function CouponModal({ closeModal, getCoupons, type, tempCoupon }) {
                                                 .getDate()
                                                 .toString()
                                                 .padStart(2, 0)}`} onChange={(e) => {
-                                                    console.log(e.target.value)
                                                     setDate(new Date(e.target.value))
                                                 }}
                                     />

@@ -18,11 +18,9 @@ function OrderQuery() {
     }
 
 
-    const getOrder = async (id) => {
-        console.log(1);
-
+    const getOrder = async (e,id) => {
+        e.preventDefault();
         setLoading(true);
-        console.log(inputRef.current.value.trim());
         const orderRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/order/${id}`);
         setOrder(orderRes.data.order);
         if (orderRes.data.order == null) {
@@ -35,11 +33,6 @@ function OrderQuery() {
             return
         }
         queryModal.current.show();
-        console.log(orderRes);
-
-
-
-
         setLoading(false);
     }
     const closeQueryModal = () => {
@@ -59,7 +52,7 @@ function OrderQuery() {
                 closeOrderModal={closeQueryModal}
             ></QueryModal>
             <form className="row justify-content-center justify-content-sm-start "
-                onSubmit={() => getOrder(inputRef.current.value.trim())}
+                onSubmit={(e) => getOrder(e,inputRef.current.value.trim())}
             >
                 <span className="col-auto"
                     style={{
@@ -81,9 +74,9 @@ function OrderQuery() {
             </form>
             <div className=" text-center mt-5">
                 <img src={search} alt=""
-                    className="order-query-img"
+                    className="order-query-img "
                     style={{
-                        // width: '500px'
+                        borderRadius:'10%'
                     }}
                 />
             </div>
