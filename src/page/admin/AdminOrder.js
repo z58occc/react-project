@@ -122,14 +122,6 @@ function AdminOrders() {
                                         >
                                             查看
                                         </button>
-                                        {/* <button
-                                            type="button"
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() => openDeleteModal(order)}
-                                        >
-                                            刪除
-                                        </button> */}
-
                                     </td>
                                 </tr>
                             )

@@ -22,13 +22,6 @@ export const messageSlice = createSlice({
                 });
             }
 
-
-            // setTimeout(()=>{
-            //     // state沒有辦法在非同步的狀態下存取
-            //     const index = state.findIndex(item=>item===id);
-
-            //     state.splice(index,1);
-            // },2000);
         },
         removeMessage(state, action) {
             const index = state.findIndex(item => item === action.payload);

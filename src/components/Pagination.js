@@ -13,7 +13,6 @@ function Pagination({pagination,changePage}) {
                     </li>
                     {
                         [...new Array(pagination.total_pages)].map((_, i) => (//索引位置
-                            // eslint-disable-next-line react/no-array-index-key
                             <li className="page-item" key={`${i}_page`}>
                                 <a
                                     className={`page-link ${(i + 1 === pagination.current_page) && 'active'}`}

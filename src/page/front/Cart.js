@@ -62,7 +62,6 @@ function Cart() {
                     code: couponCode
                 }
             })
-                // .then(response => console.log(response));
             getCart();
             return true
         } catch (error) {

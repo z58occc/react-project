@@ -23,8 +23,6 @@ function Navbar({ cartData }) {
     }, []);
 
     const style = {
-        // color: windowWidth < 768 ? 'blue' : 'green', // 根據螢幕大小改變文字顏色
-        // fontSize: windowWidth < 768 ? '24px' : '16px' // 根據螢幕大小改變文字大小
         backgroundColor: windowWidth < 768 ? "rgb(211, 211, 211, 0.8)" : '',
         textAlign: windowWidth < 768 ? 'center' : ''
 

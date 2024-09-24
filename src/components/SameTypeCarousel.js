@@ -10,11 +10,6 @@ function SameTypeCarousel({ sameProducts }) {
                     right: '-720px'
                 }}
             >
-                {/* {sameProducts.slice(0,mapTimes).map(()=>{
-                    return(
-                        
-                    )
-                })} */}
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active  " aria-current="true " aria-label="Slide 1">
                 </button>
                 {sameProducts?.slice(4, 8).length > 0
