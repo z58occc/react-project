@@ -4,7 +4,6 @@ import axios from "axios";
 import Loading from "../../components/Loading";
 import { Link, useNavigate, } from "react-router-dom";
 import heroImage from '../../heroImage.webp'
-import Countdown from "react-countdown";
 
 function Home() {
 
@@ -16,16 +15,18 @@ function Home() {
     const navigate = useNavigate();
     const [articles, setArticles] = useState([]);
     const randomNum = Math.floor(Math.random() * 6);
-    // 設置倒數時間 24 小時 = 86400 秒
-    const [key, setKey] = useState(Date.now() + 86400000);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 950);
 
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 950);
+        };
 
-    // 當倒數結束時重新啟動倒數
-    const handleComplete = () => {
-        // 更新狀態，將倒數時間重置為 24 小時
-        setKey(Date.now() + 86400000);
-        return [true]; // 返回 true 以重新啟動
-    };
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
 
 
 
@@ -40,30 +41,7 @@ function Home() {
         setArticles(articleRes.data.articles);
         setLoading(false);
     }
-    // 自定義 renderer 函數
-    const renderer = ({  hours, minutes, seconds, completed }) => {
-        if (completed) {
-            // 倒數結束時顯示的內容
-            return <span>Time's up!</span>;
-        } else {
-            // 倒數進行時顯示的內容，這裡只顯示「時：分：秒」
-            return (
-                <span className="countdown" style={{ fontSize: '20px' }}>
-                    <span>
-                        {hours > 0 && `${hours}`}
-                    </span>
-                    :
-                    <span>
-                        {minutes < 10 ? `0${minutes}` : minutes}
-                    </span>
-                    :
-                    <span>
-                        {seconds < 10 ? `0${seconds}` : seconds}
-                    </span>
-                </span>
-            );
-        }
-    };
+
 
 
     const getProducts = async (page = 1) => {
@@ -83,7 +61,7 @@ function Home() {
     return (
         <>
 
-            <div className="container">
+            <div className={`homepage-bg ${isMobile ? '' : 'container'}`}>
                 <Loading isLoading={isLoading}></Loading>
                 <div className="d-flex me-5 "
                     style={{
@@ -129,7 +107,7 @@ function Home() {
                     }}>
                     <Carousel products={products} ></Carousel>
                 </div>
-                <div className="row m-5">
+                <div className="row mt-10">
                     {products.slice(randomNum, randomNum + 4).map((product) => {
                         return (
                             <div className="col-md-6 mt-md-4" key={product.id}>
@@ -155,7 +133,7 @@ function Home() {
                         )
                     })}
 
-                    <div className="container my-7">
+                    <div className={isMobile ? '' : 'container'}>
                         <div className="row" >
                             {articles.slice(randomNum, randomNum + 3).map((article, i) => {
                                 return (
@@ -174,16 +152,16 @@ function Home() {
                                 )
                             })}
                             <div className="bg-light mt-7">
-                                <div className="container">
-                                    <div id="carouselExampleControls" className=" carousel slide" data-ride="carousel">
+                                <div className={isMobile ? '' : 'container'}>
+                                    <div id="carouselExampleControls" data-ride="carousel">
                                         <div className="homepage-carousel carousel-inner">
                                             <div className="carousel-item active"
                                                 style={{
                                                     backgroundImage: 'url("https://images.unsplash.com/photo-1468436139062-f60a71c5c892?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")'
                                                 }}
                                             >
-                                                <div className="row justify-content-center py-7">
-                                                    <div className="col-md-8 d-flex">
+                                                <div className="row justify-content-center py-7 ">
+                                                    <div className=" col-md-8 d-flex " >
                                                         <img src="https://images.unsplash.com/photo-1712847333437-f9386beb83e4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGh1bWFufGVufDB8fDB8fHww" alt="" className="rounded-circle me-5" style={{ width: "160px", height: "160px", objectFit: "cover", }} />
                                                         <div className="d-flex flex-column">
                                                             <p className="h5">“科技的真正目的，是讓我們的生活更簡單，而不是更複雜”</p>
@@ -283,67 +261,6 @@ function Home() {
                                         <p className="text-muted">Steam Deck概念不錯，但性能不足，續航力需改進。
                                         </p>
                                     </div>
-                                </div>
-                            </div>
-                            <div
-                                style={{
-                                    backgroundColor: 'lightyellow'
-                                }}
-                            >
-                                <div className="d-flex
-                                align-items-center
-                                border-bottom border-primary border-5 pb-1 ">
-                                    <span>
-                                    <i className="bi bi-clock-fill me-3"
-                                    style={{
-                                        fontSize:'50px',
-                                        color:'orange'
-                                    }}
-                                    ></i>
-                                    </span>
-                                    <span>
-
-                                        <div className="text-primary"
-                                        style={{
-                                            fontSize:'18px'
-                                        }}
-                                        >限時搶購:</div>
-                                        <div className="text-secondary"
-                                        style={{
-                                            fontSize:'13px'
-                                        }}
-                                        
-                                        >距離結束還有</div>
-                                    </span>
-                                    <span className="ms-3">
-                                        <Countdown
-                                            date={key}
-                                            renderer={renderer}
-                                            key={key}
-                                            onComplete={handleComplete} // 倒數結束時觸發的回調
-                                        />
-                                    </span>
-                                </div>
-                                <div className="row mt-3">
-                                    <div className="col-2">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY02AzBmCIR5T98JtS1m1vLQ8SEC4BrlBINg&s" alt="" className="img-fluid" />
-                                    </div>
-                                    <div className="col-2">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY02AzBmCIR5T98JtS1m1vLQ8SEC4BrlBINg&s" alt="" className="img-fluid" />
-                                    </div>
-                                    <div className="col-2">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY02AzBmCIR5T98JtS1m1vLQ8SEC4BrlBINg&s" alt="" className="img-fluid" />
-                                    </div>
-                                    <div className="col-2">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY02AzBmCIR5T98JtS1m1vLQ8SEC4BrlBINg&s" alt="" className="img-fluid" />
-                                    </div>
-                                    <div className="col-2">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY02AzBmCIR5T98JtS1m1vLQ8SEC4BrlBINg&s" alt="" className="img-fluid" />
-                                    </div>
-                                    <div className="col-2">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY02AzBmCIR5T98JtS1m1vLQ8SEC4BrlBINg&s" alt="" className="img-fluid" />
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
