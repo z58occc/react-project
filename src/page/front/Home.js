@@ -16,6 +16,16 @@ function Home() {
     const navigate = useNavigate();
     const [articles, setArticles] = useState([]);
     const randomNum = Math.floor(Math.random() * 6);
+    // 設置倒數時間 24 小時 = 86400 秒
+    const [key, setKey] = useState(Date.now() + 86400000);
+
+
+    // 當倒數結束時重新啟動倒數
+    const handleComplete = () => {
+        // 更新狀態，將倒數時間重置為 24 小時
+        setKey(Date.now() + 86400000);
+        return [true]; // 返回 true 以重新啟動
+    };
 
 
 
@@ -30,7 +40,30 @@ function Home() {
         setArticles(articleRes.data.articles);
         setLoading(false);
     }
-
+    // 自定義 renderer 函數
+    const renderer = ({  hours, minutes, seconds, completed }) => {
+        if (completed) {
+            // 倒數結束時顯示的內容
+            return <span>Time's up!</span>;
+        } else {
+            // 倒數進行時顯示的內容，這裡只顯示「時：分：秒」
+            return (
+                <span className="countdown" style={{ fontSize: '20px' }}>
+                    <span>
+                        {hours > 0 && `${hours}`}
+                    </span>
+                    :
+                    <span>
+                        {minutes < 10 ? `0${minutes}` : minutes}
+                    </span>
+                    :
+                    <span>
+                        {seconds < 10 ? `0${seconds}` : seconds}
+                    </span>
+                </span>
+            );
+        }
+    };
 
 
     const getProducts = async (page = 1) => {
@@ -254,12 +287,42 @@ function Home() {
                             </div>
                             <div
                                 style={{
-                                    backgroundColor: 'lightgray'
+                                    backgroundColor: 'lightyellow'
                                 }}
                             >
-                                <div className="border-bottom border-primary border-5 pb-3">
-                                    限時搶購:<Countdown date={new Date(2024, 11, 17)} 
-                                    />
+                                <div className="d-flex
+                                align-items-center
+                                border-bottom border-primary border-5 pb-1 ">
+                                    <span>
+                                    <i className="bi bi-clock-fill me-3"
+                                    style={{
+                                        fontSize:'50px',
+                                        color:'orange'
+                                    }}
+                                    ></i>
+                                    </span>
+                                    <span>
+
+                                        <div className="text-primary"
+                                        style={{
+                                            fontSize:'18px'
+                                        }}
+                                        >限時搶購:</div>
+                                        <div className="text-secondary"
+                                        style={{
+                                            fontSize:'13px'
+                                        }}
+                                        
+                                        >距離結束還有</div>
+                                    </span>
+                                    <span className="ms-3">
+                                        <Countdown
+                                            date={key}
+                                            renderer={renderer}
+                                            key={key}
+                                            onComplete={handleComplete} // 倒數結束時觸發的回調
+                                        />
+                                    </span>
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-2">
