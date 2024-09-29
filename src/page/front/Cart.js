@@ -25,6 +25,14 @@ function Cart() {
     }
 
     const checkCoupon = () => {
+        if (couponCode == "") {
+            Swal.fire({
+                title: "發生錯誤",
+                html: "<small>欄位不得為空 請依照需求填寫折扣碼</small>",
+                icon: "error"
+            });
+            return
+        }
         Swal.fire({
             title: "你決定好了嗎？",
             html: '<div><small>優惠券將套用到當前購物車內所有商品上</small></div> <div><small>若還有想購買之商品 請按繼續購物</small></div>',
@@ -206,11 +214,11 @@ function Cart() {
                                             >
                                                 <i className="bi bi-x-circle-fill"></i>
                                             </button>
-                                            <Link to={`/product/${item.product.id}`} 
-                                            style={{
-                                                textDecoration:'none',
-                                                color:'black'
-                                            }}
+                                            <Link to={`/product/${item.product.id}`}
+                                                style={{
+                                                    textDecoration: 'none',
+                                                    color: 'black'
+                                                }}
                                             >
                                                 <p className="mb-0 fw-bold">{item.product.title}</p>
                                             </Link>

@@ -100,7 +100,7 @@ function ProdeuctDetail() {
 
     return (
         <>
-            <Loading isLoading={isLoading}></Loading>
+            {/* <Loading isLoading={isLoading}></Loading> */}
             <div className="container">
                 <div className="row d-flex flex-row-reverse   m-1 ">
 

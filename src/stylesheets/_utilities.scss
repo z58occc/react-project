@@ -136,7 +136,8 @@ li>.active {
   margin-left: 30px;
 }
 
-@media(max-width:950px) {//RWD
+@media(max-width:950px) {
+  //RWD
 
   li>.nav-link {
     border-bottom: solid;
@@ -167,7 +168,7 @@ li>.active {
   .product-description,
   .article-title,
   .article-description {
-    
+
     max-width: 400px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -236,4 +237,16 @@ li>.active {
 
 .collapse {
   transition: none !important;
+}
+
+.homepage-carousel>.carousel-item {
+
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: top center;
+  color: white;
+}
+
+.bi-star-fill {
+  color: #ffd700;
 }

@@ -7,7 +7,7 @@ function SameTypeCarousel({ sameProducts }) {
                 style={{
                     position: 'absolute',
                     top: '0px',
-                    right: '-720px'
+                    left: '700px'
                 }}
             >
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active  " aria-current="true " aria-label="Slide 1">

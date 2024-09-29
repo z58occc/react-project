@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext,Link } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import { Input } from "../../components/FontElements";
 import { Textarea } from "../../components/FontElements";
@@ -131,7 +131,8 @@ function Checkout() {
                         </div>
 
                         <div className="d-flex flex-column-reverse flex-md-row mt-4 justify-content-between align-items-md-center align-items-end w-100">
-                            <a href="./product.html" className="text-dark mt-md-0 mt-3"><i className="fas fa-chevron-left me-2"></i> 繼續購物</a>
+                            <Link to='/products' className="text-dark mt-md-0 mt-3"
+                            ><i className="fas fa-chevron-left me-2"></i> 繼續購物</Link>
                             <button type="submit" className="btn btn-dark py-3 px-7 rounded-0">送出表單</button>
                         </div>
                     </form>

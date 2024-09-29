@@ -49,7 +49,9 @@ function Products() {
         const { htmlFor } = e.target;
         const category = htmlFor;
         const typeRes = await axios.get(`/v2/api/${process.env.REACT_APP_API_PATH}/products?category=${category}`);
+        console.log(typeRes.data);
         setProducts(typeRes.data.products);
+        setPagination(typeRes.data.pagination);
         setLoading(false);
     }
     const handleKeyEnter = (e) => {
